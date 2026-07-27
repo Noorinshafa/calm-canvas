@@ -12,12 +12,12 @@ export default async function handler(req, res) {
     const result = await response.json();
 
     const products = result.data.map((product) => ({
-      id: product.id,
-      title: product.title,
-      description: product.description,
-      image: product.images[0]?.src,
-      variants: product.variants,
-    }));
+  id: product.id,
+  title: product.title,
+  description: product.description,
+  image: product.images[0]?.src,
+  price: `Rs. ${(product.variants[0].price / 100).toLocaleString()}`,
+}));
 
     res.status(200).json(products);
 
