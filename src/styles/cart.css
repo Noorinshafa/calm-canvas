@@ -1,0 +1,317 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600&display=swap");
+
+/* ===========================
+   PAGE
+=========================== */
+
+.cart-page{
+
+    padding:170px 8% 100px;
+
+    min-height:100vh;
+
+    background:#fffdfb;
+}
+
+.cart-heading{
+
+    text-align:center;
+
+    margin-bottom:60px;
+}
+
+.cart-heading span{
+
+    letter-spacing:3px;
+
+    color:#d89caf;
+
+    font-size:.9rem;
+
+    font-weight:700;
+}
+
+.cart-heading h1{
+
+    font-family:"Cormorant Garamond",serif;
+
+    font-size:3.8rem;
+
+    color:#5f4446;
+
+    margin-top:12px;
+}
+
+/* ===========================
+   LAYOUT
+=========================== */
+
+.cart-page{
+
+    display:flex;
+
+    flex-direction:column;
+}
+
+.cart-items{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:25px;
+}
+
+/* ===========================
+   PRODUCT CARD
+=========================== */
+
+.cart-item{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:30px;
+
+    background:white;
+
+    border-radius:22px;
+
+    padding:25px;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.05);
+}
+
+.cart-item-image{
+
+    width:170px;
+
+    height:170px;
+
+    object-fit:contain;
+
+    background:#f7f7f7;
+
+    border-radius:18px;
+
+    flex-shrink:0;
+}
+
+.cart-item-info{
+
+    flex:1;
+}
+
+.cart-item-info h3{
+
+    font-size:1.5rem;
+
+    color:#5f4446;
+
+    margin-bottom:10px;
+}
+
+.cart-price{
+
+    color:#d69a57;
+
+    font-size:1.2rem;
+
+    font-weight:700;
+
+    margin-bottom:20px;
+}
+
+/* ===========================
+   QUANTITY
+=========================== */
+
+.quantity-box{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+    margin-bottom:18px;
+}
+
+.quantity-box button{
+
+    width:42px;
+
+    height:42px;
+
+    border:none;
+
+    border-radius:50%;
+
+    background:#f4e6ea;
+
+    color:#5f4446;
+
+    font-size:1.3rem;
+
+    cursor:pointer;
+
+    transition:.3s;
+}
+
+.quantity-box button:hover{
+
+    background:#d89caf;
+
+    color:white;
+}
+
+.quantity-box span{
+
+    font-size:1.2rem;
+
+    font-weight:700;
+
+    color:#5f4446;
+}
+
+/* ===========================
+   REMOVE
+=========================== */
+
+.remove-btn{
+
+    border:none;
+
+    background:none;
+
+    color:#d66b6b;
+
+    cursor:pointer;
+
+    font-weight:600;
+
+    font-size:.95rem;
+}
+
+.remove-btn:hover{
+
+    text-decoration:underline;
+}
+
+/* ===========================
+   SUMMARY
+=========================== */
+
+.cart-summary{
+
+    margin-top:50px;
+
+    background:white;
+
+    border-radius:24px;
+
+    padding:35px;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.05);
+
+    text-align:right;
+}
+
+.cart-summary h2{
+
+    font-family:"Cormorant Garamond",serif;
+
+    color:#5f4446;
+
+    margin-bottom:18px;
+}
+
+.cart-summary h3{
+
+    color:#d69a57;
+
+    font-size:2rem;
+
+    margin-bottom:30px;
+}
+
+.checkout-btn{
+
+    display:inline-block;
+
+    text-decoration:none;
+
+    padding:18px 45px;
+
+    border-radius:50px;
+
+    background:#5f4446;
+
+    color:white;
+
+    font-weight:600;
+
+    transition:.35s;
+}
+
+.checkout-btn:hover{
+
+    background:#d89caf;
+
+    transform:translateY(-3px);
+}
+
+/* ===========================
+   EMPTY CART
+=========================== */
+
+.empty-cart{
+
+    text-align:center;
+
+    padding:120px 0;
+}
+
+.empty-cart h2{
+
+    font-family:"Cormorant Garamond",serif;
+
+    font-size:2.5rem;
+
+    color:#5f4446;
+
+    margin-bottom:15px;
+}
+
+.empty-cart p{
+
+    color:#777;
+}
+
+/* ===========================
+   RESPONSIVE
+=========================== */
+
+@media(max-width:900px){
+
+.cart-item{
+
+    flex-direction:column;
+
+    text-align:center;
+}
+
+.cart-summary{
+
+    text-align:center;
+}
+
+.cart-item-image{
+
+    width:220px;
+
+    height:220px;
+}
+
+}

@@ -1,0 +1,135 @@
+.search-bar{
+
+    position:absolute;
+
+    top:75px;
+
+    right:0;
+
+    width:360px;
+
+    background:#fff;
+
+    border-radius:18px;
+
+    overflow:hidden;
+
+    box-shadow:0 15px 45px rgba(0,0,0,.12);
+
+    animation:searchOpen .25s ease;
+}
+
+@keyframes searchOpen{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(-10px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+
+.search-bar input{
+
+    width:100%;
+
+    border:none;
+
+    outline:none;
+
+    padding:18px 20px;
+
+    font-size:1rem;
+
+    background:#faf8f6;
+
+    color:#5f4446;
+}
+
+.search-results{
+
+    max-height:380px;
+
+    overflow-y:auto;
+}
+
+.search-category{
+
+    display:block;
+
+    padding:14px 20px;
+
+    text-decoration:none;
+
+    color:#7b6264;
+
+    font-weight:600;
+
+    border-bottom:1px solid #f2f2f2;
+
+    transition:.25s;
+}
+
+.search-category:hover{
+
+    background:#f9f3f3;
+}
+
+.search-product{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+    padding:14px 20px;
+
+    text-decoration:none;
+
+    color:#5f4446;
+
+    transition:.25s;
+}
+
+.search-product:hover{
+
+    background:#f9f3f3;
+}
+
+.search-product img{
+
+    width:55px;
+
+    height:55px;
+
+    object-fit:contain;
+
+    background:#fafafa;
+
+    border-radius:10px;
+}
+
+.search-product h4{
+
+    font-size:.95rem;
+
+    margin-bottom:4px;
+}
+
+.search-product p{
+
+    color:#d69a57;
+
+    font-size:.85rem;
+}

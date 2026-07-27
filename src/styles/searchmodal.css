@@ -1,0 +1,48 @@
+.search-overlay{
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,.45);
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:flex-start;
+
+    padding-top:120px;
+
+    z-index:3000;
+}
+
+.search-modal{
+
+    width:650px;
+
+    background:white;
+
+    border-radius:20px;
+
+    padding:30px;
+
+    box-shadow:0 20px 60px rgba(0,0,0,.15);
+}
+
+.search-input{
+
+    width:100%;
+
+    border:none;
+
+    outline:none;
+
+    font-size:1.2rem;
+
+    padding:18px 20px;
+
+    background:#f8f8f8;
+
+    border-radius:14px;
+}

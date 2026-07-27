@@ -1,0 +1,469 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600&display=swap");
+
+.signature{
+
+    background:#fff8f9;
+
+     padding:140px 8% 40px;
+
+    overflow:hidden;
+
+}
+
+/* ------------------------ */
+
+.bubble-container{
+
+     position:relative;
+
+    width:100%;
+
+    height:760px;
+
+     top:-130px;
+
+}
+
+/* ------------------------ */
+
+.bubble{
+
+    position:absolute;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    cursor:pointer;
+
+    transition:.45s ease;
+   
+    
+
+}
+
+/* ------------------------ */
+
+.bubble::before{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    border-radius:50%;
+
+    background:
+
+    linear-gradient(
+
+        145deg,
+
+        rgba(255,255,255,.75),
+
+        rgba(255,214,229,.35)
+
+    );
+
+    backdrop-filter:blur(18px);
+
+    border:1px solid rgba(255,255,255,.7);
+
+    box-shadow:
+
+    inset -10px -10px 30px rgba(255,255,255,.55),
+
+    inset 8px 8px 20px rgba(255,184,207,.18),
+
+    0 25px 60px rgba(255,184,207,.22);
+
+}
+
+/* ------------------------ */
+
+.bubble-glow{
+
+    position:absolute;
+
+    width:120%;
+
+    height:120%;
+
+    border-radius:50%;
+
+    background:
+
+    radial-gradient(
+
+        rgba(255,179,205,.45),
+
+        transparent 70%
+
+    );
+
+    filter:blur(35px);
+
+    z-index:-1;
+
+    transition:.5s;
+
+}
+
+/* ------------------------ */
+
+.bubble-frame{
+
+    width:78%;
+    height:78%;
+
+    border-radius:50%;
+
+    overflow:hidden;
+
+    border:7px solid rgba(255,255,255,.9);
+
+    position:relative;
+
+    z-index:2;
+
+}
+
+.bubble-frame img{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+
+    transition:.5s;
+
+}
+
+/* ------------------------ */
+
+.bubble-info{
+
+    position:absolute;
+
+    bottom:-95px;
+
+    left:50%;
+
+    transform:translateX(-50%) translateY(15px);
+
+    width:240px;
+
+    text-align:center;
+
+    opacity:0;
+
+    transition:.45s;
+
+}
+
+.bubble-info h3{
+
+    font-family:"Cormorant Garamond",serif;
+
+    font-size:1.9rem;
+
+    color:#7c5d63;
+
+}
+
+.bubble-info p{
+
+    margin-top:8px;
+
+    font-family:"Manrope";
+
+    color:#d28ca0;
+
+    font-weight:600;
+
+}
+/* ------------------------
+Bubble Sizes
+------------------------ */
+
+/* ===========================
+CENTER FEATURED
+=========================== */
+
+.bubble-one{
+
+    width:430px;
+    height:430px;
+
+    left:30%;
+    top:200px;
+
+    transform:translateX(-50%);
+
+    animation:float1 8s ease-in-out infinite;
+}
+.bubble-one .bubble-glow{
+
+    transform:scale(1.4);
+
+    opacity:.9;
+
+}
+
+/* ===========================
+TOP LEFT
+=========================== */
+
+.bubble-two{
+
+    width:290px;
+    height:290px;
+
+    left:1%;
+    top:90px;
+
+    animation:float2 6s ease-in-out infinite;
+
+}
+
+/* ===========================
+TOP RIGHT
+=========================== */
+
+.bubble-three{
+
+    width:290px;
+    height:290px;
+
+    right:-1%;
+    top:90px;
+
+    animation:float3 7s ease-in-out infinite;
+
+}
+
+/* ===========================
+BOTTOM LEFT
+=========================== */
+
+.bubble-four{
+
+    width:250px;
+    height:250px;
+
+    left:1%;
+    top:470px;
+
+    animation:float4 6.5s ease-in-out infinite;
+
+}
+
+/* ===========================
+BOTTOM RIGHT
+=========================== */
+
+.bubble-five{
+
+    width:250px;
+    height:250px;
+
+    right:-1%;
+    top:470px;
+
+    animation:float5 6.8s ease-in-out infinite;
+
+
+}
+.bubble-one{
+
+animation:float1 6s ease-in-out infinite;
+
+}
+
+.bubble-two{
+
+animation:float2 7s ease-in-out infinite;
+
+}
+
+.bubble-three{
+
+animation:float3 5.5s ease-in-out infinite;
+
+}
+
+.bubble-four{
+
+animation:float4 6.5s ease-in-out infinite;
+
+}
+
+@keyframes float1{
+
+0%,100%{
+
+transform:translateY(0);
+
+}
+
+50%{
+
+transform:translateY(-18px);
+
+}
+
+}
+
+@keyframes float2{
+
+0%,100%{
+
+transform:translateY(0);
+
+}
+
+50%{
+
+transform:translateY(-28px);
+
+}
+
+}
+
+@keyframes float3{
+
+0%,100%{
+
+transform:translateY(0);
+
+}
+
+50%{
+
+transform:translateY(-20px);
+
+}
+
+}
+
+@keyframes float4{
+
+0%,100%{
+
+transform:translateY(0);
+
+}
+
+50%{
+
+transform:translateY(-24px);
+
+}
+
+}
+@keyframes float5{
+
+0%,100%{
+
+transform:translateY(0);
+
+}
+
+50%{
+
+transform:translateY(-20px);
+
+}
+
+}
+.bubble:hover{
+
+transform:scale(1.12);
+
+z-index:20;
+
+}
+
+.bubble:hover .bubble-glow{
+
+transform:scale(1.3);
+
+filter:blur(55px);
+
+}
+
+.bubble:hover .bubble-frame img{
+
+transform:scale(1.08);
+
+}
+
+.bubble:hover .bubble-info{
+
+opacity:1;
+
+transform:translateX(-50%) translateY(0);
+
+}
+.signature-heading{
+
+    text-align:center;
+
+    margin-bottom:30px
+
+}
+
+.signature-heading span{
+
+    display:inline-block;
+
+    letter-spacing:4px;
+
+    color:#d69aaa;
+
+    font-size:.9rem;
+
+    font-weight:600;
+
+    margin-bottom:18px;
+
+}
+
+.signature-heading h2{
+
+    font-family:"Cormorant Garamond",serif;
+
+    font-size:4.3rem;
+
+    color:#65484d;
+
+    font-weight:600;
+
+}
+
+.signature-heading p{
+
+    max-width:620px;
+
+    margin:22px auto 0;
+
+    color:#8b7277;
+
+    line-height:1.9;
+
+    font-size:1.05rem;
+
+}
+@media (max-width:768px){
+
+    .signature{
+
+        display:none;
+
+    }
+
+}

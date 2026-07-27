@@ -1,0 +1,267 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600&display=swap");
+
+.featured{
+
+    padding:0 1% 120px;
+
+    margin-top:-250px;
+
+}
+
+.featured-heading{
+
+    text-align:center;
+
+    margin-bottom:80px;
+
+}
+
+.featured-heading span{
+
+    display:inline-block;
+
+    letter-spacing:4px;
+
+    font-size:.82rem;
+
+    color:#d69aaa;
+
+    font-family:"Manrope",sans-serif;
+
+    font-weight:700;
+
+}
+
+.featured-heading h2{
+
+    margin-top:18px;
+
+    font-size:4rem;
+
+    font-family:"Cormorant Garamond",serif;
+
+    color:#5f4549;
+
+}
+
+.featured-heading p{
+
+    margin:22px auto 0;
+
+    max-width:650px;
+
+    font-family:"Manrope",sans-serif;
+
+    line-height:1.9;
+
+    color:#8a7277;
+
+}
+/* ======================================
+   CATEGORY HEADINGS
+====================================== */
+
+.category-heading{
+
+    position:relative;
+
+    text-align:center;
+
+    margin:120px 0 70px;
+
+}
+
+.category-heading:first-of-type{
+
+    margin-top:60px;
+
+}
+
+/* Pink Glass Label */
+
+.category-heading span{
+
+    display:inline-block;
+
+    padding:14px 36px;
+
+    border-radius:50px;
+
+    background:linear-gradient(
+        135deg,
+        rgba(255,235,242,.95),
+        rgba(255,255,255,.95)
+    );
+
+    border:1px solid rgba(236,180,198,.45);
+
+    box-shadow:
+        0 15px 35px rgba(235,180,198,.20);
+
+    font-family:"Manrope",sans-serif;
+
+    font-size:.95rem;
+
+    font-weight:700;
+
+    letter-spacing:5px;
+
+    color:#d889a0;
+
+    text-transform:uppercase;
+
+}
+
+/* Decorative Line */
+
+.category-heading::after{
+
+    content:"";
+
+    display:block;
+
+    width:220px;
+
+    height:2px;
+
+    margin:28px auto 0;
+
+    background:linear-gradient(
+        to right,
+        transparent,
+        #efb5c8,
+        transparent
+    );
+
+}
+
+.category-heading h3{
+
+    margin-top:35px;
+
+    font-family:"Cormorant Garamond",serif;
+
+    font-size:4rem;
+
+    font-weight:600;
+
+    color:#5f4448;
+
+}
+
+.category-heading p{
+
+    margin:20px auto 0;
+
+    max-width:600px;
+
+    font-family:"Manrope",sans-serif;
+
+    font-size:1.05rem;
+
+    line-height:1.9;
+
+    color:#8b7478;
+
+}
+
+
+
+   
+/* ===========================
+PRODUCT GRID
+=========================== */
+
+.products-row{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:stretch;
+
+    gap:14px;
+
+    margin-bottom:90px;
+
+}
+
+
+/* ===========================
+Responsive
+=========================== */
+
+/* ===========================
+   MOBILE
+=========================== */
+
+@media (max-width:768px){
+
+    .products-row{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:5px;
+    align-items:start;
+}
+
+    .product-card{
+
+        width:100%;
+
+        height:370px;
+      
+
+    }
+
+    .product-image{
+
+        height:190px;
+
+    }
+    .product-content{
+
+    padding:15px;
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.product-content h3{
+
+    font-size:1.2rem;
+
+    line-height:1.3;
+
+    height:3rem;          /* exactly 2 lines */
+
+    overflow:hidden;
+
+}
+
+.product-content p{
+
+    font-size:.8rem;
+
+    line-height:1.5;
+
+    height:3.6rem;        /* exactly 3 lines */
+
+    overflow:hidden;
+
+}
+
+.product-content span{
+
+    margin-top:auto;
+
+}
+}
+.featured{
+
+    margin-top:0;
+
+    padding-top:60px;
+
+}

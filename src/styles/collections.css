@@ -1,0 +1,266 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600&display=swap");
+
+/* ===================================
+   PAGE
+=================================== */
+
+.collections{
+
+    background:#fffdfb;
+
+    padding:170px 8% 120px;
+
+}
+
+/* ===================================
+   HEADING
+=================================== */
+
+.collections-heading{
+
+    text-align:center;
+
+    margin-bottom:110px;
+
+}
+
+.collections-heading span{
+
+    display:inline-block;
+
+    letter-spacing:4px;
+
+    color:#d89caf;
+
+    font-size:.9rem;
+
+    font-weight:700;
+
+    margin-bottom:18px;
+
+}
+
+.collections-heading h1{
+
+    font-family:"Cormorant Garamond",serif;
+
+    font-size:4.3rem;
+
+    color:#60484d;
+
+    font-weight:600;
+
+    margin-bottom:25px;
+
+}
+
+.collections-heading p{
+
+    max-width:650px;
+
+    margin:auto;
+
+    color:#857176;
+
+    line-height:2;
+
+    font-size:1.05rem;
+
+}
+
+/* ===================================
+   COLLECTION BANNER
+=================================== */
+
+.collection-banner{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:80px;
+
+    margin-bottom:140px;
+
+}
+
+.collection-banner.reverse{
+
+    flex-direction:row-reverse;
+
+}
+
+/* ===================================
+   IMAGE
+=================================== */
+
+.banner-image{
+
+    flex:1;
+
+}
+
+.banner-image img{
+
+    width:100%;
+
+    display:block;
+
+    border-radius:35px;
+
+    box-shadow:
+    0 25px 60px rgba(0,0,0,.08);
+
+    transition:.45s;
+
+}
+
+.banner-image img:hover{
+
+    transform:scale(1.03);
+
+}
+
+/* ===================================
+   CONTENT
+=================================== */
+
+.banner-content{
+
+    flex:1;
+
+}
+
+.banner-content span{
+
+    display:inline-block;
+
+    letter-spacing:4px;
+
+    color:#d89caf;
+
+    font-size:.9rem;
+
+    font-weight:700;
+
+    margin-bottom:20px;
+
+}
+
+.banner-content h2{
+
+    font-family:"Cormorant Garamond",serif;
+
+    font-size:3.6rem;
+
+    color:#60484d;
+
+    margin-bottom:25px;
+
+}
+
+.banner-content p{
+
+    color:#857176;
+
+    line-height:2;
+
+    font-size:1.05rem;
+
+    margin-bottom:40px;
+
+}
+
+
+/* ===================================
+   BUTTON
+=================================== */
+
+.banner-button{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    margin-top:15px;
+
+    padding:16px 36px;
+
+    text-decoration:none;
+
+    border-radius:50px;
+
+    background:#ecdddd;
+
+    color:#5f4446;
+
+    font-family:"Manrope",sans-serif;
+
+    font-size:1rem;
+
+    font-weight:700;
+
+    letter-spacing:.4px;
+
+    box-shadow:
+    0 12px 35px rgba(0,0,0,.18);
+
+    transition:.35s;
+
+}
+
+.banner-button:hover{
+
+    transform:translateY(-5px);
+
+    background:#f7d7df;
+
+    color:#d69a57;
+
+    box-shadow:
+    0 20px 40px rgba(0,0,0,.25);
+
+}
+/* ===================================
+   RESPONSIVE
+=================================== */
+
+@media(max-width:1000px){
+
+    .collection-banner{
+
+        flex-direction:column;
+
+        gap:45px;
+
+    }
+
+    .collection-banner.reverse{
+
+        flex-direction:column;
+
+    }
+
+    .banner-content{
+
+        text-align:center;
+
+    }
+
+    .collections-heading h1{
+
+        font-size:3.3rem;
+
+    }
+
+    .banner-content h2{
+
+        font-size:2.8rem;
+
+    }
+
+}

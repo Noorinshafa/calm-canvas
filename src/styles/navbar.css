@@ -1,0 +1,617 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600&display=swap");
+
+/* ===================================
+   NAVBAR
+=================================== */
+
+.navbar{
+
+    position:fixed;
+
+    top:30px;
+    left:50%;
+
+    transform:translateX(-50%);
+
+    width:92%;
+    max-width:1450px;
+
+    height:80px;
+
+    padding:0 40px;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    z-index:9999;
+
+    background:rgba(255,255,255,.28);
+
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+
+    border:1px solid rgba(255,255,255,.5);
+
+    border-radius:28px;
+
+    box-shadow:
+    0 12px 40px rgba(0,0,0,.08);
+
+   transition:
+top .45s ease,
+background .35s ease,
+box-shadow .35s ease;
+
+}
+
+/* ===================================
+   HIDE NAVBAR
+=================================== */
+
+.navbar.hide{
+
+     top:-120px;
+
+}
+
+/* ===================================
+   LOGO
+=================================== */
+
+.logo{
+
+    display:flex;
+    align-items:center;
+
+    gap:12px;
+
+    cursor:pointer;
+
+}
+
+.logo-icon{
+
+    font-size:1.4rem;
+
+    color:#d89caf;
+
+}
+
+.logo h2{
+
+    font-family:"Cormorant Garamond",serif;
+
+    font-size:2rem;
+
+    font-weight:700;
+
+    letter-spacing:1px;
+
+    color:#5f4446;
+
+}
+
+/* ===================================
+   NAV LINKS
+=================================== */
+
+.nav-links{
+
+    display:flex;
+
+    gap:38px;
+
+    list-style:none;
+
+    margin:0;
+    padding:0;
+
+}
+
+.nav-links a{
+
+    position:relative;
+
+    text-decoration:none;
+
+    font-family:"Manrope",sans-serif;
+
+    font-size:.95rem;
+
+    font-weight:600;
+
+    color:#6b5559;
+
+    transition:.35s;
+
+}
+
+.nav-links a:hover{
+
+    color:#d69a57;
+
+}
+
+.nav-links a::after{
+
+    content:"";
+
+    position:absolute;
+
+    left:0;
+    bottom:-8px;
+
+    width:0;
+
+    height:2px;
+
+    background:#d69a57;
+
+    transition:.35s;
+
+}
+
+.nav-links a:hover::after{
+
+    width:100%;
+
+}
+
+/* ===================================
+   ICONS
+=================================== */
+
+.nav-icons{
+
+    display:flex;
+
+    gap:14px;
+
+}
+
+.nav-icons button{
+
+    width:46px;
+    height:46px;
+
+    border:none;
+
+    border-radius:50%;
+
+    background:rgba(255,255,255,.55);
+
+    backdrop-filter:blur(15px);
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    cursor:pointer;
+
+    color:#6b5559;
+
+    font-size:1.05rem;
+
+    transition:.35s;
+
+    box-shadow:
+    0 8px 18px rgba(0,0,0,.06);
+
+}
+
+.nav-icons button:hover{
+
+    transform:translateY(-5px);
+
+    background:#f7d7df;
+
+    color:#c88955;
+
+}
+
+/* ===================================
+   RESPONSIVE
+=================================== */
+
+@media(max-width:1000px){
+
+    .nav-links{
+
+        display:none;
+
+    }
+
+    .navbar{
+
+        padding:0 25px;
+
+    }
+
+    .logo h2{
+
+        font-size:1.7rem;
+
+    }
+
+}
+
+@media(max-width:600px){
+
+    .navbar{
+
+        width:95%;
+
+        height:70px;
+
+        top:15px;
+
+        padding:0 18px;
+
+    }
+
+    .logo h2{
+
+        font-size:1.5rem;
+
+    }
+
+    .nav-icons button{
+
+        width:42px;
+        height:42px;
+
+        font-size:1rem;
+
+    }
+
+}
+/* ===================================
+   SHOW / HIDE NAVBAR
+=================================== */
+
+.navbar{
+
+    transition:
+    transform .45s ease,
+    opacity .35s ease;
+
+}
+
+.navbar.show{
+
+    transform:translateX(-50%) translateY(0);
+
+    opacity:1;
+
+}
+
+.navbar.hide{
+
+    transform:translateX(-50%) translateY(-150px);
+
+    opacity:0;
+
+}
+/* ===============================
+   DROPDOWN
+================================ */
+
+.dropdown{
+
+    position:relative;
+
+}
+
+.dropdown-title{
+
+    font-family:"Manrope",sans-serif;
+
+    font-size:.95rem;
+
+    font-weight:600;
+
+    color:#6b5559;
+
+    cursor:pointer;
+
+    transition:.35s;
+
+}
+
+.dropdown-title:hover{
+
+    color:#d69a57;
+
+}
+
+.dropdown-menu{
+
+    position:absolute;
+
+    top:40px;
+
+    left:-15px;
+
+    width:220px;
+
+    padding:12px 0;
+
+    list-style:none;
+
+    background:rgba(255,255,255,.92);
+
+    backdrop-filter:blur(18px);
+
+    border-radius:18px;
+
+    box-shadow:0 15px 35px rgba(0,0,0,.12);
+
+    opacity:0;
+
+    visibility:hidden;
+
+    transform:translateY(10px);
+
+    transition:.35s;
+
+    z-index:9999;
+
+}
+
+.dropdown:hover .dropdown-menu{
+
+    opacity:1;
+
+    visibility:visible;
+
+    transform:translateY(0);
+
+}
+
+.dropdown-menu li{
+
+    width:100%;
+
+}
+
+.dropdown-menu li a{
+
+    display:block;
+
+    padding:14px 24px;
+
+    color:#6b5559;
+
+    text-decoration:none;
+
+    font-family:"Manrope",sans-serif;
+
+    font-weight:500;
+
+    transition:.3s;
+
+}
+
+.dropdown-menu li a:hover{
+
+    background:#fdf2f5;
+
+    color:#d69a57;
+
+}
+.cart-btn{
+    position: relative;
+}
+
+.cart-count{
+
+    position:absolute;
+
+    top:-4px;
+
+    right:-4px;
+
+    width:18px;
+
+    height:18px;
+
+    border-radius:50%;
+
+    background:#d89caf;
+
+    color:white;
+
+    font-size:11px;
+
+    font-weight:700;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+}
+
+    
+.cart-btn{
+
+    position:relative;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    width:42px;
+
+    height:42px;
+
+    border-radius:50%;
+
+    text-decoration:none;
+
+    color:#5f4446;
+
+    transition:.3s;
+}
+
+.cart-btn:hover{
+
+    background:#f8f2f4;
+
+    color:#d89caf;
+
+}
+.search-container{
+
+    position:relative;
+}
+/* ===================================
+   MOBILE NAVBAR
+=================================== */
+
+.mobile-menu-btn{
+
+    display:none;
+
+    background:none;
+
+    border:none;
+
+    font-size:1.7rem;
+
+    color:#5f4549;
+
+    cursor:pointer;
+
+}
+
+/* Slide Menu */
+
+.mobile-menu{
+
+    position:fixed;
+
+    top:0;
+
+    left:0;
+
+    width:280px;
+
+    height:100vh;
+
+    background:white;
+
+    box-shadow:0 0 30px rgba(0,0,0,.15);
+
+    padding:30px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:22px;
+
+    z-index:9999;
+
+}
+
+.mobile-menu-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:20px;
+
+}
+
+.mobile-menu-header h2{
+
+    font-size:1.6rem;
+
+    color:#5f4549;
+
+}
+
+.mobile-menu-header button{
+
+    background:none;
+
+    border:none;
+
+    font-size:1.8rem;
+
+    cursor:pointer;
+
+}
+
+.mobile-menu a{
+
+    text-decoration:none;
+
+    color:#5f4549;
+
+    font-size:1.05rem;
+
+    font-weight:500;
+
+    transition:.3s;
+
+}
+
+.mobile-menu a:hover{
+
+    color:#d88da2;
+
+    transform:translateX(8px);
+
+}
+
+/* ===================================
+   RESPONSIVE
+=================================== */
+
+@media (max-width:768px){
+
+    /* Hide desktop menu */
+
+    .nav-links{
+
+        display:none;
+
+    }
+
+    /* Show hamburger */
+
+    .mobile-menu-btn{
+
+        display:block;
+
+    }
+
+    /* Better spacing */
+
+    .navbar{
+
+        padding:15px 20px;
+
+    }
+
+    .logo h2{
+
+        font-size:1.7rem;
+
+    }
+
+    .nav-icons{
+
+        gap:15px;
+
+    }
+
+}

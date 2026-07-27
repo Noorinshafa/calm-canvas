@@ -1,0 +1,69 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600&display=swap");
+
+.about{
+
+    background:#fffdfc;
+
+    min-height:100vh;
+
+    padding:180px 8% 100px;
+
+}
+
+.about-hero{
+
+    max-width:900px;
+
+    margin:0 auto;
+
+    text-align:center;
+
+}
+
+.about-hero span{
+
+    display:inline-block;
+
+    font-family:"Manrope",sans-serif;
+
+    font-size:.85rem;
+
+    font-weight:700;
+
+    letter-spacing:4px;
+
+    color:#d89caf;
+
+    margin-bottom:25px;
+
+}
+
+.about-hero h1{
+
+    font-family:"Cormorant Garamond",serif;
+
+    font-size:5rem;
+
+    font-weight:600;
+
+    line-height:1.05;
+
+    color:#5f4549;
+
+}
+
+.about-hero p{
+
+    margin:35px auto 0;
+
+    max-width:720px;
+
+    font-family:"Manrope",sans-serif;
+
+    font-size:1.08rem;
+
+    line-height:2;
+
+    color:#8a7378;
+
+}

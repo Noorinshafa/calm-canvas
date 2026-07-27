@@ -1,0 +1,119 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600&display=swap");
+
+.contact{
+
+    min-height:100vh;
+
+    background:#fffdfc;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    padding:180px 8% 100px;
+
+}
+
+.contact-box{
+
+    max-width:760px;
+
+    width:100%;
+
+    text-align:center;
+
+}
+
+.contact-box span{
+
+    display:inline-block;
+
+    letter-spacing:4px;
+
+    font-size:.85rem;
+
+    font-weight:700;
+
+    color:#d89caf;
+
+    margin-bottom:20px;
+
+    font-family:"Manrope",sans-serif;
+
+}
+
+.contact-box h1{
+
+    font-family:"Cormorant Garamond",serif;
+
+    font-size:4.5rem;
+
+    color:#60484d;
+
+    margin-bottom:30px;
+
+}
+
+.contact-box p{
+
+    font-family:"Manrope",sans-serif;
+
+    color:#8a7378;
+
+    line-height:2;
+
+    font-size:1.05rem;
+
+    margin-bottom:60px;
+
+}
+
+.email-card{
+
+    background:rgba(255,255,255,.75);
+
+    backdrop-filter:blur(25px);
+
+    border:1px solid rgba(255,255,255,.9);
+
+    border-radius:30px;
+
+    padding:45px;
+
+    box-shadow:0 25px 60px rgba(232,183,201,.18);
+
+}
+
+.email-card h3{
+
+    font-family:"Cormorant Garamond",serif;
+
+    font-size:2rem;
+
+    color:#65484d;
+
+    margin-bottom:20px;
+
+}
+
+.email-card a{
+
+    font-family:"Manrope",sans-serif;
+
+    font-size:1.1rem;
+
+    font-weight:600;
+
+    color:#d88da2;
+
+    transition:.35s;
+
+}
+
+.email-card a:hover{
+
+    color:#b56d82;
+
+}

@@ -1,0 +1,358 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600&display=swap");
+
+/* ===================================
+   FOOTER
+=================================== */
+
+.footer{
+
+    background:#fff8f8;
+
+    padding:90px 8% 35px;
+
+    border-top:1px solid rgba(230,210,215,.6);
+
+}
+
+/* ===================================
+   TOP
+=================================== */
+
+.footer-top{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:flex-start;
+
+    gap:80px;
+
+    margin-bottom:70px;
+
+}
+
+/* ===================================
+   BRAND
+=================================== */
+
+.footer-brand{
+
+    max-width:380px;
+
+}
+
+.footer-brand h2{
+
+    font-family:"Cormorant Garamond",serif;
+
+    font-size:3rem;
+
+    color:#5f4549;
+
+    margin-bottom:20px;
+
+}
+
+.footer-brand p{
+
+    font-family:"Manrope",sans-serif;
+
+    line-height:1.9;
+
+    color:#8a7378;
+
+}
+
+/* ===================================
+   LINKS
+=================================== */
+
+.footer-links{
+
+    display:flex;
+
+    gap:80px;
+
+}
+
+.footer-links div{
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.footer-links h4{
+
+    font-family:"Cormorant Garamond",serif;
+
+    font-size:1.6rem;
+
+    color:#62484d;
+
+    margin-bottom:18px;
+
+}
+
+.footer-links a{
+
+    text-decoration:none;
+
+    color:#8a7378;
+
+    font-family:"Manrope",sans-serif;
+
+    margin-bottom:12px;
+
+    transition:.35s;
+
+}
+
+.footer-links a:hover{
+
+    color:#d88da2;
+
+    transform:translateX(6px);
+
+}
+
+/* ===================================
+   NEWSLETTER
+=================================== */
+
+.footer-newsletter{
+
+    text-align:center;
+
+    padding:60px 0;
+
+    border-top:1px solid rgba(235,220,224,.7);
+
+    border-bottom:1px solid rgba(235,220,224,.7);
+
+}
+
+.footer-newsletter h3{
+
+    font-family:"Cormorant Garamond",serif;
+
+    font-size:2.6rem;
+
+    color:#5f4549;
+
+}
+
+.footer-newsletter p{
+
+    margin:18px auto 35px;
+
+    max-width:520px;
+
+    color:#8a7378;
+
+    line-height:1.8;
+
+    font-family:"Manrope",sans-serif;
+
+}
+
+.newsletter-box{
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:15px;
+
+    flex-wrap:wrap;
+
+}
+
+.newsletter-box input{
+
+    width:360px;
+
+    padding:18px 25px;
+
+    border:none;
+
+    border-radius:60px;
+
+    background:white;
+
+    font-size:.95rem;
+
+    font-family:"Manrope",sans-serif;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.05);
+
+    outline:none;
+
+}
+
+.newsletter-box button{
+
+    padding:18px 34px;
+
+    border:none;
+
+    border-radius:60px;
+
+    cursor:pointer;
+
+    font-family:"Manrope",sans-serif;
+
+    font-weight:600;
+
+    color:white;
+
+    background:linear-gradient(
+        135deg,
+        #ef9fb5,
+        #f6b7c9
+    );
+
+    transition:.35s;
+
+    box-shadow:0 12px 28px rgba(239,159,181,.35);
+
+}
+
+.newsletter-box button:hover{
+
+    transform:translateY(-4px);
+
+}
+
+/* ===================================
+   BOTTOM
+=================================== */
+
+.footer-bottom{
+
+    text-align:center;
+
+    margin-top:35px;
+
+}
+
+.footer-bottom p{
+
+    color:#9a868a;
+
+    font-family:"Manrope",sans-serif;
+
+    font-size:.9rem;
+
+}
+
+/* ===================================
+   RESPONSIVE
+=================================== */
+
+@media(max-width:1000px){
+
+.footer-top{
+
+    flex-direction:column;
+
+    gap:50px;
+
+}
+
+.footer-links{
+
+    width:100%;
+
+    justify-content:space-between;
+
+}
+
+}
+
+@media(max-width:700px){
+
+.footer-links{
+
+    flex-direction:column;
+
+    gap:35px;
+
+}
+
+.newsletter-box input{
+
+    width:100%;
+
+}
+
+.newsletter-box{
+
+    flex-direction:column;
+
+}
+
+.newsletter-box button{
+
+    width:100%;
+
+}
+
+.footer-brand h2{
+
+    font-size:2.4rem;
+
+}
+
+.footer-newsletter h3{
+
+    font-size:2rem;
+
+}
+
+}
+.footer a{
+
+    text-decoration:none;
+
+    color:inherit;
+
+    transition:.3s;
+}
+
+.footer a:hover{
+
+    color:#d69a57;
+}
+
+.footer-column ul{
+
+    list-style:none;
+
+    padding:0;
+}
+
+.footer-column li{
+
+    margin-bottom:15px;
+
+    cursor:pointer;
+}
+
+.footer-column li:hover{
+
+    color:#d69a57;
+}
+
+.footer-links span{
+
+    color:#8a7378;
+
+    font-family:"Manrope",sans-serif;
+
+    margin-bottom:12px;
+
+    display:block;
+}

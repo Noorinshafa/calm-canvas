@@ -1,0 +1,121 @@
+.floating-card{
+
+    position:absolute;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    cursor:pointer;
+
+    transition:.5s ease;
+
+}
+
+.floating-glow{
+
+    position:absolute;
+
+    width:260px;
+
+    height:260px;
+
+    border-radius:50%;
+
+    background:radial-gradient(
+
+        rgba(247,220,229,.9),
+
+        transparent 70%
+
+    );
+
+    filter:blur(35px);
+
+    opacity:.8;
+
+    transition:.5s;
+
+    z-index:1;
+
+}
+
+.floating-card-image{
+
+    width:260px;
+
+    position:relative;
+
+    z-index:2;
+
+    transition:.5s;
+
+}
+
+.floating-card-info{
+
+    margin-top:18px;
+
+    text-align:center;
+
+    position:relative;
+
+    z-index:3;
+
+    opacity:0;
+
+    transform:translateY(20px);
+
+    transition:.45s;
+
+}
+
+.floating-card-info h3{
+
+    font-family:"Cormorant Garamond",serif;
+
+    font-size:1.8rem;
+
+    color:#5d4548;
+
+}
+
+.floating-card-info p{
+
+    margin-top:8px;
+
+    color:#c98d9a;
+
+    font-weight:600;
+
+}
+
+.floating-card:hover{
+
+    transform:translateY(-12px);
+
+}
+
+.floating-card:hover .floating-card-image{
+
+    transform:scale(1.05);
+
+}
+
+.floating-card:hover .floating-glow{
+
+    transform:scale(1.2);
+
+    opacity:1;
+
+}
+
+.floating-card:hover .floating-card-info{
+
+    opacity:1;
+
+    transform:translateY(0);
+
+}
