@@ -11,12 +11,16 @@ export default async function handler(req, res) {
 
     const result = await response.json();
 
-    const summary = result.data.map(product => ({
+   const products = result.data.map((product) => ({
+  id: product.id,
   title: product.title,
+  description: product.description,
+  image: product.images[0]?.src,
+  price: `Rs. ${(product.variants[0].price / 100).toLocaleString()}`,
   blueprint_id: product.blueprint_id,
 }));
 
-res.status(200).json(summary);
+res.status(200).json(products);
 
   } catch (error) {
     res.status(500).json({
