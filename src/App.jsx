@@ -1,129 +1,126 @@
 import { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
-import ScrollToTop from "./components/ScrollToTop";
-import ProductDetails from "./components/pages/ProductDetails";
-import Checkout from "./components/pages/Checkout";
-import OrderSuccess from "./components/pages/OrderSuccess";
 
-import Cart from "./components/pages/Cart";
-import Navbar from './components/layout/Navbar';
-import Hero from './components/sections/Hero';
-import SignatureCollection from "./components/sections/SignatureCollection";
+import ScrollToTop from "./components/ScrollToTop";
+
+import Navbar from "./components/layout/Navbar";
+import Hero from "./components/sections/Hero";
 import FeaturedCollection from "./components/sections/FeaturedCollection";
 import ParallaxBanner from "./components/sections/ParallaxBanner";
 import Footer from "./components/sections/Footer";
+
+import Collections from "./components/pages/Collections";
 import About from "./components/pages/About";
 import Contact from "./components/pages/Contact";
-import Collections from "./components/pages/Collections";
-import Jewellery from "./components/pages/collections/Jewellery";
-import Accessories from "./components/pages/collections/Accessories";
-import Gifts from "./components/pages/collections/Gifts";
-import './styles/global.css';
-import './styles/navbar.css';
-import './styles/logo.css';
-import './styles/hero.css';
-import './App.css';
+
+import ProductDetails from "./components/pages/ProductDetails";
+import Cart from "./components/pages/Cart";
+import Checkout from "./components/pages/Checkout";
+import OrderSuccess from "./components/pages/OrderSuccess";
+
+import Tshirts from "./components/pages/collections/Tshirts";
+import Hoodies from "./components/pages/collections/Hoodies";
+import Totebags from "./components/pages/collections/Totebags";
+import PhoneCases from "./components/pages/collections/PhoneCases";
+import Mugs from "./components/pages/collections/Mugs";
+
+import "./styles/global.css";
+import "./styles/navbar.css";
+import "./styles/logo.css";
+import "./styles/hero.css";
+import "./App.css";
 
 function App() {
+
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
-useEffect(() => {
+  useEffect(() => {
 
-  const handleResize = () => {
+    const handleResize = () => {
 
-    setIsMobile(window.innerWidth <= 768);
+      setIsMobile(window.innerWidth <= 768);
 
-  };
+    };
 
-  window.addEventListener("resize", handleResize);
+    window.addEventListener("resize", handleResize);
 
-  return () => {
+    return () => window.removeEventListener("resize", handleResize);
 
-    window.removeEventListener("resize", handleResize);
+  }, []);
 
-  };
+  return (
 
-}, []);
- return (
+    <div className="app">
 
-  <div className="app">
+      <Navbar />
 
-    <Navbar />
-    <ScrollToTop />
+      <ScrollToTop />
 
-    <Routes>
+      <Routes>
 
-      <Route
-        path="/"
-        element={
-          
-          <>
-  <Hero />
+        <Route
+          path="/"
+          element={
+            <>
+              <Hero />
 
-  {isMobile ? (
-    <>
-      <FeaturedCollection />
-      <ParallaxBanner />
-    </>
-  ) : (
-    <>
-      <SignatureCollection />
-      <ParallaxBanner />
-      <FeaturedCollection />
-    </>
-  )}
+              <FeaturedCollection />
 
-</>
-        }
-      />
+              {!isMobile && <ParallaxBanner />}
+            </>
+          }
+        />
 
-      <Route
-        path="/about"
-        element={<About />}
-      />
+        <Route path="/collections" element={<Collections />} />
 
-      <Route
-    path="/contact"
-    element={<Contact />}
-  />
- <Route
-  path="/product/:id"
-  element={<ProductDetails />}
+        <Route path="/tshirts" element={<Tshirts />} />
 
-/>
+        <Route path="/hoodies" element={<Hoodies />} />
 
-  <Route
-  path="/collections"
-  element={<Collections />}
-  
-/>
-<Route path="/jewellery" element={<Jewellery />} />
+        <Route path="/totebags" element={<Totebags />} />
 
-<Route path="/accessories" element={<Accessories />} />
+        <Route path="/phonecases" element={<PhoneCases />} />
 
-<Route path="/gifts" element={<Gifts />} />
+        <Route path="/mugs" element={<Mugs />} />
 
-<Route
-  path="/cart"
-  element={<Cart />}
-/>
+        <Route
+          path="/product/:id"
+          element={<ProductDetails />}
+        />
 
-<Route
-    path="/checkout"
-    element={<Checkout />}
-/>
-<Route
-  path="/order-success"
-  element={<OrderSuccess />}
-/>
+        <Route
+          path="/cart"
+          element={<Cart />}
+        />
 
-    </Routes>
+        <Route
+          path="/checkout"
+          element={<Checkout />}
+        />
 
-    <Footer />
+        <Route
+          path="/order-success"
+          element={<OrderSuccess />}
+        />
 
-  </div>
+        <Route
+          path="/about"
+          element={<About />}
+        />
 
-);
+        <Route
+          path="/contact"
+          element={<Contact />}
+        />
+
+      </Routes>
+
+      <Footer />
+
+    </div>
+
+  );
+
 }
 
 export default App;

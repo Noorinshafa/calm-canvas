@@ -4,134 +4,140 @@ import useProducts from "../../hooks/useProducts";
 import ProductCard from "../ui/ProductCard";
 import ExploreCard from "../ui/ExploreCard";
 
-import jewellery from "../../data/jewellery";
-import accessories from "../../data/accessories";
-import gifts from "../../data/gifts";
-
-
 function FeaturedCollection() {
-    const { products, loading, error } = useProducts();
-    if (loading) return <h2>Loading products...</h2>;
+  const { products, loading, error } = useProducts();
 
-if (error) return <h2>{error}</h2>;
+  const tshirts = products.filter((p) =>
+    [6, 145, 281, 706].includes(p.blueprint_id)
+  );
 
-return(
+  const hoodies = products.filter((p) =>
+    [49, 1296].includes(p.blueprint_id)
+  );
 
-<section className="featured">
+  const totebags = products.filter((p) =>
+    [326, 1313, 1389].includes(p.blueprint_id)
+  );
 
-<div className="featured-heading">
+  const phonecases = products.filter((p) =>
+    [269, 370, 421].includes(p.blueprint_id)
+  );
 
-<span>SHOP OUR FAVORITES</span>
+  if (loading) return <h2>Loading products...</h2>;
 
-<h2>Made to Make You Smile</h2>
+  if (error) return <h2>{error}</h2>;
 
-<p>
-Discover elegant jewellery, adorable accessories,
-and thoughtful gifts made with love.
-</p>
+  return (
+    <section className="featured">
 
-</div>
+      <div className="featured-heading">
+        <span>SHOP OUR FAVORITES</span>
 
-{/* Jewellery */}
+        <h2>Made to Express Your Style</h2>
 
-<div className="category-heading">
+        <p>
+          Discover premium graphic apparel and accessories designed to
+          reflect your personality.
+        </p>
+      </div>
 
-    <span>✦ CUTE JEWELLERY</span>
+      {/* T-Shirts */}
 
-    <h3>Jewellery You'll Love</h3>
+      <div className="category-heading">
+        <span>✦ TRENDING T-SHIRTS</span>
 
-    <p>
-        Delicate pieces chosen to add elegance to every moment.
-    </p>
+        <h3>Graphic T-Shirts You'll Love</h3>
 
-</div>
+        <p>
+          Comfortable, stylish and designed to express your personality.
+        </p>
+      </div>
 
-<div className="products-row">
+      <div className="products-row">
+        {tshirts.slice(0, 4).map((product) => (
+          <ProductCard
+            key={product.id}
+            {...product}
+          />
+        ))}
 
-{jewellery.slice(0,4).map((product) => (
+        <ExploreCard link="/tshirts" />
+      </div>
 
-<ProductCard
+      {/* Hoodies */}
 
-key={product.id}
+      <div className="category-heading">
+        <span>✦ COZY HOODIES</span>
 
-{...product}
+        <h3>Wrap Yourself in Comfort</h3>
 
-/>
+        <p>
+          Soft, stylish hoodies made for everyday comfort and effortless
+          streetwear.
+        </p>
+      </div>
 
-))}
+      <div className="products-row">
+        {hoodies.slice(0, 4).map((product) => (
+          <ProductCard
+            key={product.id}
+            {...product}
+          />
+        ))}
 
-<ExploreCard link="/jewellery" />
+        <ExploreCard link="/hoodies" />
+      </div>
 
-</div>
+      {/* Tote Bags */}
 
-{/* Accessories */}
+      <div className="category-heading">
+        <span>✦ EVERYDAY TOTE BAGS</span>
 
-<div className="category-heading">
+        <h3>Carry Style Everywhere</h3>
 
-    <span>✦ CUTE ACCESSORIES</span>
+        <p>
+          Practical tote bags with unique designs that make every outing
+          more stylish.
+        </p>
+      </div>
 
-    <h3>Little Details, Big Charm</h3>
+      <div className="products-row">
+        {totebags.slice(0, 4).map((product) => (
+          <ProductCard
+            key={product.id}
+            {...product}
+          />
+        ))}
 
-    <p>
-        Sweet finishing touches for your everyday style.
-    </p>
+        <ExploreCard link="/totebags" />
+      </div>
 
-</div>
+      {/* Phone Cases */}
 
-<div className="products-row">
+      <div className="category-heading">
+        <span>✦ STYLISH PHONE CASES</span>
 
-{accessories.slice(0,4).map((product) => (
+        <h3>Protect Your Phone in Style</h3>
 
-<ProductCard
+        <p>
+          Durable phone cases that keep your device safe while showing off
+          your personality.
+        </p>
+      </div>
 
-key={product.id}
+      <div className="products-row">
+        {phonecases.slice(0, 4).map((product) => (
+          <ProductCard
+            key={product.id}
+            {...product}
+          />
+        ))}
 
-{...product}
+        <ExploreCard link="/phonecases" />
+      </div>
 
-/>
-
-))}
-
-<ExploreCard link="/accessories" />
-
-</div>
-
-{/* Gifts */}
-
-<div className="category-heading">
-
-    <span>✦ THOUGHTFUL GIFTS</span>
-
-    <h3>Made to Make Someone Smile</h3>
-
-    <p>
-        Beautiful gifts wrapped with love for every special occasion.
-    </p>
-
-</div>
-
-<div className="products-row">
-
-{gifts.slice(0,4).map((product) => (
-
-<ProductCard
-
-key={product.id}
-
-{...product}
-
-/>
-
-))}
-
-<ExploreCard link="/gifts" />
-
-</div>
-
-</section>
-
-);
-
+    </section>
+  );
 }
 
 export default FeaturedCollection;
