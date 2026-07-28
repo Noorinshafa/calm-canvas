@@ -19,7 +19,7 @@ export default async function handler(req, res) {
   price: `Rs. ${(product.variants[0].price / 100).toLocaleString()}`,
 }));
 
-    res.status(200).json(products);
+    res.status(200).json(result.data[0]);
 
   } catch (error) {
     res.status(500).json({

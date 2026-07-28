@@ -1,4 +1,5 @@
 import "../../styles/featuredcollection.css";
+import useProducts from "../../hooks/useProducts";
 
 import ProductCard from "../ui/ProductCard";
 import ExploreCard from "../ui/ExploreCard";
@@ -9,6 +10,10 @@ import gifts from "../../data/gifts";
 
 
 function FeaturedCollection() {
+    const { products, loading, error } = useProducts();
+    if (loading) return <h2>Loading products...</h2>;
+
+if (error) return <h2>{error}</h2>;
 
 return(
 
