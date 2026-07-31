@@ -20,7 +20,7 @@ import "./styles/global.css";
 import "./styles/navbar.css";
 import "./styles/logo.css";
 import "./styles/hero.css";
-import "./styles/featuredCollection.css";
+import "./styles/featuredcollection.css";
 import "./App.css";
 
 function App() {
