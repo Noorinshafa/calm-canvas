@@ -1,138 +1,260 @@
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Link } from "react-router-dom";
-
 import "../../styles/hero.css";
+import { Link } from "react-router-dom";
+import { useEffect, useRef } from "react";
 
-import JewelleryBanner from "../../assets/banners/jewellery-banner.png";
-import AccessoriesBanner from "../../assets/banners/accessories-banner.png";
-import GiftsBanner from "../../assets/banners/gifts-banner.png";
-
-const slides = [
-
-  {
-    image: JewelleryBanner,
-    subtitle: "✦ CALM CANVAS JEWELLERY",
-    title: "Timeless Jewellery",
-    description:
-      "Discover elegant necklaces, bracelets, earrings and rings crafted to make every moment shine beautifully.",
-    button: "Shop Jewellery",
-    link: "/jewellery",
-  },
-
-  {
-    image: AccessoriesBanner,
-    subtitle: "✦ ACCESSORIES",
-    title: "Little Details, Big Charm",
-    description:
-      "Hair bands, bows, clips and charming accessories made to complete every beautiful outfit.",
-    button: "Explore Accessories",
-    link: "/accessories",
-  },
-
-  {
-    image: GiftsBanner,
-    subtitle: "✦ THOUGHTFUL GIFTS",
-    title: "Wrapped With Love",
-    description:
-      "Beautiful gifts carefully selected to celebrate birthdays, anniversaries and unforgettable moments.",
-    button: "Discover Gifts",
-    link: "/gifts",
-  },
-
-];
+import model1 from "../../assets/hero/model1.png";
+import model2 from "../../assets/hero/model2.png";
+import model3 from "../../assets/hero/model3.jpg";
+import model4 from "../../assets/hero/model4.png";
+import model5 from "../../assets/hero/model5.jpg";
 
 function Hero() {
 
-  const [currentSlide, setCurrentSlide] = useState(0);
+  const sceneRef = useRef(null);
 
-  useEffect(() => {
+  const stageRef = useRef(null);
 
-    const interval = setInterval(() => {
+  const animationRef = useRef(null);
 
-      setCurrentSlide((prev) => (prev + 1) % slides.length);
+  const rotationRef = useRef(0);
 
-    }, 5000);
+  const draggingRef = useRef(false);
 
-    return () => clearInterval(interval);
+  const startXRef = useRef(0);
+
+  const velocityRef = useRef(0);
+
+  const cards = [
+
+    {
+      title: "Graphic Tee",
+      image: model1,
+    },
+
+    {
+      title: "Premium Hoodie",
+      image: model2,
+    },
+
+    {
+      title: "Canvas Tote",
+      image: model3,
+    },
+
+    {
+      title: "Coffee Mug",
+      image: model4,
+    },
+
+    {
+      title: "Phone Case",
+      image: model5,
+    },
+
+  ];
+    useEffect(() => {
+
+    const scene = sceneRef.current;
+    const stage = stageRef.current;
+
+    if (!scene || !stage) return;
+
+    const cardElements = scene.querySelectorAll(".orbit-card");
+
+    const total = cardElements.length;
+
+    const radius = 340;
+
+    function updateCards() {
+
+      rotationRef.current += velocityRef.current;
+
+      velocityRef.current *= 0.95;
+
+      rotationRef.current += 0.12;
+
+      cardElements.forEach((card, index) => {
+
+        const angle =
+          (360 / total) * index + rotationRef.current;
+
+        card.style.transform = `
+          rotateY(${angle}deg)
+          translateZ(${radius}px)
+        `;
+
+      });
+
+      animationRef.current =
+        requestAnimationFrame(updateCards);
+
+    }
+
+    updateCards();
+
+    function pointerDown(e) {
+
+      draggingRef.current = true;
+
+      startXRef.current = e.clientX;
+
+      stage.classList.add("grabbing");
+
+    }
+
+    function pointerMove(e) {
+
+      if (!draggingRef.current) return;
+
+      const delta =
+        e.clientX - startXRef.current;
+
+      rotationRef.current += delta * 0.35;
+
+      velocityRef.current = delta * 0.05;
+
+      startXRef.current = e.clientX;
+
+    }
+
+    function pointerUp() {
+
+      draggingRef.current = false;
+
+      stage.classList.remove("grabbing");
+
+    }
+
+    stage.addEventListener("pointerdown", pointerDown);
+
+    window.addEventListener("pointermove", pointerMove);
+
+    window.addEventListener("pointerup", pointerUp);
+
+    return () => {
+
+      cancelAnimationFrame(animationRef.current);
+
+      stage.removeEventListener(
+        "pointerdown",
+        pointerDown
+      );
+
+      window.removeEventListener(
+        "pointermove",
+        pointerMove
+      );
+
+      window.removeEventListener(
+        "pointerup",
+        pointerUp
+      );
+
+    };
 
   }, []);
+    return (
 
-  return (
+    <section className="hero">
 
-    <section className="hero-slider">
+      <div className="hero-background"></div>
 
-      <AnimatePresence initial={false}>
+      <div className="hero-container">
 
-        <motion.div
+        {/* LEFT */}
 
-          key={currentSlide}
+        <div className="hero-left">
 
-          className="hero-slide"
+          <span className="hero-tag">
 
-          initial={{ x: 80, opacity: 0 }}
+            CALM CANVAS
 
-animate={{ x: 0, opacity: 1 }}
+          </span>
 
-exit={{ x: -80, opacity: 0 }}
+          <h1 className="hero-title">
 
-transition={{
-  duration: 1,
-  ease: [0.22, 1, 0.36, 1],
-}}
+            Wear Stories.
 
-        >
+            <br />
 
-          <img
+            Live Beautifully.
 
-            src={slides[currentSlide].image}
+          </h1>
 
-            alt={slides[currentSlide].title}
+          <p className="hero-description">
 
-            className="hero-background"
+            Premium print-on-demand apparel and
+            lifestyle products designed for people
+            who appreciate creativity and timeless
+            aesthetics.
 
-          />
+          </p>
 
-          <div className="hero-overlay"></div>
-
-          <div className="hero-content">
-
-            <span>{slides[currentSlide].subtitle}</span>
-
-            <h1>{slides[currentSlide].title}</h1>
-
-            <p>{slides[currentSlide].description}</p>
+          <div className="hero-buttons">
 
             <Link
-  to={slides[currentSlide].link}
-  className="hero-btn"
->
+              to="/collections"
+              className="hero-btn primary-btn"
+            >
 
-  {slides[currentSlide].button}
+              Shop Collection
 
-</Link>
+            </Link>
+
+            <Link
+              to="/about"
+              className="hero-btn secondary-btn"
+            >
+
+              Discover More
+
+            </Link>
 
           </div>
 
-        </motion.div>
+        </div>
 
-      </AnimatePresence>
+        {/* RIGHT */}
 
-      <div className="hero-dots">
+        <div
+          className="hero-right"
+          ref={stageRef}
+        >
 
-        {slides.map((_, index) => (
+          <div
+            className="orbit-scene"
+            ref={sceneRef}
+          >
 
-          <button
+            {cards.map((card, index) => (
 
-            key={index}
+              <div
+                className="orbit-card"
+                key={index}
+              >
 
-            className={currentSlide === index ? "active" : ""}
+                <div className="card-image">
 
-            onClick={() => setCurrentSlide(index)}
+                  <img
+                    src={card.image}
+                    alt={card.title}
+                  />
 
-          />
+                </div>
 
-        ))}
+                <div className="card-info">
+
+                  <h3>{card.title}</h3>
+
+                </div>
+
+              </div>
+
+            ))}
+
+          </div>
+
+        </div>
 
       </div>
 

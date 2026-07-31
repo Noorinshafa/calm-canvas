@@ -1,160 +1,126 @@
-@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600&display=swap");
-
-/* ===================================
-   FOOTER
-=================================== */
+/*=====================================================
+                    FOOTER
+=====================================================*/
 
 .footer{
 
-    background:#fff8f8;
+    background:#153E3B;
 
-    padding:90px 8% 35px;
+    color:#F8F5EF;
 
-    border-top:1px solid rgba(230,210,215,.6);
+    padding:90px 7% 30px;
+
+    position:relative;
+
+    overflow:hidden;
 
 }
 
-/* ===================================
-   TOP
-=================================== */
 
-.footer-top{
+/*=====================================================
+                CONTAINER
+=====================================================*/
 
-    display:flex;
+.footer-container{
 
-    justify-content:space-between;
+    display:grid;
+
+    grid-template-columns:2fr 1fr 1fr 2fr;
+
+    gap:70px;
 
     align-items:flex-start;
 
-    gap:80px;
-
-    margin-bottom:70px;
-
 }
 
-/* ===================================
-   BRAND
-=================================== */
 
-.footer-brand{
-
-    max-width:380px;
-
-}
+/*=====================================================
+                BRAND
+=====================================================*/
 
 .footer-brand h2{
 
-    font-family:"Cormorant Garamond",serif;
+    font-size:2.8rem;
 
-    font-size:3rem;
+    color:#F8F5EF;
 
-    color:#5f4549;
-
-    margin-bottom:20px;
+    margin-bottom:22px;
 
 }
 
 .footer-brand p{
 
-    font-family:"Manrope",sans-serif;
+    color:rgba(255,255,255,.75);
 
     line-height:1.9;
 
-    color:#8a7378;
+    max-width:380px;
 
 }
 
-/* ===================================
-   LINKS
-=================================== */
+
+/*=====================================================
+                LINKS
+=====================================================*/
 
 .footer-links{
 
     display:flex;
 
-    gap:80px;
-
-}
-
-.footer-links div{
-
-    display:flex;
-
     flex-direction:column;
 
+    gap:14px;
+
 }
 
-.footer-links h4{
+.footer-links h3{
 
-    font-family:"Cormorant Garamond",serif;
+    color:#D68496;
 
-    font-size:1.6rem;
+    margin-bottom:12px;
 
-    color:#62484d;
-
-    margin-bottom:18px;
+    font-size:1.1rem;
 
 }
 
 .footer-links a{
 
+    color:rgba(255,255,255,.8);
+
     text-decoration:none;
 
-    color:#8a7378;
-
-    font-family:"Manrope",sans-serif;
-
-    margin-bottom:12px;
-
-    transition:.35s;
+    transition:.3s;
 
 }
 
 .footer-links a:hover{
 
-    color:#d88da2;
+    color:#fff;
 
-    transform:translateX(6px);
-
-}
-
-/* ===================================
-   NEWSLETTER
-=================================== */
-
-.footer-newsletter{
-
-    text-align:center;
-
-    padding:60px 0;
-
-    border-top:1px solid rgba(235,220,224,.7);
-
-    border-bottom:1px solid rgba(235,220,224,.7);
+    transform:translateX(8px);
 
 }
+
+
+/*=====================================================
+                NEWSLETTER
+=====================================================*/
 
 .footer-newsletter h3{
 
-    font-family:"Cormorant Garamond",serif;
+    color:#D68496;
 
-    font-size:2.6rem;
-
-    color:#5f4549;
+    margin-bottom:18px;
 
 }
 
 .footer-newsletter p{
 
-    margin:18px auto 35px;
-
-    max-width:520px;
-
-    color:#8a7378;
+    color:rgba(255,255,255,.75);
 
     line-height:1.8;
 
-    font-family:"Manrope",sans-serif;
+    margin-bottom:28px;
 
 }
 
@@ -162,111 +128,101 @@
 
     display:flex;
 
-    justify-content:center;
-
-    gap:15px;
-
-    flex-wrap:wrap;
+    gap:12px;
 
 }
 
 .newsletter-box input{
 
-    width:360px;
+    flex:1;
 
-    padding:18px 25px;
+    padding:16px 20px;
 
     border:none;
 
-    border-radius:60px;
-
-    background:white;
-
-    font-size:.95rem;
-
-    font-family:"Manrope",sans-serif;
-
-    box-shadow:0 8px 20px rgba(0,0,0,.05);
-
     outline:none;
+
+    border-radius:50px;
+
+    background:rgba(255,255,255,.08);
+
+    backdrop-filter:blur(16px);
+
+    color:white;
+
+    font-size:1rem;
+
+}
+
+.newsletter-box input::placeholder{
+
+    color:rgba(255,255,255,.55);
 
 }
 
 .newsletter-box button{
 
-    padding:18px 34px;
+    padding:16px 30px;
 
     border:none;
 
-    border-radius:60px;
+    border-radius:50px;
 
-    cursor:pointer;
-
-    font-family:"Manrope",sans-serif;
-
-    font-weight:600;
+    background:#D68496;
 
     color:white;
 
-    background:linear-gradient(
-        135deg,
-        #ef9fb5,
-        #f6b7c9
-    );
+    cursor:pointer;
+
+    font-weight:700;
 
     transition:.35s;
-
-    box-shadow:0 12px 28px rgba(239,159,181,.35);
 
 }
 
 .newsletter-box button:hover{
 
-    transform:translateY(-4px);
+    background:white;
+
+    color:#153E3B;
+
+    transform:translateY(-3px);
 
 }
 
-/* ===================================
-   BOTTOM
-=================================== */
+
+/*=====================================================
+                BOTTOM
+=====================================================*/
 
 .footer-bottom{
 
-    text-align:center;
+    margin-top:70px;
 
-    margin-top:35px;
+    padding-top:25px;
+
+    border-top:1px solid rgba(255,255,255,.1);
+
+    text-align:center;
 
 }
 
 .footer-bottom p{
 
-    color:#9a868a;
-
-    font-family:"Manrope",sans-serif;
-
-    font-size:.9rem;
+    color:rgba(255,255,255,.6);
 
 }
 
-/* ===================================
-   RESPONSIVE
-=================================== */
+
+/*=====================================================
+                RESPONSIVE
+=====================================================*/
 
 @media(max-width:1000px){
 
-.footer-top{
+.footer-container{
 
-    flex-direction:column;
-
-    gap:50px;
-
-}
-
-.footer-links{
-
-    width:100%;
-
-    justify-content:space-between;
+grid-template-columns:1fr 1fr;
 
 }
 
@@ -274,85 +230,36 @@
 
 @media(max-width:700px){
 
-.footer-links{
+.footer{
 
-    flex-direction:column;
-
-    gap:35px;
+padding:70px 5% 25px;
 
 }
 
-.newsletter-box input{
+.footer-container{
 
-    width:100%;
+grid-template-columns:1fr;
+
+gap:50px;
 
 }
 
 .newsletter-box{
 
-    flex-direction:column;
+flex-direction:column;
 
 }
 
 .newsletter-box button{
 
-    width:100%;
+width:100%;
 
 }
 
 .footer-brand h2{
 
-    font-size:2.4rem;
+font-size:2.2rem;
 
 }
 
-.footer-newsletter h3{
-
-    font-size:2rem;
-
-}
-
-}
-.footer a{
-
-    text-decoration:none;
-
-    color:inherit;
-
-    transition:.3s;
-}
-
-.footer a:hover{
-
-    color:#d69a57;
-}
-
-.footer-column ul{
-
-    list-style:none;
-
-    padding:0;
-}
-
-.footer-column li{
-
-    margin-bottom:15px;
-
-    cursor:pointer;
-}
-
-.footer-column li:hover{
-
-    color:#d69a57;
-}
-
-.footer-links span{
-
-    color:#8a7378;
-
-    font-family:"Manrope",sans-serif;
-
-    margin-bottom:12px;
-
-    display:block;
 }

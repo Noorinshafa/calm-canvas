@@ -1,0 +1,321 @@
+/* ===========================
+   GOOGLE FONTS
+=========================== */
+
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@300;400;500;600;700&display=swap");
+
+
+/* ===========================
+   ROOT VARIABLES
+=========================== */
+
+:root{
+
+  /* Brand Palette */
+
+  --forest:#143C35;
+  --teal:#136E6E;
+  --mauve:#95627F;
+  --rose:#D67A9B;
+  --blush:#E7D8E2;
+
+  --cream:#FAF8F6;
+  --white:#ffffff;
+
+  /* Text */
+
+  --heading:var(--forest);
+  --text:#35504B;
+  --muted:#7B7B7B;
+
+  /* Fonts */
+
+  --font-heading:"Cormorant Garamond",serif;
+  --font-body:"Inter",sans-serif;
+
+  /* Radius */
+
+  --radius-sm:14px;
+  --radius-md:22px;
+  --radius-lg:34px;
+
+  /* Shadows */
+
+  --shadow-sm:
+  0 10px 25px rgba(0,0,0,.05);
+
+  --shadow-md:
+  0 18px 45px rgba(0,0,0,.08);
+
+  --shadow-lg:
+  0 30px 70px rgba(0,0,0,.10);
+
+  /* Transition */
+
+  --transition:.35s ease;
+
+}
+
+
+/* ===========================
+   GLOBAL RESET
+=========================== */
+
+*{
+
+margin:0;
+padding:0;
+box-sizing:border-box;
+
+}
+
+
+html{
+
+scroll-behavior:smooth;
+
+}
+
+
+body{
+
+font-family:var(--font-body);
+
+background:var(--cream);
+
+color:var(--text);
+
+overflow-x:hidden;
+
+}
+
+
+/* ===========================
+   CONTAINER
+=========================== */
+
+.container{
+
+width:min(1240px,92%);
+margin:auto;
+
+}
+
+
+/* ===========================
+   HEADINGS
+=========================== */
+
+h1,
+h2,
+h3,
+h4{
+
+font-family:var(--font-heading);
+
+color:var(--heading);
+
+font-weight:600;
+
+line-height:1.1;
+
+}
+
+
+h1{
+
+font-size:72px;
+
+}
+
+
+h2{
+
+font-size:52px;
+
+}
+
+
+h3{
+
+font-size:34px;
+
+}
+
+
+p{
+
+font-size:17px;
+
+line-height:1.8;
+
+color:var(--text);
+
+}
+
+
+/* ===========================
+   LINKS
+=========================== */
+
+a{
+
+text-decoration:none;
+
+color:inherit;
+
+}
+
+
+/* ===========================
+   BUTTON
+=========================== */
+
+.primary-btn{
+
+display:inline-flex;
+
+align-items:center;
+
+justify-content:center;
+
+padding:16px 34px;
+
+background:linear-gradient(
+135deg,
+var(--forest),
+var(--teal)
+);
+
+color:white;
+
+border-radius:999px;
+
+font-weight:600;
+
+transition:var(--transition);
+
+box-shadow:var(--shadow-md);
+
+}
+
+
+.primary-btn:hover{
+
+transform:translateY(-4px);
+
+box-shadow:var(--shadow-lg);
+
+}
+
+
+/* ===========================
+   SECTION
+=========================== */
+
+section{
+
+padding:110px 0;
+
+}
+
+
+/* ===========================
+   IMAGE
+=========================== */
+
+img{
+
+display:block;
+
+width:100%;
+
+}
+
+
+/* ===========================
+   CARD
+=========================== */
+
+.card{
+
+background:white;
+
+border-radius:28px;
+
+box-shadow:var(--shadow-sm);
+
+transition:var(--transition);
+
+}
+
+
+.card:hover{
+
+transform:translateY(-8px);
+
+box-shadow:var(--shadow-lg);
+
+}
+
+
+/* ===========================
+   ANIMATIONS
+=========================== */
+
+@keyframes float{
+
+0%{
+
+transform:translateY(0px);
+
+}
+
+50%{
+
+transform:translateY(-18px);
+
+}
+
+100%{
+
+transform:translateY(0px);
+
+}
+
+}
+
+
+@keyframes fadeUp{
+
+from{
+
+opacity:0;
+
+transform:translateY(40px);
+
+}
+
+to{
+
+opacity:1;
+
+transform:translateY(0);
+
+}
+
+}
+
+
+.float{
+
+animation:float 5s ease-in-out infinite;
+
+}
+
+
+.fade-up{
+
+animation:fadeUp .9s ease forwards;
+
+}

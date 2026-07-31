@@ -1,33 +1,31 @@
-/* ===================================
-   HERO SLIDER
-=================================== */
+/*=====================================================
+                HERO SECTION
+=====================================================*/
 
-.hero-slider{
+.hero{
 
     position:relative;
 
-    width:100%;
-    height:100vh;
+    min-height:100vh;
 
     overflow:hidden;
 
-}
+    background:#153E3B;
 
-/* ===================================
-   SLIDE
-=================================== */
+    display:flex;
 
-.hero-slide{
+    align-items:center;
 
-    position:absolute;
+    color:#F8F5EF;
 
-    inset:0;
+    padding:0 7%;
 
 }
 
-/* ===================================
-   BACKGROUND
-=================================== */
+
+/*=====================================================
+                BACKGROUND
+=====================================================*/
 
 .hero-background{
 
@@ -35,188 +33,538 @@
 
     inset:0;
 
+    background:
+
+    radial-gradient(circle at 80% 15%,
+    rgba(214,132,150,.18),
+    transparent 35%),
+
+    radial-gradient(circle at 20% 90%,
+    rgba(255,255,255,.05),
+    transparent 40%);
+
+    pointer-events:none;
+
+}
+
+
+/*=====================================================
+                LAYOUT
+=====================================================*/
+
+.hero-container{
+
     width:100%;
-    height:100%;
 
-    object-fit:cover;
+    display:grid;
 
-}
-
-/* ===================================
-   OVERLAY
-=================================== */
-
-.hero-overlay{
-
-    position:absolute;
-
-    inset:0;
-
-    background:linear-gradient(
-        rgba(0,0,0,.30),
-        rgba(0,0,0,.30)
-    );
-
-}
-
-/* ===================================
-   CONTENT
-=================================== */
-
-.hero-content{
-
-    position:absolute;
-
-    left:50%;
-    top:55%;
-
-    transform:translate(-50%,-50%);
-
-    width:min(700px,90%);
-
-    display:flex;
-
-    flex-direction:column;
+    grid-template-columns:45% 55%;
 
     align-items:center;
 
-    text-align:center;
+    gap:30px;
 
-    color:white;
-
-    z-index:5;
-
-}
-
-.hero-content span{
-
-    letter-spacing:4px;
-
-    font-size:.95rem;
-
-    font-weight:700;
-
-    margin-bottom:20px;
-
-}
-
-.hero-content h1{
-
-    font-family:"Cormorant Garamond",serif;
-
-    font-size:5.5rem;
-
-    font-weight:600;
-
-    margin-bottom:25px;
-
-}
-
-.hero-content p{
-
-    font-size:1.1rem;
-
-    line-height:1.9;
-
-    margin-bottom:35px;
-
-    max-width:580px;
-
-}
-
-/* ===================================
-   BUTTON
-=================================== */
-
-.hero-btn{
-
-    display:inline-flex;
-
-    justify-content:center;
-    align-items:center;
-
-    text-decoration:none;
-
-    padding:16px 40px;
-
-    border-radius:50px;
-
-    background:#ffffff;
-
-    color:#6b5559;
-
-    font-weight:600;
-
-    transition:.35s;
-
-    cursor:pointer;
-
-}
-
-.hero-btn:hover{
-
-    transform:translateY(-4px);
-
-    background:#f7d7df;
-
-    color:#d69a57;
-
-}
-
-.hero-content button:hover{
-
-    transform:translateY(-4px);
-
-    background:#efc5d2;
-
-}
-
-/* ===================================
-   DOTS
-=================================== */
-
-.hero-dots{
-
-    position:absolute;
-
-    bottom:40px;
-
-    left:50%;
-
-    transform:translateX(-50%);
-
-    display:flex;
-
-    gap:12px;
+    position:relative;
 
     z-index:10;
 
 }
 
-.hero-dots button{
 
-    width:12px;
+/*=====================================================
+                LEFT SIDE
+=====================================================*/
 
-    height:12px;
+.hero-left{
 
-    border-radius:50%;
+    position:relative;
 
-    border:none;
-
-    background:rgba(255,255,255,.5);
-
-    cursor:pointer;
-
-    transition:.3s;
+    z-index:100;
 
 }
 
-.hero-dots button.active{
 
-    width:34px;
+.hero-tag{
+
+    display:inline-block;
+
+    color:#D68496;
+
+    font-size:.9rem;
+
+    letter-spacing:4px;
+
+    text-transform:uppercase;
+
+    font-weight:700;
+
+    margin-bottom:28px;
+
+}
+
+
+.hero-title{
+
+    font-size:6rem;
+
+    line-height:.9;
+
+    font-weight:800;
+
+    color:#F8F5EF;
+
+    letter-spacing:-4px;
+
+    max-width:650px;
+
+}
+
+
+.hero-description{
+
+    margin-top:30px;
+
+    max-width:520px;
+
+    color:#D7D7D7;
+
+    line-height:1.9;
+
+    font-size:1.05rem;
+
+}
+
+
+/*=====================================================
+                BUTTONS
+=====================================================*/
+
+.hero-buttons{
+
+    display:flex;
+
+    gap:18px;
+
+    margin-top:45px;
+
+}
+
+
+.hero-btn{
+
+    text-decoration:none;
+
+    padding:18px 36px;
+
+    border-radius:100px;
+
+    font-weight:700;
+
+    transition:.35s;
+
+}
+
+
+.primary-btn{
+
+    background:#D68496;
+
+    color:#fff;
+
+    box-shadow:
+
+    0 18px 40px rgba(214,132,150,.35);
+
+}
+
+
+.primary-btn:hover{
+
+    transform:translateY(-5px);
+
+}
+
+
+.secondary-btn{
+
+    color:#F8F5EF;
+
+    border:1px solid rgba(255,255,255,.22);
+
+    background:rgba(255,255,255,.05);
+
+    backdrop-filter:blur(14px);
+
+}
+
+
+.secondary-btn:hover{
+
+    background:#ffffff;
+
+    color:#153E3B;
+
+}
+/*=====================================================
+                    RIGHT SIDE
+=====================================================*/
+
+.hero-right{
+
+    position:relative;
+
+    height:760px;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    perspective:2200px;
+
+}
+
+
+/*=====================================================
+                    ORBIT SCENE
+=====================================================*/
+
+.orbit-scene{
+
+    position:relative;
+
+    width:700px;
+
+    height:700px;
+
+    transform-style:preserve-3d;
+
+}
+
+
+/*=====================================================
+                    ORBIT CARD
+=====================================================*/
+
+.orbit-card{
+
+    position:absolute;
+
+    top:50%;
+
+    left:50%;
+
+    width:230px;
+
+    height:450px;
+
+    margin-left:-130px;
+
+    margin-top:-260px;
+
+    transform-style:preserve-3d;
+
+    transition:s
+
+        transform .25s linear,
+
+        opacity .25s linear,
+
+        box-shadow .35s;
+
+}
+
+
+/*=====================================================
+                    IMAGE
+=====================================================*/
+
+.card-image{
+
+    width:100%;
+
+    height:100%;
+
+    border-radius:34px;
+
+    overflow:hidden;
+
+    background:white;
+
+    box-shadow:
+
+        0 40px 80px rgba(0,0,0,.22),
+
+        0 12px 25px rgba(0,0,0,.12);
+
+}
+
+
+.card-image img{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+
+    transition:transform .5s;
+
+}
+
+
+/*=====================================================
+                    LABEL
+=====================================================*/
+
+.card-info{
+
+    position:absolute;
+
+    left:18px;
+
+    right:18px;
+
+    bottom:18px;
+
+    padding:10px;
 
     border-radius:20px;
 
-    background:white;
+    backdrop-filter:blur(18px);
+
+    background:rgba(255,255,255,.72);
+
+    text-align:center;
+
+    color:#143E3B;
+
+    font-weight:700;
+
+    box-shadow:
+
+        0 10px 30px rgba(0,0,0,.10);
+
+}
+
+
+.card-info h3{
+
+    font-size:1rem;
+
+    margin:0;
+
+}
+
+
+
+/*=====================================================
+                GLOW
+=====================================================*/
+
+.hero-right::before{
+
+    content:"";
+
+    position:absolute;
+
+    width:600px;
+
+    height:600px;
+
+    border-radius:50%;
+
+    background:
+
+    radial-gradient(circle,
+
+    rgba(214,132,150,.20),
+
+    rgba(214,132,150,.06),
+
+    transparent 72%);
+
+    filter:blur(45px);
+
+    z-index:-1;
+
+}
+
+
+/*=====================================================
+                FLOAT
+=====================================================*/
+
+.orbit-card{
+
+    animation:floatCard 7s ease-in-out infinite;
+
+}
+
+.orbit-card:nth-child(2){
+
+animation-delay:.6s;
+
+}
+
+.orbit-card:nth-child(3){
+
+animation-delay:1.2s;
+
+}
+
+.orbit-card:nth-child(4){
+
+animation-delay:1.8s;
+
+}
+
+.orbit-card:nth-child(5){
+
+animation-delay:2.4s;
+
+}
+
+
+@keyframes floatCard{
+
+0%{
+
+translate:0 0;
+
+}
+
+50%{
+
+translate:0 -16px;
+
+}
+
+100%{
+
+translate:0 0;
+
+}
+
+}
+
+
+/*=====================================================
+                RESPONSIVE
+=====================================================*/
+
+@media(max-width:1250px){
+
+.hero-container{
+
+grid-template-columns:1fr;
+
+}
+
+.hero-left{
+
+text-align:center;
+
+}
+
+.hero-description{
+
+margin-inline:auto;
+
+}
+
+.hero-buttons{
+
+justify-content:center;
+
+}
+
+.hero-right{
+
+margin-top:50px;
+
+height:620px;
+
+}
+
+.hero-title{
+
+font-size:4.8rem;
+
+}
+
+}
+
+
+@media(max-width:768px){
+
+.hero{
+
+padding:90px 5%;
+
+}
+
+.hero-title{
+
+font-size:3.2rem;
+
+letter-spacing:-2px;
+
+}
+
+.hero-description{
+
+font-size:1rem;
+
+}
+
+.hero-buttons{
+
+flex-direction:column;
+
+align-items:center;
+
+}
+
+.hero-btn{
+
+width:220px;
+
+text-align:center;
+
+}
+
+.hero-right{
+
+height:420px;
+
+}
+
+.orbit-scene{
+
+width:340px;
+
+height:340px;
+
+}
+
+.orbit-card{
+
+width:150px;
+
+height:290px;
+
+margin-left:-75px;
+
+margin-top:-145px;
+
+}
+
+.card-info{
+
+display:none;
+
+}
 
 }

@@ -1,23 +1,15 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Routes, Route } from "react-router-dom";
 
-import ScrollToTop from "./components/ScrollToTop";
-
 import Navbar from "./components/layout/Navbar";
+
 import Hero from "./components/sections/Hero";
 import FeaturedCollection from "./components/sections/FeaturedCollection";
 import ParallaxBanner from "./components/sections/ParallaxBanner";
+import ShopCategories from "./components/sections/ShopCategories";
 import Footer from "./components/sections/Footer";
 
-import Collections from "./components/pages/Collections";
-import About from "./components/pages/About";
-import Contact from "./components/pages/Contact";
-
-import ProductDetails from "./components/pages/ProductDetails";
-import Cart from "./components/pages/Cart";
-import Checkout from "./components/pages/Checkout";
-import OrderSuccess from "./components/pages/OrderSuccess";
-
+import CollectionPage from "./components/common/CollectionPage";
 import Tshirts from "./components/pages/collections/Tshirts";
 import Hoodies from "./components/pages/collections/Hoodies";
 import Totebags from "./components/pages/collections/Totebags";
@@ -28,6 +20,7 @@ import "./styles/global.css";
 import "./styles/navbar.css";
 import "./styles/logo.css";
 import "./styles/hero.css";
+import "./styles/featuredCollection.css";
 import "./App.css";
 
 function App() {
@@ -54,68 +47,55 @@ function App() {
 
       <Navbar />
 
-      <ScrollToTop />
-
       <Routes>
+
+        {/* ================= HOME ================= */}
 
         <Route
           path="/"
           element={
             <>
               <Hero />
-
               <FeaturedCollection />
-
-              {!isMobile && <ParallaxBanner />}
+              <ParallaxBanner/>
+              <ShopCategories />
+              <Footer/>
             </>
           }
         />
 
-        <Route path="/collections" element={<Collections />} />
-
-        <Route path="/tshirts" element={<Tshirts />} />
-
-        <Route path="/hoodies" element={<Hoodies />} />
-
-        <Route path="/totebags" element={<Totebags />} />
-
-        <Route path="/phonecases" element={<PhoneCases />} />
-
-        <Route path="/mugs" element={<Mugs />} />
+        {/* ================= COLLECTIONS ================= */}
 
         <Route
-          path="/product/:id"
-          element={<ProductDetails />}
+          path="/tshirts"
+          element={<Tshirts />}
         />
 
         <Route
-          path="/cart"
-          element={<Cart />}
+          path="/hoodies"
+          element={<Hoodies />}
         />
 
         <Route
-          path="/checkout"
-          element={<Checkout />}
+          path="/totebags"
+          element={<Totebags />}
         />
 
         <Route
-          path="/order-success"
-          element={<OrderSuccess />}
+          path="/phonecases"
+          element={<PhoneCases />}
         />
 
         <Route
-          path="/about"
-          element={<About />}
+          path="/mugs"
+          element={<Mugs />}
         />
-
         <Route
-          path="/contact"
-          element={<Contact />}
-        />
+  path="/collections"
+  element={<CollectionPage />}
+/>
 
       </Routes>
-
-      <Footer />
 
     </div>
 

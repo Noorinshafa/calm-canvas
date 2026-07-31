@@ -1,0 +1,23 @@
+:root {
+
+  /* Brand Colors */
+  --forest: #143C35;
+  --teal: #136E6E;
+  --mauve: #95627F;
+  --lotus: #D67A9B;
+  --blush: #D8C2D0;
+
+  /* Backgrounds */
+  --background: #FCFAF9;
+  --surface: #FFFFFF;
+
+  /* Text */
+  --text-dark: #143C35;
+  --text-light: #666666;
+
+  /* Effects */
+  --radius: 18px;
+  --shadow: 0 15px 40px rgba(0,0,0,0.08);
+  --transition: 0.3s ease;
+
+}

@@ -1,79 +1,90 @@
-import { Link } from "react-router-dom";
 import "../../styles/footer.css";
+import { Link } from "react-router-dom";
 
 function Footer() {
   return (
     <footer className="footer">
 
-      <div className="footer-top">
+      <div className="footer-container">
 
-        {/* Brand */}
+        {/* LEFT */}
 
         <div className="footer-brand">
 
-          <h2>✿ Calm Canvas</h2>
+          <h2>Calm Canvas</h2>
 
           <p>
-            Elegant jewellery, charming accessories,
-            and thoughtful gifts crafted to make every
-            moment beautiful.
+            Art made for everyday living.
+            Premium print-on-demand products
+            designed to inspire creativity.
           </p>
 
         </div>
 
-        {/* Links */}
+
+        {/* SHOP */}
 
         <div className="footer-links">
 
-          {/* Shop */}
+          <h3>Shop</h3>
 
-          <div>
+          <Link to="/hoodies">Hoodies</Link>
 
-            <h4>Shop</h4>
+          <Link to="/tshirts">T-Shirts</Link>
 
-            <Link to="/jewellery">
-              Jewellery
-            </Link>
+          <Link to="/sweatshirts">Sweatshirts</Link>
 
-            <Link to="/accessories">
-              Accessories
-            </Link>
+          <Link to="/mugs">Mugs</Link>
 
-            <Link to="/gifts">
-              Gifts
-            </Link>
+          <Link to="/phonecases">Phone Cases</Link>
 
-          </div>
+          <Link to="/totebags">Tote Bags</Link>
 
-          {/* Support */}
+        </div>
 
-          <div>
 
-            <h4>Support</h4>
+        {/* COMPANY */}
 
-            <span>Shipping</span>
+        <div className="footer-links">
 
-            <span>Returns</span>
+          <h3>Company</h3>
 
-            <span>FAQ</span>
+          <a href="#">About</a>
 
-          </div>
+          <a href="#">Contact</a>
 
-          {/* Company */}
+          <a href="#">FAQs</a>
 
-          <div>
+          <a href="#">Shipping</a>
 
-            <h4>Company</h4>
+          <a href="#">Returns</a>
 
-            <Link to="/about">
-              About
-            </Link>
+        </div>
 
-            <Link to="/contact">
-              Contact
-            </Link>
 
-            <span>Privacy</span>
+        {/* NEWSLETTER */}
+
+        <div className="footer-newsletter">
+
+          <h3>Stay Inspired</h3>
+
+          <p>
+            Join our newsletter for new
+            collections and exclusive offers.
+          </p>
+
+          <div className="newsletter-box">
+
+            <input
+              type="email"
+              placeholder="Your email"
+            />
+
+            <button>
+
+              Join
+
+            </button>
 
           </div>
 
@@ -81,38 +92,13 @@ function Footer() {
 
       </div>
 
-      {/* Newsletter */}
-
-      <div className="footer-newsletter">
-
-        <h3>Join Our Newsletter</h3>
-
-        <p>
-          Be the first to discover new collections,
-          exclusive offers and special surprises.
-        </p>
-
-        <div className="newsletter-box">
-
-          <input
-            type="email"
-            placeholder="Enter your email"
-          />
-
-          <button>
-            Subscribe
-          </button>
-
-        </div>
-
-      </div>
-
-      {/* Bottom */}
 
       <div className="footer-bottom">
 
         <p>
-          © {new Date().getFullYear()} Calm Canvas. Crafted with love.
+
+          © 2026 Calm Canvas. All rights reserved.
+
         </p>
 
       </div>

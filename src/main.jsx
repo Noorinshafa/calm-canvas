@@ -6,6 +6,7 @@ import { Toaster } from "react-hot-toast";
 
 
 import "./styles/global.css";
+import "./styles/theme.css";
 import App from "./App";
 
 createRoot(document.getElementById("root")).render(

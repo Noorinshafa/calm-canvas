@@ -1,8 +1,7 @@
-import "../../styles/parallaxbanner.css";
-
+import "../../styles/parallaxBanner.css";
 import { Link } from "react-router-dom";
 
-import Banner from "../../assets/banners/gifts-banner.png";
+import banner from "../../assets/parallax/parallax banner.png";
 
 function ParallaxBanner() {
 
@@ -10,33 +9,33 @@ function ParallaxBanner() {
 
     <section
       className="parallax-banner"
-      style={{ backgroundImage: `url(${Banner})` }}
+      style={{
+        backgroundImage: `url(${banner})`,
+      }}
     >
 
       <div className="parallax-overlay">
 
-        <div className="parallax-content">
+        <span>CALM CANVAS</span>
 
-          <span>✦ CALM CANVAS</span>
+        <h2>
+          Wear Art.
+          <br />
+          Live Beautifully.
+        </h2>
 
-          <h2>
-            Crafted With Love
-          </h2>
+        <p>
+          Every design tells a story. Discover premium
+          apparel and accessories created to inspire
+          your everyday moments.
+        </p>
 
-          <p>
-            Every piece at Calm Canvas is thoughtfully
-            selected to bring beauty, elegance and
-            a little happiness into your everyday life.
-          </p>
-
-          <Link
-            to="/collections"
-            className="parallax-btn"
-          >
-            Explore Collections →
-          </Link>
-
-        </div>
+        <Link
+          to="/collections"
+          className="parallax-btn"
+        >
+          Explore Collection
+        </Link>
 
       </div>
 
