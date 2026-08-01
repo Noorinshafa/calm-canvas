@@ -1,4 +1,4 @@
-import "../../styles/collectionPage.css";
+import "../../styles/collectionpage.css";
 import { Link } from "react-router-dom";
 
 import hoodies from "../../assets/categories/hoodies.png";
