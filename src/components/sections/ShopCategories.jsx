@@ -1,4 +1,4 @@
-import "../../styles/shopcategories.css";
+import "../../styles/shopCategories.css";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
