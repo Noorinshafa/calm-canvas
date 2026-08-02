@@ -15,24 +15,35 @@ function Hoodies() {
 
   return (
 
-    <section className="collection-page">
+   <section className="collection-page">
 
-      <h1>Hoodies</h1>
+    <div className="collection-header">
 
-      <div className="products-grid">
+        <span>CALM CANVAS</span>
+
+        <h1>Hoodies</h1>
+
+        <p>
+            Discover premium oversized hoodies designed for comfort,
+            elegance and everyday style.
+        </p>
+
+    </div>
+
+    <div className="products-grid">
 
         {hoodies.map(product => (
 
-          <ProductCard
-            key={product.id}
-            {...product}
-          />
+            <ProductCard
+                key={product.id}
+                {...product}
+            />
 
         ))}
 
-      </div>
+    </div>
 
-    </section>
+</section>
 
   );
 

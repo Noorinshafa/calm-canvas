@@ -15,9 +15,18 @@ export default async function handler(req, res) {
   id: product.id,
   title: product.title,
   description: product.description,
+
   image: product.images[0]?.src,
+
+  images: product.images.map((img) => ({
+    src: img.src,
+  })),
+
   price: `Rs. ${(product.variants[0].price / 100).toLocaleString()}`,
+
   blueprint_id: product.blueprint_id,
+
+  variants: product.variants,
 }));
 
 res.status(200).json(products);

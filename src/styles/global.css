@@ -38,3 +38,94 @@ a{
 section{
     width:100%;
 }
+/* ==========================================
+        PRODUCTS GRID
+========================================== */
+
+.products-grid{
+
+    max-width:1500px;
+
+    margin:60px auto 0;
+
+    display:grid;
+
+    grid-template-columns:repeat(3,minmax(300px,1fr));
+
+    gap:40px;
+
+    justify-items:center;
+
+}
+
+.collection-page{
+
+    padding:140px 6%;
+
+    background:#F8F5EF;
+
+    min-height:100vh;
+
+}
+
+.collection-page h1{
+
+    text-align:center;
+
+    font-size:4rem;
+
+    margin-bottom:20px;
+
+    color:#153E3B;
+
+    font-family:"Cormorant Garamond",serif;
+
+}
+
+.collection-page p{
+
+    text-align:center;
+
+    color:#666;
+
+    margin-bottom:50px;
+
+}
+
+/* Tablet */
+
+@media(max-width:1100px){
+
+.products-grid{
+
+grid-template-columns:repeat(2,1fr);
+
+}
+
+}
+
+/* Mobile */
+
+@media(max-width:768px){
+
+.products-grid{
+
+grid-template-columns:1fr;
+
+gap:30px;
+
+}
+
+.collection-page{
+
+padding:110px 5%;
+
+}
+
+.collection-page h1{
+
+font-size:2.8rem;
+
+}
+
+}

@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
 import useProducts from "../../hooks/useProducts";
@@ -20,6 +21,17 @@ function ProductDetails() {
   const product = products.find(
     item => item.id === id
   );
+  const [selectedImage, setSelectedImage] = useState("");
+
+useEffect(() => {
+
+  if (product) {
+
+    setSelectedImage(product.image);
+
+  }
+
+}, [product]);
 
   if (loading) {
 
@@ -55,13 +67,34 @@ function ProductDetails() {
 
           <div className="details-image">
 
-            <img
-              className="details-image-img"
-              src={product.image}
-              alt={product.title}
-            />
+  <div className="image-gallery">
 
-          </div>
+    <div className="thumbnail-column">
+
+      <img
+        className={`thumbnail ${
+          selectedImage === product.image ? "active" : ""
+        }`}
+        src={product.image}
+        alt={product.title}
+        onClick={() => setSelectedImage(product.image)}
+      />
+
+    </div>
+
+    <div className="main-image">
+
+      <img
+        className="details-image-img"
+        src={selectedImage}
+        alt={product.title}
+      />
+
+    </div>
+
+  </div>
+
+</div>
 
           <div className="product-info">
 

@@ -262,4 +262,73 @@
     }
 
 }
+/*======================================
+            IMAGE GALLERY
+======================================*/
+
+.image-gallery{
+
+    display:flex;
+
+    gap:25px;
+
+    align-items:flex-start;
+
+}
+
+.thumbnail-column{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:18px;
+
+}
+
+.thumbnail{
+
+    width:90px;
+
+    height:90px;
+
+    object-fit:cover;
+
+    border-radius:18px;
+
+    cursor:pointer;
+
+    border:2px solid transparent;
+
+    transition:.3s;
+
+}
+
+.thumbnail:hover{
+
+    border-color:#D68496;
+
+}
+
+.thumbnail.active{
+
+    border-color:#153E3B;
+
+}
+
+.main-image{
+
+    flex:1;
+
+}
+
+.details-image-img{
+
+    width:100%;
+
+    border-radius:28px;
+
+    display:block;
+
+}
 
