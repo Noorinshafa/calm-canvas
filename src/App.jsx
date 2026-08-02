@@ -8,6 +8,8 @@ import FeaturedCollection from "./components/sections/FeaturedCollection";
 import ParallaxBanner from "./components/sections/ParallaxBanner";
 import ShopCategories from "./components/sections/ShopCategories";
 import Footer from "./components/sections/Footer";
+import ProductDetails from "./components/pages/ProductDetails";
+import Checkout from "./components/pages/Checkout";
 
 import CollectionPage from "./components/common/CollectionPage";
 import Tshirts from "./components/pages/collections/Tshirts";
@@ -93,6 +95,14 @@ function App() {
         <Route
   path="/collections"
   element={<CollectionPage />}
+/>
+<Route
+  path="/product/:id"
+  element={<ProductDetails />}
+/>
+<Route
+  path="/checkout"
+  element={<Checkout />}
 />
 
       </Routes>

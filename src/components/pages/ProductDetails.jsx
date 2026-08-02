@@ -1,62 +1,51 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
+import useProducts from "../../hooks/useProducts";
 import toast from "react-hot-toast";
 
 import "../../styles/productdetails.css";
 
 import ProductCard from "../ui/ProductCard";
 
-import jewellery from "../../data/jewellery";
-import accessories from "../../data/accessories";
-import gifts from "../../data/gifts";
-
 function ProductDetails() {
 
   const { id } = useParams();
+
   const navigate = useNavigate();
+
   const { addToCart } = useCart();
 
-  const allProducts = [
-    ...jewellery,
-    ...accessories,
-    ...gifts,
-  ];
+  const { products, loading, error } = useProducts();
 
-  const product = allProducts.find(
-    (item) => item.id === id
+  const product = products.find(
+    item => item.id === id
   );
 
-  if (!product) {
-    return (
-      <section className="product-details">
-        <div className="product-container">
-          <h1>Product not found.</h1>
-        </div>
-      </section>
-    );
+  if (loading) {
+
+    return <h2>Loading...</h2>;
+
   }
 
-  let currentCategory = [];
+  if (error) {
 
-if (jewellery.find(item => item.id === product.id)) {
+    return <h2>{error}</h2>;
 
-  currentCategory = jewellery;
+  }
 
-} else if (accessories.find(item => item.id === product.id)) {
+  if (!product) {
 
-  currentCategory = accessories;
+    return <h2>Product not found.</h2>;
 
-} else if (gifts.find(item => item.id === product.id)) {
+  }
 
-  currentCategory = gifts;
-
-}
-
-const relatedProducts = currentCategory
-  .filter(item => item.id !== product.id)
-  .slice(0, 4);
-
-  return (
+  const relatedProducts = products
+    .filter(item =>
+      item.blueprint_id === product.blueprint_id &&
+      item.id !== product.id
+    )
+    .slice(0, 4);
+      return (
 
     <>
 
@@ -86,7 +75,11 @@ const relatedProducts = currentCategory
 
             <h2>{product.price}</h2>
 
-            <p>{product.description}</p>
+            <p
+              dangerouslySetInnerHTML={{
+                __html: product.description,
+              }}
+            />
 
             <div className="product-buttons">
 
@@ -146,7 +139,7 @@ const relatedProducts = currentCategory
 
         <div className="related-grid">
 
-          {relatedProducts.map((item) => (
+          {relatedProducts.map(item => (
 
             <ProductCard
               key={item.id}
@@ -158,8 +151,7 @@ const relatedProducts = currentCategory
         </div>
 
       </section>
-
-    </>
+          </>
 
   );
 

@@ -226,3 +226,32 @@
     min-height:45px;
 
 }
+.view-details-btn{
+
+    margin-top:20px;
+
+    display:block;
+
+    text-align:center;
+
+    padding:12px;
+
+    background:#d88da2;
+
+    color:white;
+
+    border-radius:14px;
+
+    text-decoration:none;
+
+    font-weight:600;
+
+    transition:.3s;
+
+}
+
+.view-details-btn:hover{
+
+    background:#c97891;
+
+}
