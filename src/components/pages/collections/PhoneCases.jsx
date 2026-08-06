@@ -17,7 +17,17 @@ function PhoneCases() {
 
     <section className="collection-page">
 
-      <h1>Phone Cases</h1>
+      <div className="collection-header">
+
+        <span>CALM CANVAS COLLECTION</span>
+
+<h1>Protection Meets Style</h1>
+
+<p>
+Premium phone cases that combine everyday protection with artistic designs you'll enjoy carrying everywhere.
+</p>
+
+    </div>
 
       <div className="products-grid">
 

@@ -5,18 +5,21 @@ function ProductCard({ id, image, title, price }) {
   return (
     <div className="product-wrapper">
 
-      <Link
-        to={`/product/${id}`}
-        className="product-card"
-      >
-        <div className="card-glow"></div>
+      <div className="product-card">
 
-        <div className="product-image">
-          <img
-            src={image}
-            alt={title}
-          />
-        </div>
+        <Link
+          to={`/product/${id}`}
+          className="product-image"
+        >
+          {image && (
+            <img
+              src={image}
+              alt={title}
+              loading="lazy"
+              decoding="async"
+            />
+          )}
+        </Link>
 
         <div className="product-content">
 
@@ -24,16 +27,16 @@ function ProductCard({ id, image, title, price }) {
 
           <span>{price}</span>
 
+          <Link
+            to={`/product/${id}`}
+            className="view-details-btn"
+          >
+            View Details
+          </Link>
+
         </div>
 
-      </Link>
-
-      <Link
-        to={`/product/${id}`}
-        className="view-details-btn"
-      >
-        View Details
-      </Link>
+      </div>
 
     </div>
   );

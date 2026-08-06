@@ -2,11 +2,11 @@ import "../../styles/featuredcollection.css";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 
-import model1 from "../../assets/hero/model1.png";
-import model2 from "../../assets/hero/model2.png";
-import model3 from "../../assets/hero/model3.jpg";
-import model4 from "../../assets/hero/model4.png";
-import model5 from "../../assets/hero/model5.jpg";
+import model1 from "../../assets/hero/model1.webp";
+import model2 from "../../assets/hero/model2.webp";
+import model3 from "../../assets/hero/model3.webp";
+import model4 from "../../assets/hero/model4.webp";
+import model5 from "../../assets/hero/model5.webp";
 
 const products = [
   {

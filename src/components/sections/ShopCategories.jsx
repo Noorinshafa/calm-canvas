@@ -2,12 +2,12 @@ import "../../styles/shopCategories.css";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
-import hoodies from "../../assets/categories/hoodies.png";
-import tshirts from "../../assets/categories/tshirts.png";
-import mugs from "../../assets/categories/mugs.png";
-import sweatshirts from "../../assets/categories/sweatshirts.png";
-import phonecases from "../../assets/categories/phonecases.png";
-import totebags from "../../assets/categories/totebags.png";
+import hoodies from "../../assets/categories/hoodies.webp";
+import tshirts from "../../assets/categories/tshirts.webp";
+import mugs from "../../assets/categories/mugs.webp";
+import sweatshirts from "../../assets/categories/sweatshirts.webp";
+import phonecases from "../../assets/categories/phonecases.webp";
+import totebags from "../../assets/categories/totebags.webp";
 
 const categories = [
   {

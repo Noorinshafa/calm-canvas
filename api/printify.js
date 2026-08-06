@@ -9,27 +9,41 @@ export default async function handler(req, res) {
       }
     );
 
+    if (!response.ok) {
+      const error = await response.text();
+      return res.status(response.status).json({ error });
+    }
+
     const result = await response.json();
 
-   const products = result.data.map((product) => ({
-  id: product.id,
-  title: product.title,
-  description: product.description,
+    const products = result.data.map((product) => ({
+      id: product.id,
+      title: product.title,
+      description: product.description,
 
-  image: product.images[0]?.src,
+      image: product.images?.[0]?.src || null,
 
-  images: product.images.map((img) => ({
-    src: img.src,
-  })),
+      images: (product.images || [])
+        .filter((img) => img.src)
+        .map((img) => ({
+          src: img.src,
+        })),
 
-  price: `Rs. ${(product.variants[0].price / 100).toLocaleString()}`,
+      price: product.variants?.length
+  ? `$${(product.variants[0].price / 100).toFixed(2)}`
+  : "$0.00",
 
-  blueprint_id: product.blueprint_id,
+      blueprint_id: product.blueprint_id,
 
-  variants: product.variants,
-}));
+      variants: product.variants || [],
+    }));
 
-res.status(200).json(products);
+    res.setHeader(
+      "Cache-Control",
+      "public, s-maxage=300, stale-while-revalidate=86400"
+    );
+
+    res.status(200).json(products);
 
   } catch (error) {
     res.status(500).json({

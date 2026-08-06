@@ -17,7 +17,17 @@ function Totebags() {
 
     <section className="collection-page">
 
-      <h1>Tote Bags</h1>
+       <div className="collection-header">
+
+      <span>CALM CANVAS COLLECTION</span>
+
+<h1>Carry Beauty Everywhere</h1>
+
+<p>
+Elegant tote bags designed to make every outing feel lighter, more organized, and effortlessly stylish.
+</p>
+
+    </div>
 
       <div className="products-grid">
 

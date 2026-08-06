@@ -38,25 +38,30 @@ a{
 section{
     width:100%;
 }
+
 /* ==========================================
         PRODUCTS GRID
 ========================================== */
 
 .products-grid{
 
-    max-width:1500px;
+    max-width:1700px;
 
     margin:60px auto 0;
 
     display:grid;
 
-    grid-template-columns:repeat(3,minmax(300px,1fr));
+    grid-template-columns:repeat(5,1fr);
 
-    gap:40px;
+    gap:28px;
 
-    justify-items:center;
+    align-items:start;
 
 }
+
+/* ==========================================
+        COLLECTION PAGE
+========================================== */
 
 .collection-page{
 
@@ -92,39 +97,81 @@ section{
 
 }
 
-/* Tablet */
+/* ==========================================
+        LARGE LAPTOPS
+========================================== */
+
+@media(max-width:1600px){
+
+.products-grid{
+
+    grid-template-columns:repeat(4,1fr);
+
+}
+
+}
+
+/* ==========================================
+        TABLETS
+========================================== */
 
 @media(max-width:1100px){
 
 .products-grid{
 
-grid-template-columns:repeat(2,1fr);
+    grid-template-columns:repeat(3,1fr);
+
+    gap:24px;
 
 }
 
 }
 
-/* Mobile */
+/* ==========================================
+        SMALL TABLETS
+========================================== */
 
-@media(max-width:768px){
+@media(max-width:850px){
 
 .products-grid{
 
-grid-template-columns:1fr;
+    grid-template-columns:repeat(2,1fr);
 
-gap:30px;
+    gap:20px;
+
+}
+
+}
+
+/* ==========================================
+        MOBILE
+========================================== */
+
+@media(max-width:576px){
+
+.products-grid{
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:16px;
 
 }
 
 .collection-page{
 
-padding:110px 5%;
+    padding:110px 5%;
 
 }
 
 .collection-page h1{
 
-font-size:2.8rem;
+    font-size:2.5rem;
+
+}
+
+.collection-page p{
+
+    font-size:.95rem;
 
 }
 

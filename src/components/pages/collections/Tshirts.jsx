@@ -17,7 +17,17 @@ function Tshirts() {
 
     <section className="collection-page">
 
-      <h1>T-Shirts</h1>
+       <div className="collection-header">
+
+     <span>CALM CANVAS COLLECTION</span>
+
+<h1>Everyday Essentials</h1>
+
+<p>
+Minimal, comfortable, and beautifully designed T-shirts created to bring art and personality into your everyday wardrobe.
+</p>
+
+    </div>
 
       <div className="products-grid">
 

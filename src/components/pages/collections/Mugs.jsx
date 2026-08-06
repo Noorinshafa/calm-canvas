@@ -4,11 +4,19 @@ function Mugs() {
 
     <section className="collection-page">
 
-      <h1>Mugs</h1>
+      
 
-      <p>
-        Coming soon...
-      </p>
+      <div className="collection-header">
+
+       <span>CALM CANVAS COLLECTION</span>
+
+<h1>Moments Worth Savoring</h1>
+
+<p>
+Beautiful mugs made for peaceful mornings, cozy evenings, and every warm drink that brightens your day.
+</p>
+
+    </div>
 
     </section>
 

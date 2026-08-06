@@ -2,174 +2,233 @@ import "../../styles/hero.css";
 import { Link } from "react-router-dom";
 import { useEffect, useRef } from "react";
 
-import model1 from "../../assets/hero/model1.png";
-import model2 from "../../assets/hero/model2.png";
-import model3 from "../../assets/hero/model3.jpg";
-import model4 from "../../assets/hero/model4.png";
-import model5 from "../../assets/hero/model5.jpg";
+import model1 from "../../assets/hero/model1.webp";
+import model2 from "../../assets/hero/model2.webp";
+import model3 from "../../assets/hero/model3.webp";
+import model4 from "../../assets/hero/model4.webp";
+import model5 from "../../assets/hero/model5.webp";
 
 function Hero() {
 
-  const sceneRef = useRef(null);
-
   const stageRef = useRef(null);
+
+  const copyRef = useRef(null);
 
   const animationRef = useRef(null);
 
-  const rotationRef = useRef(0);
+  // eased pointer position: x/y = current, tx/ty = target
+  const pointerRef = useRef({ x: 0, y: 0, tx: 0, ty: 0 });
 
-  const draggingRef = useRef(false);
-
-  const startXRef = useRef(0);
-
-  const velocityRef = useRef(0);
-
-  const cards = [
+  // Scattered film stills — position/size/rotation/depth are all data,
+  // not decoration: depth controls how far each still travels under
+  // the parallax dolly, and z controls whether it sits in front of
+  // or behind the headline type.
+  const stills = [
 
     {
-      title: "Graphic Tee",
       image: model1,
+      title: "Graphic Tee",
+      top: "10%",
+      left: "60%",
+      size: 220,
+      rotate: -6,
+      depth: 1.3,
+      z: 30,
+      blur: 0,
+      brightness: 1,
     },
 
     {
-      title: "Premium Hoodie",
       image: model2,
+      title: "Premium Hoodie",
+      top: "15%",
+      left: "6%",
+      size: 170,
+      rotate: 5,
+      depth: 0.4,
+      z: 5,
+      blur: 2,
+      brightness: 0.72,
     },
 
     {
-      title: "Canvas Tote",
       image: model3,
+      title: "Canvas Tote",
+      top: "64%",
+      left: "70%",
+      size: 200,
+      rotate: 8,
+      depth: 1.15,
+      z: 30,
+      blur: 0,
+      brightness: 1,
     },
 
     {
-      title: "Coffee Mug",
       image: model4,
+      title: "Coffee Mug",
+      top: "5%",
+      left: "85%",
+      size: 140,
+      rotate: -10,
+      depth: 0.3,
+      z: 4,
+      blur: 3,
+      brightness: 0.65,
     },
 
     {
-      title: "Phone Case",
       image: model5,
+      title: "Phone Case",
+      top: "70%",
+      left: "16%",
+      size: 180,
+      rotate: -4,
+      depth: 0.8,
+      z: 15,
+      blur: 0.5,
+      brightness: 0.88,
     },
 
   ];
-    useEffect(() => {
 
-    const scene = sceneRef.current;
+  useEffect(() => {
+
     const stage = stageRef.current;
+    const copyEl = copyRef.current;
 
-    if (!scene || !stage) return;
+    if (!stage) return;
 
-    const cardElements = scene.querySelectorAll(".orbit-card");
+    const stillEls = stage.querySelectorAll(".film-still");
 
-    const total = cardElements.length;
+    const reduceMotion =
+      window.matchMedia &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    const radius = 340;
+    function loop() {
 
-    function updateCards() {
+      const pointer = pointerRef.current;
 
-      rotationRef.current += velocityRef.current;
+      pointer.x += (pointer.tx - pointer.x) * 0.06;
+      pointer.y += (pointer.ty - pointer.y) * 0.06;
 
-      velocityRef.current *= 0.95;
+      const t = performance.now() * 0.001;
 
-      rotationRef.current += 0.12;
+      stillEls.forEach((el, i) => {
 
-      cardElements.forEach((card, index) => {
+        const depth = parseFloat(el.dataset.depth) || 1;
+        const rotate = parseFloat(el.dataset.rotate) || 0;
 
-        const angle =
-          (360 / total) * index + rotationRef.current;
+        const bobAmp = reduceMotion ? 0 : 5;
+        const bob = Math.sin(t * 0.6 + i * 1.4) * bobAmp * depth;
 
-        card.style.transform = `
-          rotateY(${angle}deg)
-          translateZ(${radius}px)
+        const mx = pointer.x * depth * 55;
+        const my = pointer.y * depth * 38 + bob;
+
+        el.style.transform = `
+          translate(-50%, -50%)
+          translate(${mx}px, ${my}px)
+          rotate(${rotate}deg)
         `;
 
       });
 
-      animationRef.current =
-        requestAnimationFrame(updateCards);
+      if (copyEl) {
+        copyEl.style.transform = `translate(${pointer.x * -14}px, ${pointer.y * -8}px)`;
+      }
+
+      animationRef.current = requestAnimationFrame(loop);
 
     }
 
-    updateCards();
+    loop();
 
-    function pointerDown(e) {
+    function mouseMove(e) {
 
-      draggingRef.current = true;
+      if (reduceMotion) return;
 
-      startXRef.current = e.clientX;
+      const rect = stage.getBoundingClientRect();
 
-      stage.classList.add("grabbing");
-
-    }
-
-    function pointerMove(e) {
-
-      if (!draggingRef.current) return;
-
-      const delta =
-        e.clientX - startXRef.current;
-
-      rotationRef.current += delta * 0.35;
-
-      velocityRef.current = delta * 0.05;
-
-      startXRef.current = e.clientX;
+      pointerRef.current.tx = (e.clientX - rect.left) / rect.width - 0.5;
+      pointerRef.current.ty = (e.clientY - rect.top) / rect.height - 0.5;
 
     }
 
-    function pointerUp() {
+    function mouseLeave() {
 
-      draggingRef.current = false;
-
-      stage.classList.remove("grabbing");
+      pointerRef.current.tx = 0;
+      pointerRef.current.ty = 0;
 
     }
 
-    stage.addEventListener("pointerdown", pointerDown);
+    stage.addEventListener("mousemove", mouseMove);
 
-    window.addEventListener("pointermove", pointerMove);
-
-    window.addEventListener("pointerup", pointerUp);
+    stage.addEventListener("mouseleave", mouseLeave);
 
     return () => {
 
       cancelAnimationFrame(animationRef.current);
 
-      stage.removeEventListener(
-        "pointerdown",
-        pointerDown
-      );
+      stage.removeEventListener("mousemove", mouseMove);
 
-      window.removeEventListener(
-        "pointermove",
-        pointerMove
-      );
-
-      window.removeEventListener(
-        "pointerup",
-        pointerUp
-      );
+      stage.removeEventListener("mouseleave", mouseLeave);
 
     };
 
   }, []);
-    return (
+
+  return (
 
     <section className="hero">
 
-      <div className="hero-background"></div>
+      <div className="hero-backdrop" aria-hidden="true"></div>
 
-      <div className="hero-container">
+      <div className="hero-sweep" aria-hidden="true"></div>
 
-        {/* LEFT */}
+      <div className="hero-grain" aria-hidden="true"></div>
 
-        <div className="hero-left">
+      <div className="hero-vignette" aria-hidden="true"></div>
 
-          <span className="hero-tag">
+      <span className="hero-spine" aria-hidden="true">Calm Canvas</span>
 
-            CALM CANVAS
+      <div className="hero-stage" ref={stageRef}>
 
-          </span>
+        <div className="hero-gallery">
+
+          {stills.map((s, i) => (
+
+            <div
+              className="film-still"
+              key={i}
+              data-depth={s.depth}
+              data-rotate={s.rotate}
+              style={{
+                "--top": s.top,
+                "--left": s.left,
+                "--size": `${s.size}px`,
+                "--rotate": `${s.rotate}deg`,
+                zIndex: s.z,
+                filter: `blur(${s.blur}px) brightness(${s.brightness})`,
+              }}
+            >
+
+              <div className="still-frame">
+
+                <img src={s.image} alt={s.title} />
+
+                <div className="still-caption">
+                  {String(i + 1).padStart(2, "0")} — {s.title}
+                </div>
+
+              </div>
+
+            </div>
+
+          ))}
+
+        </div>
+
+        <div className="hero-copy" ref={copyRef}>
 
           <h1 className="hero-title">
 
@@ -177,7 +236,7 @@ function Hero() {
 
             <br />
 
-            Live Beautifully.
+            <span className="title-accent">Live Beautifully.</span>
 
           </h1>
 
@@ -214,49 +273,9 @@ function Hero() {
 
         </div>
 
-        {/* RIGHT */}
-
-        <div
-          className="hero-right"
-          ref={stageRef}
-        >
-
-          <div
-            className="orbit-scene"
-            ref={sceneRef}
-          >
-
-            {cards.map((card, index) => (
-
-              <div
-                className="orbit-card"
-                key={index}
-              >
-
-                <div className="card-image">
-
-                  <img
-                    src={card.image}
-                    alt={card.title}
-                  />
-
-                </div>
-
-                <div className="card-info">
-
-                  <h3>{card.title}</h3>
-
-                </div>
-
-              </div>
-
-            ))}
-
-          </div>
-
-        </div>
-
       </div>
+
+      
 
     </section>
 

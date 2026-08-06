@@ -1,7 +1,7 @@
 import "../../styles/parallaxbanner.css";
 import { Link } from "react-router-dom";
 
-import banner from "../../assets/parallax/parallax banner.png";
+import banner from "../../assets/parallax/parallax banner.webp";
 
 function ParallaxBanner() {
 
