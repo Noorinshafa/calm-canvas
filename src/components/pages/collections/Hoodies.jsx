@@ -6,7 +6,7 @@ function Hoodies() {
   const { products, loading, error } = useProducts();
 
   const hoodies = products.filter(product =>
-    [49, 1296].includes(product.blueprint_id)
+    [49, 1296, 1525, 77].includes(product.blueprint_id)
   );
 
   if (loading) return <h2>Loading...</h2>;
