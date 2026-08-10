@@ -64,7 +64,7 @@ function FeaturedCollection() {
   </span>
 
   <h2>
-    Floating
+    Explore new
     <span> Collection</span>
   </h2>
 
