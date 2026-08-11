@@ -5,9 +5,9 @@ function Mugs() {
 
   const { products, loading, error } = useProducts();
 
-  const mugs = products.filter(product =>
-    [478].includes(product.blueprint_id)
-  );
+  const mugs = products.filter(
+  product => Number(product.blueprint_id) === 478
+);
 
   if (loading) return <h2>Loading...</h2>;
 
