@@ -1,19 +1,25 @@
-import { useEffect, useState } from "react";
 import { Routes, Route } from "react-router-dom";
 
 import Navbar from "./components/layout/Navbar";
+import ScrollToTop from "./components/common/ScrollToTop";
 
 import Hero from "./components/sections/Hero";
 import FeaturedCollection from "./components/sections/FeaturedCollection";
 import ParallaxBanner from "./components/sections/ParallaxBanner";
 import ShopCategories from "./components/sections/ShopCategories";
 import Footer from "./components/sections/Footer";
+
 import ProductDetails from "./components/pages/ProductDetails";
 import Checkout from "./components/pages/Checkout";
+import Cart from "./components/pages/Cart";
+import About from "./components/pages/About";
+import Contact from "./components/pages/Contact";
 
 import CollectionPage from "./components/common/CollectionPage";
+
 import Tshirts from "./components/pages/collections/Tshirts";
 import Hoodies from "./components/pages/collections/Hoodies";
+import Sweatshirts from "./components/pages/collections/Sweatshirts";
 import Totebags from "./components/pages/collections/Totebags";
 import PhoneCases from "./components/pages/collections/PhoneCases";
 import Mugs from "./components/pages/collections/Mugs";
@@ -26,26 +32,10 @@ import "./styles/featuredcollection.css";
 import "./App.css";
 
 function App() {
-
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
-
-  useEffect(() => {
-
-    const handleResize = () => {
-
-      setIsMobile(window.innerWidth <= 768);
-
-    };
-
-    window.addEventListener("resize", handleResize);
-
-    return () => window.removeEventListener("resize", handleResize);
-
-  }, []);
-
   return (
-
     <div className="app">
+
+      <ScrollToTop />
 
       <Navbar />
 
@@ -59,14 +49,20 @@ function App() {
             <>
               <Hero />
               <FeaturedCollection />
-              <ParallaxBanner/>
+              <ParallaxBanner />
               <ShopCategories />
-              <Footer/>
+              <Footer />
             </>
           }
         />
 
+
         {/* ================= COLLECTIONS ================= */}
+
+        <Route
+          path="/collections"
+          element={<CollectionPage />}
+        />
 
         <Route
           path="/tshirts"
@@ -76,6 +72,11 @@ function App() {
         <Route
           path="/hoodies"
           element={<Hoodies />}
+        />
+
+        <Route
+          path="/sweatshirts"
+          element={<Sweatshirts />}
         />
 
         <Route
@@ -92,25 +93,48 @@ function App() {
           path="/mugs"
           element={<Mugs />}
         />
+
+
+        {/* ================= PRODUCT ================= */}
+
         <Route
-  path="/collections"
-  element={<CollectionPage />}
-/>
-<Route
-  path="/product/:id"
-  element={<ProductDetails />}
-/>
-<Route
-  path="/checkout"
-  element={<Checkout />}
-/>
+          path="/product/:id"
+          element={<ProductDetails />}
+        />
+
+
+        {/* ================= CART ================= */}
+
+        <Route
+          path="/cart"
+          element={<Cart />}
+        />
+
+
+        {/* ================= COMPANY ================= */}
+
+        <Route
+          path="/about"
+          element={<About />}
+        />
+
+        <Route
+          path="/contact"
+          element={<Contact />}
+        />
+
+
+        {/* ================= CHECKOUT ================= */}
+
+        <Route
+          path="/checkout"
+          element={<Checkout />}
+        />
 
       </Routes>
 
     </div>
-
   );
-
 }
 
 export default App;

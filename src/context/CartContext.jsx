@@ -8,65 +8,62 @@ export function CartProvider({ children }) {
 
   function addToCart(product) {
 
-    const existing = cart.find(
-      item => item.id === product.id
-    );
+    const cartItemId = `${product.id}-${product.selectedVariant?.id || "default"}`;
 
-    if (existing) {
+    const quantityToAdd = product.quantity || 1;
 
-      setCart(
+    setCart((currentCart) => {
 
-        cart.map(item =>
-          item.id === product.id
-            ? {
-                ...item,
-                quantity: item.quantity + 1,
-              }
-            : item
-        )
-
+      const existing = currentCart.find(
+        (item) => item.cartItemId === cartItemId
       );
 
-    } else {
+      if (existing) {
 
-      setCart([
+        return currentCart.map((item) =>
+          item.cartItemId === cartItemId
+            ? {
+                ...item,
+                quantity: item.quantity + quantityToAdd,
+              }
+            : item
+        );
 
-        ...cart,
+      }
 
+      return [
+        ...currentCart,
         {
           ...product,
-          quantity: 1,
+          quantity: quantityToAdd,
+          cartItemId,
         },
+      ];
 
-      ]);
-
-    }
+    });
 
   }
 
-  function increaseQuantity(id) {
+  function increaseQuantity(cartItemId) {
 
-    setCart(
-
-      cart.map(item =>
-        item.id === id
+    setCart((currentCart) =>
+      currentCart.map((item) =>
+        item.cartItemId === cartItemId
           ? {
               ...item,
               quantity: item.quantity + 1,
             }
           : item
       )
-
     );
 
   }
 
-  function decreaseQuantity(id) {
+  function decreaseQuantity(cartItemId) {
 
-    setCart(
-
-      cart.map(item =>
-        item.id === id
+    setCart((currentCart) =>
+      currentCart.map((item) =>
+        item.cartItemId === cartItemId
           ? {
               ...item,
               quantity:
@@ -76,17 +73,16 @@ export function CartProvider({ children }) {
             }
           : item
       )
-
     );
 
   }
 
-  function removeFromCart(id) {
+  function removeFromCart(cartItemId) {
 
-    setCart(
-
-      cart.filter(item => item.id !== id)
-
+    setCart((currentCart) =>
+      currentCart.filter(
+        (item) => item.cartItemId !== cartItemId
+      )
     );
 
   }
@@ -94,22 +90,14 @@ export function CartProvider({ children }) {
   return (
 
     <CartContext.Provider
-
       value={{
-
         cart,
         setCart,
-
         addToCart,
-
         increaseQuantity,
-
         decreaseQuantity,
-
         removeFromCart,
-
       }}
-
     >
 
       {children}

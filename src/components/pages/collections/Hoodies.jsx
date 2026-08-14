@@ -5,9 +5,11 @@ function Hoodies() {
 
   const { products, loading, error } = useProducts();
 
-  const hoodies = products.filter(product =>
-    [49, 1296, 1525, 77].includes(product.blueprint_id)
-  );
+ const hoodies = products.filter(
+  (product) =>
+    [49, 1296, 1525, 77].includes(Number(product.blueprint_id)) &&
+    !product.title.toLowerCase().includes("sweatshirt")
+);
 
   if (loading) return <h2>Loading...</h2>;
 

@@ -45,21 +45,31 @@ function Footer() {
 
         {/* COMPANY */}
 
-        <div className="footer-links">
+       <div className="footer-links">
 
-          <h3>Company</h3>
+  <h3>Company</h3>
 
-          <a href="#">About</a>
+  <Link to="/about">
+    About Us
+  </Link>
 
-          <a href="#">Contact</a>
+  <Link to="/contact">
+    Contact Us
+  </Link>
 
-          <a href="#">FAQs</a>
+  <a href="#">
+    FAQs
+  </a>
 
-          <a href="#">Shipping</a>
+  <a href="#">
+    Shipping
+  </a>
 
-          <a href="#">Returns</a>
+  <a href="#">
+    Returns
+  </a>
 
-        </div>
+</div>
 
 
         {/* NEWSLETTER */}

@@ -8,39 +8,34 @@
 /*=====================================================
                 HERO SECTION
 =====================================================*/
-
-.hero{
-
+.hero {
     --void:#150A0D;
-
     --panel:#1D1013;
-
     --paper:#F3ECE2;
-
     --ink:#F6EEE7;
-
     --ink-dim:#C9B5B8;
-
     --rose:#D68496;
-
     --amber:#D68496;
 
-    position:relative;
+    position: relative;
 
-    min-height:100vh;
+    min-height: 100vh;
 
-    overflow:hidden;
+    overflow: hidden;
 
-    background:var(--void);
+    background: var(--void);
 
-    display:flex;
+    display: flex;
 
-    flex-direction:column;
+    flex-direction: column;
 
-    color:var(--ink);
+    color: var(--ink);
 
-    font-family:'Manrope', sans-serif;
+    font-family: 'Manrope', sans-serif;
 
+    padding-top: 200px;
+
+    box-sizing: border-box;
 }
 
 
