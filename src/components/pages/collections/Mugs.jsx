@@ -2,19 +2,19 @@ import useProducts from "../../../hooks/useProducts";
 import ProductCard from "../../ui/ProductCard";
 
 function Mugs() {
-
   const { products, loading, error } = useProducts();
 
-  const mugs = products.filter(
-  product => Number(product.blueprint_id) === 478
-);
+  const mugs = products.filter((product) =>
+    [68, 478, 425, 479, 289, 635, 583].includes(
+      Number(product.blueprint_id)
+    )
+  );
 
   if (loading) return <h2>Loading...</h2>;
 
   if (error) return <h2>{error}</h2>;
 
   return (
-
     <section className="collection-page">
 
       <div className="collection-header">
@@ -32,21 +32,17 @@ function Mugs() {
 
       <div className="products-grid">
 
-        {mugs.map(product => (
-
+        {mugs.map((product) => (
           <ProductCard
             key={product.id}
             {...product}
           />
-
         ))}
 
       </div>
 
     </section>
-
   );
-
 }
 
 export default Mugs;

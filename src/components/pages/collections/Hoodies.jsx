@@ -2,53 +2,48 @@ import useProducts from "../../../hooks/useProducts";
 import ProductCard from "../../ui/ProductCard";
 
 function Hoodies() {
-
   const { products, loading, error } = useProducts();
 
- const hoodies = products.filter(
-  (product) =>
-    [49, 1296, 1525, 77].includes(Number(product.blueprint_id)) &&
-    !product.title.toLowerCase().includes("sweatshirt")
-);
+  const hoodies = products.filter(
+    (product) =>
+      [77, 450, 1525].includes(
+        Number(product.blueprint_id)
+      )
+  );
 
   if (loading) return <h2>Loading...</h2>;
 
   if (error) return <h2>{error}</h2>;
 
   return (
+    <section className="collection-page">
 
-   <section className="collection-page">
-
-    <div className="collection-header">
+      <div className="collection-header">
 
         <span>CALM CANVAS</span>
 
         <h1>Hoodies</h1>
 
         <p>
-            Discover premium oversized hoodies designed for comfort,
-            elegance and everyday style.
+          Discover premium oversized hoodies designed for comfort,
+          elegance and everyday style.
         </p>
 
-    </div>
+      </div>
 
-    <div className="products-grid">
+      <div className="products-grid">
 
-        {hoodies.map(product => (
-
-            <ProductCard
-                key={product.id}
-                {...product}
-            />
-
+        {hoodies.map((product) => (
+          <ProductCard
+            key={product.id}
+            {...product}
+          />
         ))}
 
-    </div>
+      </div>
 
-</section>
-
+    </section>
   );
-
 }
 
 export default Hoodies;

@@ -9,22 +9,18 @@ import model4 from "../../assets/hero/model4.webp";
 import model5 from "../../assets/hero/model5.webp";
 
 function Hero() {
-
   const stageRef = useRef(null);
-
   const copyRef = useRef(null);
-
   const animationRef = useRef(null);
 
-  // eased pointer position: x/y = current, tx/ty = target
-  const pointerRef = useRef({ x: 0, y: 0, tx: 0, ty: 0 });
+  const pointerRef = useRef({
+    x: 0,
+    y: 0,
+    tx: 0,
+    ty: 0,
+  });
 
-  // Scattered film stills — position/size/rotation/depth are all data,
-  // not decoration: depth controls how far each still travels under
-  // the parallax dolly, and z controls whether it sits in front of
-  // or behind the headline type.
   const stills = [
-
     {
       image: model1,
       title: "Graphic Tee",
@@ -36,6 +32,7 @@ function Hero() {
       z: 30,
       blur: 0,
       brightness: 1,
+      priority: true,
     },
 
     {
@@ -49,6 +46,7 @@ function Hero() {
       z: 5,
       blur: 2,
       brightness: 0.72,
+      priority: true,
     },
 
     {
@@ -62,6 +60,7 @@ function Hero() {
       z: 30,
       blur: 0,
       brightness: 1,
+      priority: false,
     },
 
     {
@@ -75,6 +74,7 @@ function Hero() {
       z: 4,
       blur: 3,
       brightness: 0.65,
+      priority: false,
     },
 
     {
@@ -88,12 +88,11 @@ function Hero() {
       z: 15,
       blur: 0.5,
       brightness: 0.88,
+      priority: false,
     },
-
   ];
 
   useEffect(() => {
-
     const stage = stageRef.current;
     const copyEl = copyRef.current;
 
@@ -105,7 +104,13 @@ function Hero() {
       window.matchMedia &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+    let isVisible = true;
+
     function loop() {
+      if (!isVisible) {
+        animationRef.current = null;
+        return;
+      }
 
       const pointer = pointerRef.current;
 
@@ -115,91 +120,187 @@ function Hero() {
       const t = performance.now() * 0.001;
 
       stillEls.forEach((el, i) => {
+        const depth =
+          parseFloat(el.dataset.depth) || 1;
 
-        const depth = parseFloat(el.dataset.depth) || 1;
-        const rotate = parseFloat(el.dataset.rotate) || 0;
+        const rotate =
+          parseFloat(el.dataset.rotate) || 0;
 
         const bobAmp = reduceMotion ? 0 : 5;
-        const bob = Math.sin(t * 0.6 + i * 1.4) * bobAmp * depth;
 
-        const mx = pointer.x * depth * 55;
-        const my = pointer.y * depth * 38 + bob;
+        const bob =
+          Math.sin(t * 0.6 + i * 1.4) *
+          bobAmp *
+          depth;
+
+        const mx =
+          pointer.x * depth * 55;
+
+        const my =
+          pointer.y * depth * 38 + bob;
 
         el.style.transform = `
           translate(-50%, -50%)
           translate(${mx}px, ${my}px)
           rotate(${rotate}deg)
         `;
-
       });
 
       if (copyEl) {
-        copyEl.style.transform = `translate(${pointer.x * -14}px, ${pointer.y * -8}px)`;
+        copyEl.style.transform = `
+          translate(
+            ${pointer.x * -14}px,
+            ${pointer.y * -8}px
+          )
+        `;
       }
 
-      animationRef.current = requestAnimationFrame(loop);
-
+      animationRef.current =
+        requestAnimationFrame(loop);
     }
 
-    loop();
+    function startAnimation() {
+      if (
+        isVisible &&
+        !animationRef.current &&
+        !reduceMotion
+      ) {
+        animationRef.current =
+          requestAnimationFrame(loop);
+      }
+    }
+
+    function stopAnimation() {
+      if (animationRef.current) {
+        cancelAnimationFrame(
+          animationRef.current
+        );
+
+        animationRef.current = null;
+      }
+    }
+
+    /*
+      Pause the animation when the hero is
+      outside the viewport.
+    */
+
+    const observer =
+      new IntersectionObserver(
+        ([entry]) => {
+          isVisible = entry.isIntersecting;
+
+          if (isVisible) {
+            startAnimation();
+          } else {
+            stopAnimation();
+          }
+        },
+        {
+          threshold: 0,
+        }
+      );
+
+    observer.observe(stage);
+
+    /*
+      Mouse movement
+    */
 
     function mouseMove(e) {
-
       if (reduceMotion) return;
 
-      const rect = stage.getBoundingClientRect();
+      const rect =
+        stage.getBoundingClientRect();
 
-      pointerRef.current.tx = (e.clientX - rect.left) / rect.width - 0.5;
-      pointerRef.current.ty = (e.clientY - rect.top) / rect.height - 0.5;
+      pointerRef.current.tx =
+        (e.clientX - rect.left) /
+          rect.width -
+        0.5;
 
+      pointerRef.current.ty =
+        (e.clientY - rect.top) /
+          rect.height -
+        0.5;
     }
 
     function mouseLeave() {
-
       pointerRef.current.tx = 0;
       pointerRef.current.ty = 0;
-
     }
 
-    stage.addEventListener("mousemove", mouseMove);
+    stage.addEventListener(
+      "mousemove",
+      mouseMove
+    );
 
-    stage.addEventListener("mouseleave", mouseLeave);
+    stage.addEventListener(
+      "mouseleave",
+      mouseLeave
+    );
+
+    if (!reduceMotion) {
+      startAnimation();
+    }
 
     return () => {
+      stopAnimation();
 
-      cancelAnimationFrame(animationRef.current);
+      observer.disconnect();
 
-      stage.removeEventListener("mousemove", mouseMove);
+      stage.removeEventListener(
+        "mousemove",
+        mouseMove
+      );
 
-      stage.removeEventListener("mouseleave", mouseLeave);
-
+      stage.removeEventListener(
+        "mouseleave",
+        mouseLeave
+      );
     };
-
   }, []);
 
   return (
-
     <section className="hero">
 
-      <div className="hero-backdrop" aria-hidden="true"></div>
+      <div
+        className="hero-backdrop"
+        aria-hidden="true"
+      />
 
-      <div className="hero-sweep" aria-hidden="true"></div>
+      <div
+        className="hero-sweep"
+        aria-hidden="true"
+      />
 
-      <div className="hero-grain" aria-hidden="true"></div>
+      <div
+        className="hero-grain"
+        aria-hidden="true"
+      />
 
-      <div className="hero-vignette" aria-hidden="true"></div>
+      <div
+        className="hero-vignette"
+        aria-hidden="true"
+      />
 
-      <span className="hero-spine" aria-hidden="true">Calm Canvas</span>
+      <span
+        className="hero-spine"
+        aria-hidden="true"
+      >
+        Calm Canvas
+      </span>
 
-      <div className="hero-stage" ref={stageRef}>
+      <div
+        className="hero-stage"
+        ref={stageRef}
+      >
 
         <div className="hero-gallery">
 
           {stills.map((s, i) => (
-
             <div
               className="film-still"
-              key={i}
+              key={s.title}
               data-depth={s.depth}
               data-rotate={s.rotate}
               style={{
@@ -208,45 +309,66 @@ function Hero() {
                 "--size": `${s.size}px`,
                 "--rotate": `${s.rotate}deg`,
                 zIndex: s.z,
-                filter: `blur(${s.blur}px) brightness(${s.brightness})`,
+                filter: `
+                  blur(${s.blur}px)
+                  brightness(${s.brightness})
+                `,
               }}
             >
 
               <div className="still-frame">
 
-                <img src={s.image} alt={s.title} />
+                <img
+                  src={s.image}
+                  alt={s.title}
+                  width="220"
+                  height="293"
+                  loading={
+                    s.priority
+                      ? "eager"
+                      : "lazy"
+                  }
+                  fetchPriority={
+                    s.priority
+                      ? "high"
+                      : "auto"
+                  }
+                  decoding="async"
+                />
 
                 <div className="still-caption">
-                  {String(i + 1).padStart(2, "0")} — {s.title}
+                  {String(i + 1).padStart(
+                    2,
+                    "0"
+                  )}{" "}
+                  — {s.title}
                 </div>
 
               </div>
 
             </div>
-
           ))}
 
         </div>
 
-        <div className="hero-copy" ref={copyRef}>
+        <div
+          className="hero-copy"
+          ref={copyRef}
+        >
 
           <h1 className="hero-title">
-
             Wear Stories.
-
             <br />
-
-            <span className="title-accent">Live Beautifully.</span>
-
+            <span className="title-accent">
+              Live Beautifully.
+            </span>
           </h1>
 
           <p className="hero-description">
-
             Premium print-on-demand apparel and
             lifestyle products designed for people
             who appreciate creativity and timeless
             aesthetics.
-
           </p>
 
           <div className="hero-buttons">
@@ -255,18 +377,14 @@ function Hero() {
               to="/collections"
               className="hero-btn primary-btn"
             >
-
               Shop Collection
-
             </Link>
 
             <Link
               to="/about"
               className="hero-btn secondary-btn"
             >
-
               Discover More
-
             </Link>
 
           </div>
@@ -274,13 +392,8 @@ function Hero() {
         </div>
 
       </div>
-
-      
-
     </section>
-
   );
-
 }
 
 export default Hero;
