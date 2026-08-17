@@ -1,12 +1,87 @@
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
+import { useCart } from "../../context/CartContext";
 import useTitle from "../../hooks/useTitle";
 import "../../styles/ordersuccess.css";
 
 function OrderSuccess() {
   useTitle("Order Confirmed");
 
-  return (
+  const { setCart } = useCart();
+  const [searchParams] = useSearchParams();
+  const sessionId = searchParams.get("session_id");
 
+  const [status, setStatus] = useState(sessionId ? "confirming" : "done");
+  const [errorMsg, setErrorMsg] = useState("");
+
+  useEffect(() => {
+    if (!sessionId) return;
+
+    let cancelled = false;
+
+    async function confirm() {
+      try {
+        const response = await fetch(
+          `/api/confirm-order?session_id=${sessionId}`
+        );
+        const result = await response.json();
+
+        if (!response.ok) {
+          throw new Error(
+            result.error || "We couldn't confirm your payment."
+          );
+        }
+
+        if (!cancelled) {
+          setCart([]);
+          setStatus("done");
+        }
+      } catch (error) {
+        if (!cancelled) {
+          setStatus("error");
+          setErrorMsg(error.message);
+        }
+      }
+    }
+
+    confirm();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [sessionId, setCart]);
+
+  if (status === "confirming") {
+    return (
+      <section className="order-success">
+        <div className="success-card">
+          <h1>Confirming your payment...</h1>
+          <p>Please wait a moment, this only takes a second.</p>
+        </div>
+      </section>
+    );
+  }
+
+  if (status === "error") {
+    return (
+      <section className="order-success">
+        <div className="success-card">
+          <h1>Something went wrong</h1>
+          <p>{errorMsg}</p>
+          <p>
+            If money was taken from your account, don't worry — please
+            contact us with your email so we can confirm your order
+            manually.
+          </p>
+          <Link to="/contact" className="continue-btn">
+            Contact Us
+          </Link>
+        </div>
+      </section>
+    );
+  }
+
+  return (
     <section className="order-success">
 
       <div className="success-card">

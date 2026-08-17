@@ -12,9 +12,7 @@ function Cart() {
 
   const total = cart.reduce(
     (sum, item) =>
-      sum +
-      Number(item.price.replace(/[^\d]/g, "")) *
-        item.quantity,
+      sum + (item.priceValue || 0) * item.quantity,
     0
   );
 
@@ -130,7 +128,7 @@ function Cart() {
             <h2>Order Summary</h2>
 
             <h3>
-              Total: Rs. {total.toLocaleString()}
+              Total: ${total.toFixed(2)}
             </h3>
 
             <Link

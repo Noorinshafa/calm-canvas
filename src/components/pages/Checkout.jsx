@@ -22,27 +22,18 @@ function Checkout() {
     postalCode: "",
     address: "",
     notes: "",
-    payment: "Cash on Delivery",
     agree: false,
 
   });
 
+  const [paymentMethod, setPaymentMethod] = useState("cod");
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [orderError, setOrderError] = useState("");
 
   const total = cart.reduce(
-
-    (sum, item) =>
-
-      sum +
-
-      Number(item.price.replace(/[^\d]/g, "")) *
-
-      item.quantity,
-
+    (sum, item) => sum + (item.priceValue || 0) * item.quantity,
     0
-
   );
 
   function handleChange(e) {
@@ -98,6 +89,30 @@ function Checkout() {
     setSubmitting(true);
 
     try {
+      if (paymentMethod === "card") {
+
+        const response = await fetch("/api/create-checkout-session", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ cart, shipping: formData }),
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+          throw new Error(
+            result.error || "Could not start the payment. Please try again."
+          );
+        }
+
+        // Send the customer to Stripe's secure hosted payment page.
+        // The cart is cleared only after payment is confirmed
+        // (see OrderSuccess.jsx), so nothing is lost if they cancel.
+        window.location.href = result.url;
+        return;
+      }
+
+      // Cash on Delivery — submit the order to Printify right away.
       const response = await fetch("/api/create-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -114,9 +129,9 @@ function Checkout() {
 
       setCart([]);
       navigate("/order-success");
+
     } catch (error) {
       setOrderError(error.message);
-    } finally {
       setSubmitting(false);
     }
 
@@ -234,7 +249,13 @@ function Checkout() {
 
           <h2>Payment Method</h2>
 
-          <div className="payment-card active">
+          <div
+            className={`payment-card ${
+              paymentMethod === "cod" ? "active" : ""
+            }`}
+            onClick={() => setPaymentMethod("cod")}
+            style={{ cursor: "pointer" }}
+          >
 
             💵 Cash on Delivery
 
@@ -242,19 +263,17 @@ function Checkout() {
 
           </div>
 
-          <div className="payment-card disabled">
+          <div
+            className={`payment-card ${
+              paymentMethod === "card" ? "active" : ""
+            }`}
+            onClick={() => setPaymentMethod("card")}
+            style={{ cursor: "pointer" }}
+          >
 
-            💳 Credit / Debit Card
+            💳 Card / Apple Pay / Google Pay
 
-            <span>Coming Soon</span>
-
-          </div>
-
-          <div className="payment-card disabled">
-
-            📱 Apple Pay / Google Pay
-
-            <span>Coming Soon</span>
+            <span>Secure checkout via Stripe</span>
 
           </div>
 
@@ -295,7 +314,11 @@ function Checkout() {
 
           >
 
-            {submitting ? "Placing Order..." : "Place Order"}
+            {submitting
+              ? "Please wait..."
+              : paymentMethod === "card"
+              ? "Continue to Payment"
+              : "Place Order"}
 
           </button>
 
@@ -343,7 +366,7 @@ function Checkout() {
 
   <span>Total</span>
 
-  <span>Rs. {total.toLocaleString()}</span>
+  <span>${total.toFixed(2)}</span>
 
 </h3>
 

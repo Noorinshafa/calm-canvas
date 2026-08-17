@@ -26,22 +26,42 @@ export default async function handler(req, res) {
       page++;
     } while (page <= lastPage);
 
-    const products = allProducts.map((product) => ({
-      id: product.id,
-      title: product.title,
-      description: product.description,
-      image: product.images?.[0]?.src || null,
-      images: (product.images || [])
-        .filter((img) => img.src)
-        .map((img) => ({ src: img.src })),
-      price: product.variants?.length
-        ? `$${(product.variants[0].price / 100).toFixed(2)}`
-        : "$0.00",
-      blueprint_id: product.blueprint_id,
-      variants: product.variants || [],
-    }));
+    const products = allProducts.map((product) => {
+      const availableVariants = (product.variants || []).filter(
+        (variant) =>
+          variant.is_enabled !== false && variant.is_available !== false
+      );
 
-    res.setHeader("Cache-Control", "public, s-maxage=300, stale-while-revalidate=86400");
+      const pricedVariants = availableVariants.length
+        ? availableVariants
+        : product.variants || [];
+
+      const prices = pricedVariants
+        .map((variant) => variant.price)
+        .filter((price) => typeof price === "number");
+
+      const lowestPriceCents = prices.length ? Math.min(...prices) : 0;
+      const priceValue = Number((lowestPriceCents / 100).toFixed(2));
+
+      return {
+        id: product.id,
+        title: product.title,
+        description: product.description,
+        image: product.images?.[0]?.src || null,
+        images: (product.images || [])
+          .filter((img) => img.src)
+          .map((img) => ({ src: img.src })),
+        price: `$${priceValue.toFixed(2)}`,
+        priceValue,
+        blueprint_id: product.blueprint_id,
+        variants: product.variants || [],
+      };
+    });
+
+    res.setHeader(
+      "Cache-Control",
+      "public, s-maxage=300, stale-while-revalidate=86400"
+    );
 
     return res.status(200).json(products);
   } catch (error) {

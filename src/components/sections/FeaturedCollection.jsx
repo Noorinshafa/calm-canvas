@@ -12,14 +12,14 @@ const products = [
   {
     id: 1,
     image: model1,
-    title: "Minimal Tees",
+    itle: "Signature Hoodies",
     category: "Graphic Wear",
     className: "featured-card orbit-left-top",
   },
   {
     id: 2,
     image: model2,
-    title: "Signature Hoodies",
+    title: "Minimal Tees",
     category: "Premium Apparel",
     className: "featured-card orbit-center",
   },
