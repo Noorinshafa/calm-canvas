@@ -1,7 +1,10 @@
 import useProducts from "../../../hooks/useProducts";
+import useTitle from "../../../hooks/useTitle";
 import ProductCard from "../../ui/ProductCard";
 
 function Hoodies() {
+  useTitle("Hoodies");
+
   const { products, loading, error } = useProducts();
 
   const hoodies = products.filter(

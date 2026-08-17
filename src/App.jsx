@@ -1,7 +1,8 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 import Navbar from "./components/layout/Navbar";
 import ScrollToTop from "./components/common/ScrollToTop";
+import useTitle from "./hooks/useTitle";
 
 import Hero from "./components/sections/Hero";
 import FeaturedCollection from "./components/sections/FeaturedCollection";
@@ -14,6 +15,7 @@ import Checkout from "./components/pages/Checkout";
 import Cart from "./components/pages/Cart";
 import About from "./components/pages/About";
 import Contact from "./components/pages/Contact";
+import OrderSuccess from "./components/pages/OrderSuccess";
 
 import CollectionPage from "./components/common/CollectionPage";
 
@@ -26,10 +28,23 @@ import Mugs from "./components/pages/collections/Mugs";
 
 import "./styles/global.css";
 import "./styles/navbar.css";
-import "./styles/logo.css";
 import "./styles/hero.css";
 import "./styles/featuredcollection.css";
 import "./App.css";
+
+function Home() {
+  useTitle();
+
+  return (
+    <>
+      <Hero />
+      <FeaturedCollection />
+      <ParallaxBanner />
+      <ShopCategories />
+      <Footer />
+    </>
+  );
+}
 
 function App() {
   return (
@@ -45,15 +60,7 @@ function App() {
 
         <Route
           path="/"
-          element={
-            <>
-              <Hero />
-              <FeaturedCollection />
-              <ParallaxBanner />
-              <ShopCategories />
-              <Footer />
-            </>
-          }
+          element={<Home />}
         />
 
 
@@ -129,6 +136,19 @@ function App() {
         <Route
           path="/checkout"
           element={<Checkout />}
+        />
+
+        <Route
+          path="/order-success"
+          element={<OrderSuccess />}
+        />
+
+
+        {/* ================= FALLBACK ================= */}
+
+        <Route
+          path="*"
+          element={<Navigate to="/" replace />}
         />
 
       </Routes>

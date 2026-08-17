@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
+import useTitle from "../../hooks/useTitle";
 import "../../styles/checkout.css";
 
 function Checkout() {
+  useTitle("Checkout");
 
   const { cart, setCart } = useCart();
 
@@ -26,6 +28,8 @@ function Checkout() {
   });
 
   const [errors, setErrors] = useState({});
+  const [submitting, setSubmitting] = useState(false);
+  const [orderError, setOrderError] = useState("");
 
   const total = cart.reduce(
 
@@ -86,13 +90,35 @@ function Checkout() {
 
   }
 
-  function placeOrder() {
+  async function placeOrder() {
 
     if (!validateForm()) return;
 
-    setCart([]);
+    setOrderError("");
+    setSubmitting(true);
 
-    navigate("/order-success");
+    try {
+      const response = await fetch("/api/create-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ cart, shipping: formData }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          result.error || "Something went wrong placing your order."
+        );
+      }
+
+      setCart([]);
+      navigate("/order-success");
+    } catch (error) {
+      setOrderError(error.message);
+    } finally {
+      setSubmitting(false);
+    }
 
   }
 
@@ -247,15 +273,29 @@ function Checkout() {
 
           <small>{errors.agree}</small>
 
+          {orderError && (
+            <p
+              style={{
+                color: "#c0392b",
+                marginTop: "0.75rem",
+                fontWeight: 500,
+              }}
+            >
+              {orderError}
+            </p>
+          )}
+
           <button
 
             className="place-order-btn"
 
             onClick={placeOrder}
 
+            disabled={submitting}
+
           >
 
-            Place Order
+            {submitting ? "Placing Order..." : "Place Order"}
 
           </button>
 

@@ -25,3 +25,7 @@ dist-ssr
 
 .vercel
 .env*
+
+# Debug/scratch data dumps - never commit these
+printify-output.json
+*-output.json

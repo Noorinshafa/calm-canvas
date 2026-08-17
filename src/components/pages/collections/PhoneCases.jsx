@@ -1,12 +1,16 @@
 import useProducts from "../../../hooks/useProducts";
+import useTitle from "../../../hooks/useTitle";
 import ProductCard from "../../ui/ProductCard";
 
 function PhoneCases() {
+  useTitle("Phone Cases");
 
   const { products, loading, error } = useProducts();
 
-  const phonecases = products.filter(product =>
-    [269, 370, 421].includes(product.blueprint_id)
+  const phonecases = products.filter((product) =>
+    [269, 370, 421, 841, 1521, 1273].includes(
+      Number(product.blueprint_id)
+    )
   );
 
   if (loading) return <h2>Loading...</h2>;

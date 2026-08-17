@@ -1,11 +1,14 @@
 import useProducts from "../../../hooks/useProducts";
+import useTitle from "../../../hooks/useTitle";
 import ProductCard from "../../ui/ProductCard";
 
 function Sweatshirts() {
+  useTitle("Sweatshirts");
+
   const { products, loading, error } = useProducts();
 
   const sweatshirts = products.filter((product) =>
-    product.title.toLowerCase().includes("sweatshirt")
+    [49].includes(Number(product.blueprint_id))
   );
 
   if (loading) {

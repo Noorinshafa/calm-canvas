@@ -1,13 +1,15 @@
 import useProducts from "../../../hooks/useProducts";
+import useTitle from "../../../hooks/useTitle";
 import ProductCard from "../../ui/ProductCard";
 
 function Totebags() {
+  useTitle("Tote Bags");
 
   const { products, loading, error } = useProducts();
 
- const totebags = products.filter((product) =>
-  [1313, 1389].includes(Number(product.blueprint_id))
-);
+  const totebags = products.filter((product) =>
+    [1313, 1389].includes(Number(product.blueprint_id))
+  );
 
   if (loading) return <h2>Loading...</h2>;
 

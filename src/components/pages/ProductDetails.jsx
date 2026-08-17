@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
 import useProducts from "../../hooks/useProducts";
+import useTitle from "../../hooks/useTitle";
 import toast from "react-hot-toast";
 
 import "../../styles/productdetails.css";
@@ -17,6 +18,8 @@ function ProductDetails() {
   const { products, loading, error } = useProducts();
 
   const product = products.find((item) => item.id === id);
+
+  useTitle(product?.title);
 
   const [selectedImage, setSelectedImage] = useState("");
   const [quantity, setQuantity] = useState(1);

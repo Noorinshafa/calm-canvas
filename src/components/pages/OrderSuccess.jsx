@@ -1,7 +1,9 @@
 import { Link } from "react-router-dom";
+import useTitle from "../../hooks/useTitle";
 import "../../styles/ordersuccess.css";
 
 function OrderSuccess() {
+  useTitle("Order Confirmed");
 
   return (
 
