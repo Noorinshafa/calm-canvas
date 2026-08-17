@@ -4,11 +4,15 @@ export default async function handler(req, res) {
       Authorization: `Bearer ${process.env.PRINTIFY_API_TOKEN}`,
     };
 
-    let url = "https://api.printify.com/v1/shops/23619549/products.json?limit=50";
+    let page = 1;
+    let lastPage = 1;
     let allProducts = [];
 
-    while (url) {
-      const response = await fetch(url, { headers });
+    do {
+      const response = await fetch(
+        `https://api.printify.com/v1/shops/23619549/products.json?limit=50&page=${page}`,
+        { headers }
+      );
 
       if (!response.ok) {
         const error = await response.text();
@@ -18,9 +22,9 @@ export default async function handler(req, res) {
       const result = await response.json();
 
       allProducts = [...allProducts, ...(result.data || [])];
-
-      url = result.next_page_url || null;
-    }
+      lastPage = result.last_page || 1;
+      page++;
+    } while (page <= lastPage);
 
     const products = allProducts.map((product) => ({
       id: product.id,

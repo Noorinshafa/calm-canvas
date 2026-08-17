@@ -5,8 +5,8 @@ function Totebags() {
 
   const { products, loading, error } = useProducts();
 
- const totebags = products.filter(
-  product => product.category === "totebags"
+ const totebags = products.filter((product) =>
+  [1313, 1389].includes(Number(product.blueprint_id))
 );
 
   if (loading) return <h2>Loading...</h2>;
