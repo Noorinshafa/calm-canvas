@@ -8,7 +8,7 @@ function Sweatshirts() {
   const { products, loading, error } = useProducts();
 
   const sweatshirts = products.filter((product) =>
-    [49].includes(Number(product.blueprint_id))
+    [49, 1405].includes(Number(product.blueprint_id))
   );
 
   if (loading) {

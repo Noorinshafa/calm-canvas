@@ -12,7 +12,7 @@ const products = [
   {
     id: 1,
     image: model1,
-    itle: "Signature Hoodies",
+    title: "Signature Hoodies",
     category: "Graphic Wear",
     className: "featured-card orbit-left-top",
   },
