@@ -9,7 +9,7 @@ function Sweatshirts() {
   const { products, loading, error } = useProducts();
 
   const sweatshirts = products.filter((product) =>
-    isInCategory(product, ["sweatshirt", "crewneck"], [49, 1405])
+    isInCategory(product, ["sweatshirt"], [49, 1405], ["hood"])
   );
 
   if (loading) {

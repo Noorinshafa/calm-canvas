@@ -12,8 +12,22 @@
 // "Weekender Bag" or "Crewneck Sweatshirt". We match on keywords in that
 // name first. The old ID list is kept ONLY as a backup, in case the name
 // lookup ever fails.
-export function isInCategory(product, keywords, fallbackIds = []) {
+//
+// Some words are shared between categories (a "Hooded Sweatshirt" is a
+// hoodie, not a plain sweatshirt; "Crewneck" describes a neckline used by
+// both t-shirts and sweatshirts). `excludeKeywords` lets a category say
+// "match these words, UNLESS the name also contains one of these" so
+// products don't get pulled into the wrong page.
+export function isInCategory(product, keywords, fallbackIds = [], excludeKeywords = []) {
   const blueprintTitle = (product.blueprintTitle || "").toLowerCase();
+
+  const matchesExclude = excludeKeywords.some((keyword) =>
+    blueprintTitle.includes(keyword)
+  );
+
+  if (matchesExclude) {
+    return false;
+  }
 
   const matchesKeyword = keywords.some((keyword) =>
     blueprintTitle.includes(keyword)

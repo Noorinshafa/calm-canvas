@@ -9,7 +9,7 @@ function Hoodies() {
   const { products, loading, error } = useProducts();
 
   const hoodies = products.filter((product) =>
-    isInCategory(product, ["hoodie"], [77, 450, 1525])
+    isInCategory(product, ["hoodie", "hooded"], [77, 450, 1525])
   );
 
   if (loading) return <h2>Loading...</h2>;
