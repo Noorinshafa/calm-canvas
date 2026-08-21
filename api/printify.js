@@ -1,3 +1,46 @@
+// Cached in memory for as long as this serverless function stays "warm" —
+// Printify's product catalog (blueprint names) barely ever changes, so we
+// avoid re-fetching it on every single page load.
+let blueprintTitleCache = null;
+let blueprintTitleCacheTime = 0;
+const BLUEPRINT_CACHE_TTL = 24 * 60 * 60 * 1000; // 24 hours
+
+async function getBlueprintTitles(headers) {
+  const isFresh =
+    blueprintTitleCache && Date.now() - blueprintTitleCacheTime < BLUEPRINT_CACHE_TTL;
+
+  if (isFresh) {
+    return blueprintTitleCache;
+  }
+
+  try {
+    const response = await fetch(
+      "https://api.printify.com/v1/catalog/blueprints.json",
+      { headers }
+    );
+
+    if (!response.ok) {
+      // If this fails, don't break the whole product list — just fall
+      // back to whatever we had before (or an empty map).
+      return blueprintTitleCache || {};
+    }
+
+    const blueprints = await response.json();
+    const map = {};
+
+    for (const blueprint of blueprints) {
+      map[blueprint.id] = (blueprint.title || "").toLowerCase();
+    }
+
+    blueprintTitleCache = map;
+    blueprintTitleCacheTime = Date.now();
+
+    return map;
+  } catch {
+    return blueprintTitleCache || {};
+  }
+}
+
 export default async function handler(req, res) {
   try {
     const headers = {
@@ -25,6 +68,8 @@ export default async function handler(req, res) {
       lastPage = result.last_page || 1;
       page++;
     } while (page <= lastPage);
+
+    const blueprintTitles = await getBlueprintTitles(headers);
 
     const products = allProducts.map((product) => {
       const availableVariants = (product.variants || []).filter(
@@ -54,6 +99,7 @@ export default async function handler(req, res) {
         price: `$${priceValue.toFixed(2)}`,
         priceValue,
         blueprint_id: product.blueprint_id,
+        blueprintTitle: blueprintTitles[product.blueprint_id] || "",
         variants: product.variants || [],
       };
     });

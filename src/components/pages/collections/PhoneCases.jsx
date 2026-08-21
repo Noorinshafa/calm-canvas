@@ -1,5 +1,6 @@
 import useProducts from "../../../hooks/useProducts";
 import useTitle from "../../../hooks/useTitle";
+import { isInCategory } from "../../../utils/matchesCategory";
 import ProductCard from "../../ui/ProductCard";
 
 function PhoneCases() {
@@ -8,9 +9,7 @@ function PhoneCases() {
   const { products, loading, error } = useProducts();
 
   const phonecases = products.filter((product) =>
-    [269, 370, 421, 841, 1521, 1273].includes(
-      Number(product.blueprint_id)
-    )
+    isInCategory(product, ["case"], [269, 370, 421, 841, 1521, 1273])
   );
 
   if (loading) return <h2>Loading...</h2>;

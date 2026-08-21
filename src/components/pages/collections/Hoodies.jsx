@@ -1,5 +1,6 @@
 import useProducts from "../../../hooks/useProducts";
 import useTitle from "../../../hooks/useTitle";
+import { isInCategory } from "../../../utils/matchesCategory";
 import ProductCard from "../../ui/ProductCard";
 
 function Hoodies() {
@@ -7,11 +8,8 @@ function Hoodies() {
 
   const { products, loading, error } = useProducts();
 
-  const hoodies = products.filter(
-    (product) =>
-      [77, 450, 1525].includes(
-        Number(product.blueprint_id)
-      )
+  const hoodies = products.filter((product) =>
+    isInCategory(product, ["hoodie"], [77, 450, 1525])
   );
 
   if (loading) return <h2>Loading...</h2>;

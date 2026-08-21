@@ -1,5 +1,6 @@
 import useProducts from "../../../hooks/useProducts";
 import useTitle from "../../../hooks/useTitle";
+import { isInCategory } from "../../../utils/matchesCategory";
 import ProductCard from "../../ui/ProductCard";
 
 function Tshirts() {
@@ -8,8 +9,10 @@ function Tshirts() {
   const { products, loading, error } = useProducts();
 
   const tshirts = products.filter((product) =>
-    [6, 145, 281, 466, 706, 800, 1476].includes(
-      Number(product.blueprint_id)
+    isInCategory(
+      product,
+      ["t-shirt", "tee shirt", "tshirt"],
+      [6, 145, 281, 466, 706, 800, 1476]
     )
   );
 

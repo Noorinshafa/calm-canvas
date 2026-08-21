@@ -1,5 +1,6 @@
 import useProducts from "../../../hooks/useProducts";
 import useTitle from "../../../hooks/useTitle";
+import { isInCategory } from "../../../utils/matchesCategory";
 import ProductCard from "../../ui/ProductCard";
 
 function Totebags() {
@@ -8,7 +9,7 @@ function Totebags() {
   const { products, loading, error } = useProducts();
 
   const totebags = products.filter((product) =>
-    [1313, 1389].includes(Number(product.blueprint_id))
+    isInCategory(product, ["bag", "tote"], [1313, 1389, 326])
   );
 
   if (loading) return <h2>Loading...</h2>;
