@@ -108,6 +108,10 @@
 
     position:relative;
 
+    /* Without this, rotateX/rotateY on the cards below renders as a
+       flat skew instead of real 3D depth. */
+    perspective:1800px;
+
 }
 /* =========================================================
    CARD

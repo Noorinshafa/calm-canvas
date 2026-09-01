@@ -9,20 +9,23 @@ function OrderSuccess() {
 
   const { setCart } = useCart();
   const [searchParams] = useSearchParams();
-  const sessionId = searchParams.get("session_id");
+  const tracker = searchParams.get("tracker");
+  const state = searchParams.get("state");
 
-  const [status, setStatus] = useState(sessionId ? "confirming" : "done");
+  const [status, setStatus] = useState(tracker ? "confirming" : "done");
   const [errorMsg, setErrorMsg] = useState("");
 
   useEffect(() => {
-    if (!sessionId) return;
+    if (!tracker) return;
 
     let cancelled = false;
 
     async function confirm() {
       try {
         const response = await fetch(
-          `/api/confirm-order?session_id=${sessionId}`
+          `/api/confirm-order?tracker=${encodeURIComponent(
+            tracker
+          )}&state=${encodeURIComponent(state || "")}`
         );
         const result = await response.json();
 
@@ -49,7 +52,7 @@ function OrderSuccess() {
     return () => {
       cancelled = true;
     };
-  }, [sessionId, setCart]);
+  }, [tracker, state, setCart]);
 
   if (status === "confirming") {
     return (

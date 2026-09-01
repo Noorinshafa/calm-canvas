@@ -5,7 +5,10 @@ import ScrollToTop from "./components/common/ScrollToTop";
 import useTitle from "./hooks/useTitle";
 
 import Hero from "./components/sections/Hero";
+import Marquee from "./components/sections/Marquee";
+import BestSellers from "./components/sections/BestSellers";
 import FeaturedCollection from "./components/sections/FeaturedCollection";
+import WhyCalmCanvas from "./components/sections/WhyCalmCanvas";
 import ParallaxBanner from "./components/sections/ParallaxBanner";
 import ShopCategories from "./components/sections/ShopCategories";
 import Footer from "./components/sections/Footer";
@@ -38,9 +41,12 @@ function Home() {
   return (
     <>
       <Hero />
+      <Marquee />
+      <BestSellers />
       <FeaturedCollection />
-      <ParallaxBanner />
       <ShopCategories />
+      <WhyCalmCanvas />
+      <ParallaxBanner />
       <Footer />
     </>
   );

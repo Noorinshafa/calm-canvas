@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
 import useTitle from "../../hooks/useTitle";
 import "../../styles/checkout.css";
@@ -7,12 +6,9 @@ import "../../styles/checkout.css";
 function Checkout() {
   useTitle("Checkout");
 
-  const { cart, setCart } = useCart();
-
-  const navigate = useNavigate();
+  const { cart } = useCart();
 
   const [formData, setFormData] = useState({
-
     firstName: "",
     lastName: "",
     phone: "",
@@ -23,10 +19,8 @@ function Checkout() {
     address: "",
     notes: "",
     agree: false,
-
   });
 
-  const [paymentMethod, setPaymentMethod] = useState("cod");
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [orderError, setOrderError] = useState("");
@@ -37,21 +31,14 @@ function Checkout() {
   );
 
   function handleChange(e) {
-
     const { name, value, type, checked } = e.target;
-
     setFormData({
-
       ...formData,
-
       [name]: type === "checkbox" ? checked : value,
-
     });
-
   }
 
   function validateForm() {
-
     let newErrors = {};
 
     if (!formData.firstName.trim())
@@ -78,42 +65,16 @@ function Checkout() {
     setErrors(newErrors);
 
     return Object.keys(newErrors).length === 0;
-
   }
 
   async function placeOrder() {
-
     if (!validateForm()) return;
 
     setOrderError("");
     setSubmitting(true);
 
     try {
-      if (paymentMethod === "card") {
-
-        const response = await fetch("/api/create-checkout-session", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ cart, shipping: formData }),
-        });
-
-        const result = await response.json();
-
-        if (!response.ok) {
-          throw new Error(
-            result.error || "Could not start the payment. Please try again."
-          );
-        }
-
-        // Send the customer to Stripe's secure hosted payment page.
-        // The cart is cleared only after payment is confirmed
-        // (see OrderSuccess.jsx), so nothing is lost if they cancel.
-        window.location.href = result.url;
-        return;
-      }
-
-      // Cash on Delivery — submit the order to Printify right away.
-      const response = await fetch("/api/create-order", {
+      const response = await fetch("/api/create-checkout-session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ cart, shipping: formData }),
@@ -123,66 +84,51 @@ function Checkout() {
 
       if (!response.ok) {
         throw new Error(
-          result.error || "Something went wrong placing your order."
+          result.error || "Could not start the payment. Please try again."
         );
       }
 
-      setCart([]);
-      navigate("/order-success");
-
+      // Send the customer to Safepay's secure hosted payment page.
+      // The cart is cleared only after payment is confirmed
+      // (see OrderSuccess.jsx), so nothing is lost if they cancel.
+      window.location.href = result.url;
     } catch (error) {
       setOrderError(error.message);
       setSubmitting(false);
     }
-
   }
 
   return (
-
     <section className="checkout-page">
-
       <div className="checkout-title">
-
         <span>✦ CHECKOUT</span>
-
         <h1>Complete Your Order</h1>
-
       </div>
 
       <div className="checkout-container">
-
         <div className="checkout-left">
-
           <h2>Shipping Information</h2>
 
           <div className="input-row">
-
             <div>
-
               <input
                 name="firstName"
                 placeholder="First Name"
                 value={formData.firstName}
                 onChange={handleChange}
               />
-
               <small>{errors.firstName}</small>
-
             </div>
 
             <div>
-
               <input
                 name="lastName"
                 placeholder="Last Name"
                 value={formData.lastName}
                 onChange={handleChange}
               />
-
               <small>{errors.lastName}</small>
-
             </div>
-
           </div>
 
           <input
@@ -191,7 +137,6 @@ function Checkout() {
             value={formData.phone}
             onChange={handleChange}
           />
-
           <small>{errors.phone}</small>
 
           <input
@@ -200,11 +145,9 @@ function Checkout() {
             value={formData.email}
             onChange={handleChange}
           />
-
           <small>{errors.email}</small>
 
           <div className="input-row">
-
             <input
               name="country"
               value={formData.country}
@@ -217,9 +160,7 @@ function Checkout() {
               value={formData.city}
               onChange={handleChange}
             />
-
           </div>
-
           <small>{errors.city}</small>
 
           <input
@@ -236,7 +177,6 @@ function Checkout() {
             value={formData.address}
             onChange={handleChange}
           />
-
           <small>{errors.address}</small>
 
           <textarea
@@ -247,49 +187,22 @@ function Checkout() {
             onChange={handleChange}
           />
 
-          <h2>Payment Method</h2>
+          <h2>Payment</h2>
 
-          <div
-            className={`payment-card ${
-              paymentMethod === "cod" ? "active" : ""
-            }`}
-            onClick={() => setPaymentMethod("cod")}
-            style={{ cursor: "pointer" }}
-          >
-
-            💵 Cash on Delivery
-
-            <span>Available</span>
-
-          </div>
-
-          <div
-            className={`payment-card ${
-              paymentMethod === "card" ? "active" : ""
-            }`}
-            onClick={() => setPaymentMethod("card")}
-            style={{ cursor: "pointer" }}
-          >
-
-            💳 Card / Apple Pay / Google Pay
-
-            <span>Secure checkout via Stripe</span>
-
+          <div className="payment-card active">
+            💳 Pay securely by card
+            <span>You'll enter your card details on the next screen</span>
           </div>
 
           <label className="agree-box">
-
             <input
               type="checkbox"
               name="agree"
               checked={formData.agree}
               onChange={handleChange}
             />
-
             I agree to the Terms & Conditions
-
           </label>
-
           <small>{errors.agree}</small>
 
           {orderError && (
@@ -305,79 +218,38 @@ function Checkout() {
           )}
 
           <button
-
             className="place-order-btn"
-
             onClick={placeOrder}
-
             disabled={submitting}
-
           >
-
-            {submitting
-              ? "Please wait..."
-              : paymentMethod === "card"
-              ? "Continue to Payment"
-              : "Place Order"}
-
+            {submitting ? "Taking you to payment..." : "Continue to Payment"}
           </button>
-
         </div>
 
         <div className="checkout-right">
-
           <h2>Order Summary</h2>
 
-          {cart.map(item => (
-
-            <div
-
-              className="summary-item"
-
-              key={item.id}
-
-            >
-
-              <img
-
-                src={item.image}
-
-                alt={item.title}
-
-              />
-
+          {cart.map((item) => (
+            <div className="summary-item" key={item.id}>
+              <img src={item.image} alt={item.title} />
               <div>
-
                 <h4>{item.title}</h4>
-
                 <p>{item.price}</p>
-
                 <p>Qty: {item.quantity}</p>
-
               </div>
-
             </div>
-
           ))}
 
           <hr />
 
-         <h3>
-
-  <span>Total</span>
-
-  <span>${total.toFixed(2)}</span>
-
-</h3>
-
+          <h3>
+            <span>Total</span>
+            <span>${total.toFixed(2)}</span>
+          </h3>
         </div>
-
       </div>
-
     </section>
-
   );
-
 }
 
 export default Checkout;
