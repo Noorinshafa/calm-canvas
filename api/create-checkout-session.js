@@ -102,7 +102,7 @@ export default async function handler(req, res) {
       cancelUrl: `${origin}/checkout`,
       redirectUrl: `${origin}/order-success?tracker=${token}&state=${encodedState}`,
       source: "custom",
-      webhooks: true,
+      webhooks: false,
     });
 
     return res.status(200).json({ url });
