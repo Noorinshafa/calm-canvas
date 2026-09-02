@@ -107,6 +107,16 @@ export default async function handler(req, res) {
 
     return res.status(200).json({ url });
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    const safepayDetails = error.response?.data;
+    console.error(
+      "Safepay create-checkout-session error:",
+      error.message,
+      safepayDetails ? JSON.stringify(safepayDetails) : "(no response body)"
+    );
+    return res.status(500).json({
+      error: safepayDetails
+        ? `${error.message} — ${JSON.stringify(safepayDetails)}`
+        : error.message,
+    });
   }
 }
