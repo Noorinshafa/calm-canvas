@@ -5,9 +5,26 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  if (!process.env.SAFEPAY_SECRET_KEY) {
+  const secretKey = process.env.SAFEPAY_SECRET_KEY;
+
+  if (!secretKey) {
     return res.status(503).json({
       error: "Card payments aren't connected yet. Please try again later.",
+    });
+  }
+
+  // Safepay's POST /order/v1/init `client` field must be the PUBLIC API key
+  // (starts with `sec_`), NOT the 64-char hex merchant secret. Passing the
+  // hex secret here is exactly what triggers the 404
+  // "Client with this identifier not found". The hex secret belongs in
+  // SAFEPAY_V1_SECRET (used for redirect-signature verification), not here.
+  if (!secretKey.startsWith("sec_")) {
+    console.error(
+      "SAFEPAY_SECRET_KEY is not a `sec_...` public key. The /order/v1/init " +
+        "`client` field needs the sec_ key; the hex secret goes in SAFEPAY_V1_SECRET."
+    );
+    return res.status(503).json({
+      error: "Card payments are misconfigured. Please contact the store.",
     });
   }
 
@@ -44,7 +61,7 @@ export default async function handler(req, res) {
 
     const safepay = new Safepay({
       environment,
-      apiKey: process.env.SAFEPAY_SECRET_KEY,
+      apiKey: secretKey,
       v1Secret: process.env.SAFEPAY_V1_SECRET || "",
       webhookSecret: process.env.SAFEPAY_WEBHOOK_SECRET || "",
     });

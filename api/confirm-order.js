@@ -28,7 +28,23 @@ export default async function handler(req, res) {
 
     // Never trust the redirect alone -- confirm with Safepay directly that
     // this specific payment really succeeded before we create anything.
-    const isValid = safepay.verify.signature(req);
+    // Safepay's post-payment redirect is a GET request with `sig`/`tracker`
+    // in the query string, but the SDK's verify.signature() reads from
+    // request.body -- so we read from query (falling back to body) and
+    // hand the SDK a normalized { body: { sig, tracker } } shape.
+    const sig = req.query.sig || req.body?.sig;
+    const signedTracker = req.query.tracker || req.body?.tracker;
+
+    if (!sig) {
+      console.error(
+        "confirm-order: no `sig` on the redirect -- cannot verify authenticity."
+      );
+      return res.status(402).json({ error: "Payment could not be verified." });
+    }
+
+    const isValid = safepay.verify.signature({
+      body: { sig, tracker: signedTracker },
+    });
 
     if (!isValid) {
       return res.status(402).json({ error: "Payment could not be verified." });
