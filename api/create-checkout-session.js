@@ -68,9 +68,8 @@ export default async function handler(req, res) {
 
     // What we need to actually create the Printify order once payment is
     // confirmed. We don't rely on Safepay to remember this for us -- we
-    // carry it ourselves in the redirect URL (see `state` below) and
-    // double-check the real payment status with Safepay before ever
-    // creating an order.
+    // carry it ourselves (see the cookie below) and double-check the real
+    // payment status with Safepay before ever creating an order.
     const cartForOrder = cart.map((item) => ({
       id: item.id,
       variantId: item.selectedVariant?.id,
@@ -92,10 +91,6 @@ export default async function handler(req, res) {
       },
     };
 
-    const encodedState = Buffer.from(JSON.stringify(orderState)).toString(
-      "base64url"
-    );
-
     // Step 1: start a payment with Safepay to get a tracker token.
     // Your product prices are stored in USD (priceValue), so we charge in
     // USD too rather than guessing a PKR conversion rate.
@@ -116,12 +111,29 @@ export default async function handler(req, res) {
 
     const origin = req.headers.origin || `https://${req.headers.host}`;
 
+    // Remember the order details ourselves, tied to this exact payment
+    // token, instead of stuffing them into the redirect web address. This
+    // does two things: 1) keeps the redirect address short -- a very long
+    // one appears to be why Safepay wasn't sending customers back to the
+    // site after paying -- and 2) stores the order in an HTTP-only cookie
+    // the browser sends back automatically, so a shopper can no longer
+    // change the price or items by editing the address bar (it's not in
+    // there anymore).
+    const cookiePayload = Buffer.from(
+      JSON.stringify({ token, ...orderState })
+    ).toString("base64url");
+
+    res.setHeader(
+      "Set-Cookie",
+      `cc_order=${cookiePayload}; Max-Age=3600; Path=/; HttpOnly; Secure; SameSite=Lax`
+    );
+
     // Step 2: build the hosted checkout URL the customer is redirected to.
     const url = safepay.checkout.create({
       token,
       orderId: token,
       cancelUrl: `${origin}/checkout`,
-      redirectUrl: `${origin}/order-success?tracker=${token}&state=${encodedState}`,
+      redirectUrl: `${origin}/order-success?tracker=${token}`,
       source: "custom",
       webhooks: false,
     });

@@ -10,7 +10,6 @@ function OrderSuccess() {
   const { setCart } = useCart();
   const [searchParams] = useSearchParams();
   const tracker = searchParams.get("tracker");
-  const state = searchParams.get("state");
 
   const [status, setStatus] = useState(tracker ? "confirming" : "done");
   const [errorMsg, setErrorMsg] = useState("");
@@ -23,9 +22,7 @@ function OrderSuccess() {
     async function confirm() {
       try {
         const response = await fetch(
-          `/api/confirm-order?tracker=${encodeURIComponent(
-            tracker
-          )}&state=${encodeURIComponent(state || "")}`
+          `/api/confirm-order?tracker=${encodeURIComponent(tracker)}`
         );
         const result = await response.json();
 
@@ -52,7 +49,7 @@ function OrderSuccess() {
     return () => {
       cancelled = true;
     };
-  }, [tracker, state, setCart]);
+  }, [tracker, setCart]);
 
   if (status === "confirming") {
     return (

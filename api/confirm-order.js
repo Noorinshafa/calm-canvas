@@ -3,7 +3,6 @@ import { createPrintifyOrder } from "./_lib/create-printify-order.js";
 
 export default async function handler(req, res) {
   const tracker = req.query.tracker;
-  const encodedState = req.query.state;
 
   if (!tracker) {
     return res.status(400).json({ error: "Missing tracker." });
@@ -50,20 +49,51 @@ export default async function handler(req, res) {
       return res.status(402).json({ error: "Payment could not be verified." });
     }
 
-    if (!encodedState) {
-      return res.status(400).json({ error: "Missing order details." });
+    // Order details now live in the cookie set by create-checkout-session.js
+    // -- not in the web address -- so a customer can't tamper with the
+    // price or items by editing the address bar.
+    const cookieHeader = req.headers.cookie || "";
+    const cookieMatch = cookieHeader
+      .split(";")
+      .map((part) => part.trim())
+      .find((part) => part.startsWith("cc_order="));
+
+    if (!cookieMatch) {
+      return res.status(400).json({
+        error:
+          "We couldn't find your order details. Please try checking out again.",
+      });
     }
 
-    let orderState;
+    let savedOrder;
     try {
-      orderState = JSON.parse(
-        Buffer.from(encodedState, "base64url").toString("utf8")
+      savedOrder = JSON.parse(
+        Buffer.from(
+          cookieMatch.slice("cc_order=".length),
+          "base64url"
+        ).toString("utf8")
       );
     } catch {
       return res.status(400).json({ error: "Could not read order details." });
     }
 
-    const { cart, shipping } = orderState;
+    // Make sure this cookie actually belongs to THIS payment, not a
+    // leftover from a different checkout attempt in the same browser.
+    if (savedOrder.token !== tracker) {
+      return res.status(400).json({
+        error:
+          "Your order details don't match this payment. Please try checking out again.",
+      });
+    }
+
+    // We've read what we need from the cookie -- clear it so it isn't
+    // reused if this page is somehow visited again later.
+    res.setHeader(
+      "Set-Cookie",
+      "cc_order=; Max-Age=0; Path=/; HttpOnly; Secure; SameSite=Lax"
+    );
+
+    const { cart, shipping } = savedOrder;
 
     const orderCart = (cart || []).map((item) => ({
       id: item.id,
