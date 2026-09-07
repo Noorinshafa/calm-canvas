@@ -99,8 +99,12 @@ export default async function handler(req, res) {
     // Step 1: start a payment with Safepay to get a tracker token.
     // Your product prices are stored in USD (priceValue), so we charge in
     // USD too rather than guessing a PKR conversion rate.
+    // IMPORTANT: Safepay's /order/v1/init `amount` field wants the amount
+    // in plain currency units (e.g. 6.99 for $6.99), NOT cents. Sending
+    // Math.round(total * 100) here is what caused a $6.99 mug to be
+    // charged as $699.00 -- confirmed by an actual sandbox test charge.
     const { token } = await safepay.payments.create({
-      amount: Math.round(total * 100), // smallest currency unit (cents)
+      amount: Math.round(total * 100) / 100, // e.g. 6.99, not 699
       currency: "USD",
     });
 
