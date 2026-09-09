@@ -1,4 +1,4 @@
-import { Safepay } from "@sfpy/node-sdk";
+import { createSafepayClient, extractValue } from "./_lib/safepay-node-core.js";
 import { createPrintifyOrder } from "./_lib/create-printify-order.js";
 
 export default async function handler(req, res) {
@@ -8,50 +8,53 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: "Missing tracker." });
   }
 
-  if (!process.env.SAFEPAY_SECRET_KEY) {
+  const safepay = createSafepayClient();
+
+  if (!safepay) {
     return res
       .status(503)
       .json({ error: "Card payments aren't connected yet." });
   }
 
   try {
-    const environment =
-      process.env.SAFEPAY_ENV === "production" ? "production" : "sandbox";
-
-    const safepay = new Safepay({
-      environment,
-      apiKey: process.env.SAFEPAY_SECRET_KEY,
-      v1Secret: process.env.SAFEPAY_V1_SECRET || "",
-      webhookSecret: process.env.SAFEPAY_WEBHOOK_SECRET || "",
-    });
-
-    // Never trust the redirect alone -- confirm with Safepay directly that
-    // this specific payment really succeeded before we create anything.
-    // Safepay's post-payment redirect is a GET request with `sig`/`tracker`
-    // in the query string, but the SDK's verify.signature() reads from
-    // request.body -- so we read from query (falling back to body) and
-    // hand the SDK a normalized { body: { sig, tracker } } shape.
-    const sig = req.query.sig || req.body?.sig;
-    const signedTracker = req.query.tracker || req.body?.tracker;
-
-    if (!sig) {
+    // Never trust the redirect alone -- ask Safepay directly whether this
+    // specific payment actually succeeded before we create anything. This
+    // replaces the old SDK's signature check, which doesn't exist in this
+    // newer SDK; asking Safepay for the tracker's real status directly is
+    // just as safe (a customer can't fake this response).
+    let statusResponse;
+    try {
+      statusResponse = await safepay.reporter.payments.fetch(tracker);
+    } catch (error) {
       console.error(
-        "confirm-order: no `sig` on the redirect -- cannot verify authenticity."
+        "confirm-order: reporter.payments.fetch failed:",
+        error.message,
+        error.status ? `(status ${error.status})` : ""
       );
       return res.status(402).json({ error: "Payment could not be verified." });
     }
 
-    const isValid = safepay.verify.signature({
-      body: { sig, tracker: signedTracker },
-    });
+    const state = extractValue(statusResponse, [
+      "data.state",
+      "state",
+      "data.tracker.state",
+    ]);
 
-    if (!isValid) {
+    if (state !== "TRACKER_ENDED") {
+      console.error(
+        "confirm-order: payment not completed for tracker",
+        tracker,
+        "-- state:",
+        state,
+        "raw:",
+        JSON.stringify(statusResponse)
+      );
       return res.status(402).json({ error: "Payment could not be verified." });
     }
 
-    // Order details now live in the cookie set by create-checkout-session.js
-    // -- not in the web address -- so a customer can't tamper with the
-    // price or items by editing the address bar.
+    // Order details live in the cookie set by create-checkout-session.js --
+    // not in the web address -- so a customer can't tamper with the price or
+    // items by editing the address bar.
     const cookieHeader = req.headers.cookie || "";
     const cookieMatch = cookieHeader
       .split(";")
@@ -77,17 +80,17 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "Could not read order details." });
     }
 
-    // Make sure this cookie actually belongs to THIS payment, not a
-    // leftover from a different checkout attempt in the same browser.
-    if (savedOrder.token !== tracker) {
+    // Make sure this cookie actually belongs to THIS payment, not a leftover
+    // from a different checkout attempt in the same browser.
+    if (savedOrder.tracker !== tracker) {
       return res.status(400).json({
         error:
           "Your order details don't match this payment. Please try checking out again.",
       });
     }
 
-    // We've read what we need from the cookie -- clear it so it isn't
-    // reused if this page is somehow visited again later.
+    // We've read what we need from the cookie -- clear it so it isn't reused
+    // if this page is somehow visited again later.
     res.setHeader(
       "Set-Cookie",
       "cc_order=; Max-Age=0; Path=/; HttpOnly; Secure; SameSite=Lax"
@@ -119,10 +122,10 @@ export default async function handler(req, res) {
       const details = JSON.stringify(orderError.details || "").toLowerCase();
 
       if (
-        message.includes("external_id") &&
-        (message.includes("already") ||
-          message.includes("exist") ||
-          message.includes("duplicate")) ||
+        (message.includes("external_id") &&
+          (message.includes("already") ||
+            message.includes("exist") ||
+            message.includes("duplicate"))) ||
         (details.includes("external_id") &&
           (details.includes("already") ||
             details.includes("exist") ||
