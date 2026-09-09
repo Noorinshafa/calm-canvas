@@ -9,7 +9,10 @@ function OrderSuccess() {
 
   const { setCart } = useCart();
   const [searchParams] = useSearchParams();
-  const tracker = searchParams.get("tracker");
+  // Safepay redirects back here with its own "order_id" -- which we set
+  // equal to our tracker when the payment page was created -- rather than
+  // any query string of our own (see create-checkout-session.js for why).
+  const tracker = searchParams.get("order_id") || searchParams.get("tracker");
 
   const [status, setStatus] = useState(tracker ? "confirming" : "done");
   const [errorMsg, setErrorMsg] = useState("");

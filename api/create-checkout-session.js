@@ -184,6 +184,12 @@ export default async function handler(req, res) {
     // that's the important difference from the old, broken flow, since it's
     // the embedded iframe approach that ran into the browser blocking a
     // deprecated event during the 3D-Secure step.
+    // IMPORTANT: redirect_url must NOT already contain a "?query" -- a real
+    // sandbox test showed Safepay appends its own "?order_id=..." onto
+    // whatever we give it, and if ours already has a "?", that produces a
+    // broken address with two "?" in it, scrambling the ID on the other end.
+    // Safepay echoes back whatever we set as `order_id` here, so
+    // OrderSuccess.jsx reads that instead.
     const url = safepay.checkout.createCheckoutUrl({
       env: environment,
       tracker,
@@ -191,7 +197,7 @@ export default async function handler(req, res) {
       source: "hosted",
       order_id: tracker,
       cancel_url: `${origin}/checkout`,
-      redirect_url: `${origin}/order-success?tracker=${tracker}`,
+      redirect_url: `${origin}/order-success`,
     });
 
     return res.status(200).json({ url });
