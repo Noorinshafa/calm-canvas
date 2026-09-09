@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
 import useProducts from "../../hooks/useProducts";
-import useTitle from "../../hooks/useTitle";
+import { getProduct } from "../../services/printifyApi";
 import toast from "react-hot-toast";
 
 import "../../styles/productdetails.css";
@@ -15,11 +15,47 @@ function ProductDetails() {
 
   const { addToCart } = useCart();
 
-  const { products, loading, error } = useProducts();
+  // Fetches just this one product (with its full variant details) instead
+  // of the whole catalog -- see api/product.js for why. Related products
+  // below still use the lightweight full-catalog list, which is fine since
+  // that list was never the slow part once variants were removed from it.
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  const product = products.find((item) => item.id === id);
+  const { products: allProducts } = useProducts();
 
-  useTitle(product?.title);
+  useEffect(() => {
+    let cancelled = false;
+
+    async function fetchProduct() {
+      try {
+        setLoading(true);
+        setError("");
+        setProduct(null);
+
+        const data = await getProduct(id);
+
+        if (!cancelled) {
+          setProduct(data);
+        }
+      } catch (err) {
+        if (!cancelled) {
+          setError(err?.message || "Unable to load this product.");
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    }
+
+    fetchProduct();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [id]);
 
   const [selectedImage, setSelectedImage] = useState("");
   const [quantity, setQuantity] = useState(1);
@@ -56,7 +92,7 @@ function ProductDetails() {
     return <h2>Product not found.</h2>;
   }
 
-  const relatedProducts = products
+  const relatedProducts = allProducts
     .filter(
       (item) =>
         item.blueprint_id === product.blueprint_id &&

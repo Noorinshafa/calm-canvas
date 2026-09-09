@@ -1,0 +1,109 @@
+const PRINTIFY_SHOP_ID = "23619549";
+
+// Cached in memory for as long as this serverless function stays "warm" --
+// Printify's catalog (blueprint names) barely ever changes, so we avoid
+// re-fetching it on every single request.
+let blueprintTitleCache = null;
+let blueprintTitleCacheTime = 0;
+const BLUEPRINT_CACHE_TTL = 24 * 60 * 60 * 1000; // 24 hours
+
+export function printifyHeaders() {
+  return { Authorization: `Bearer ${process.env.PRINTIFY_API_TOKEN}` };
+}
+
+export async function getBlueprintTitles(headers) {
+  const isFresh =
+    blueprintTitleCache && Date.now() - blueprintTitleCacheTime < BLUEPRINT_CACHE_TTL;
+
+  if (isFresh) {
+    return blueprintTitleCache;
+  }
+
+  try {
+    const response = await fetch(
+      "https://api.printify.com/v1/catalog/blueprints.json",
+      { headers }
+    );
+
+    if (!response.ok) {
+      // If this fails, don't break the whole page -- just fall back to
+      // whatever we had before (or an empty map).
+      return blueprintTitleCache || {};
+    }
+
+    const blueprints = await response.json();
+    const map = {};
+
+    for (const blueprint of blueprints) {
+      map[blueprint.id] = (blueprint.title || "").toLowerCase();
+    }
+
+    blueprintTitleCache = map;
+    blueprintTitleCacheTime = Date.now();
+
+    return map;
+  } catch {
+    return blueprintTitleCache || {};
+  }
+}
+
+function computePrice(product) {
+  const availableVariants = (product.variants || []).filter(
+    (variant) => variant.is_enabled !== false && variant.is_available !== false
+  );
+
+  const pricedVariants = availableVariants.length
+    ? availableVariants
+    : product.variants || [];
+
+  const prices = pricedVariants
+    .map((variant) => variant.price)
+    .filter((price) => typeof price === "number");
+
+  const lowestPriceCents = prices.length ? Math.min(...prices) : 0;
+
+  return Number((lowestPriceCents / 100).toFixed(2));
+}
+
+// Used for product LISTINGS (collections, homepage, search) -- these only
+// ever show a title, price and thumbnail, never variant details, so we
+// deliberately leave `variants` out. For 144 products, variants alone were
+// making up 94% of the response (a real product measured at 5.47MB total,
+// with over 41KB of that from one product's 181 variants) -- sending all of
+// that on every single page load, on every visit, was the main reason pages
+// were loading so slowly, especially on mobile.
+export function mapProductSummary(product, blueprintTitles) {
+  const priceValue = computePrice(product);
+
+  return {
+    id: product.id,
+    title: product.title,
+    description: product.description,
+    image: product.images?.[0]?.src || null,
+    images: (product.images || [])
+      .filter((img) => img.src)
+      .map((img) => ({ src: img.src })),
+    price: `$${priceValue.toFixed(2)}`,
+    priceValue,
+    blueprint_id: product.blueprint_id,
+    blueprintTitle: blueprintTitles[product.blueprint_id] || "",
+  };
+}
+
+// Used for a single PRODUCT DETAIL page -- this is the only place that
+// actually needs variants (to let a customer pick size/color and to know
+// which variant ID to send to Printify at checkout). `cost` is stripped
+// from each variant -- that's Printify's wholesale price to you, not
+// something that should ever be visible in a customer's browser network tab.
+export function mapProductFull(product, blueprintTitles) {
+  const summary = mapProductSummary(product, blueprintTitles);
+
+  const variants = (product.variants || []).map((variant) => {
+    const { cost, ...rest } = variant;
+    return rest;
+  });
+
+  return { ...summary, variants };
+}
+
+export { PRINTIFY_SHOP_ID };

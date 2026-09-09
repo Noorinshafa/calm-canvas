@@ -17,10 +17,17 @@ function Navbar() {
   const [navbarHidden, setNavbarHidden] = useState(false);
 
   /* =========================
-     FETCH PRODUCTS
+     FETCH PRODUCTS (only once search is actually opened -- this used to
+     run on every single page load, on every page, whether or not anyone
+     ever used search, downloading the entire product catalog for nothing
+     most of the time)
   ========================= */
 
   useEffect(() => {
+    if (!searchOpen || products.length > 0) return;
+
+    let cancelled = false;
+
     async function fetchProducts() {
       try {
         const response = await fetch("/api/printify");
@@ -31,14 +38,20 @@ function Navbar() {
 
         const data = await response.json();
 
-        setProducts(data);
+        if (!cancelled) {
+          setProducts(data);
+        }
       } catch (error) {
         console.error("Search products error:", error);
       }
     }
 
     fetchProducts();
-  }, []);
+
+    return () => {
+      cancelled = true;
+    };
+  }, [searchOpen, products.length]);
 
   /* =========================
      NAVBAR SCROLL BEHAVIOR
