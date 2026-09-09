@@ -1,6 +1,5 @@
 import {
   printifyHeaders,
-  getBlueprintTitles,
   mapProductFull,
   PRINTIFY_SHOP_ID,
 } from "./_lib/printify-shared.js";
@@ -32,14 +31,13 @@ export default async function handler(req, res) {
     }
 
     const product = await response.json();
-    const blueprintTitles = await getBlueprintTitles(headers);
 
     res.setHeader(
       "Cache-Control",
       "public, max-age=300, s-maxage=300, stale-while-revalidate=86400"
     );
 
-    return res.status(200).json(mapProductFull(product, blueprintTitles));
+    return res.status(200).json(mapProductFull(product));
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }

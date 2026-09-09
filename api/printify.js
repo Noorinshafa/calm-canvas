@@ -1,6 +1,5 @@
 import {
   printifyHeaders,
-  getBlueprintTitles,
   mapProductSummary,
   PRINTIFY_SHOP_ID,
 } from "./_lib/printify-shared.js";
@@ -44,14 +43,10 @@ export default async function handler(req, res) {
       ...remainingResults.flatMap((result) => result.data || []),
     ];
 
-    const blueprintTitles = await getBlueprintTitles(headers);
-
     // Deliberately lightweight -- see mapProductSummary's comment. Product
     // detail pages fetch their own full data from /api/product instead of
     // this endpoint.
-    const products = allProducts.map((product) =>
-      mapProductSummary(product, blueprintTitles)
-    );
+    const products = allProducts.map((product) => mapProductSummary(product));
 
     // `max-age` lets the customer's own browser reuse this for 5 minutes
     // without any network request at all (previously missing, so every

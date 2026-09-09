@@ -1,50 +1,7 @@
 const PRINTIFY_SHOP_ID = "23619549";
 
-// Cached in memory for as long as this serverless function stays "warm" --
-// Printify's catalog (blueprint names) barely ever changes, so we avoid
-// re-fetching it on every single request.
-let blueprintTitleCache = null;
-let blueprintTitleCacheTime = 0;
-const BLUEPRINT_CACHE_TTL = 24 * 60 * 60 * 1000; // 24 hours
-
 export function printifyHeaders() {
   return { Authorization: `Bearer ${process.env.PRINTIFY_API_TOKEN}` };
-}
-
-export async function getBlueprintTitles(headers) {
-  const isFresh =
-    blueprintTitleCache && Date.now() - blueprintTitleCacheTime < BLUEPRINT_CACHE_TTL;
-
-  if (isFresh) {
-    return blueprintTitleCache;
-  }
-
-  try {
-    const response = await fetch(
-      "https://api.printify.com/v1/catalog/blueprints.json",
-      { headers }
-    );
-
-    if (!response.ok) {
-      // If this fails, don't break the whole page -- just fall back to
-      // whatever we had before (or an empty map).
-      return blueprintTitleCache || {};
-    }
-
-    const blueprints = await response.json();
-    const map = {};
-
-    for (const blueprint of blueprints) {
-      map[blueprint.id] = (blueprint.title || "").toLowerCase();
-    }
-
-    blueprintTitleCache = map;
-    blueprintTitleCacheTime = Date.now();
-
-    return map;
-  } catch {
-    return blueprintTitleCache || {};
-  }
 }
 
 function computePrice(product) {
@@ -72,7 +29,7 @@ function computePrice(product) {
 // with over 41KB of that from one product's 181 variants) -- sending all of
 // that on every single page load, on every visit, was the main reason pages
 // were loading so slowly, especially on mobile.
-export function mapProductSummary(product, blueprintTitles) {
+export function mapProductSummary(product) {
   const priceValue = computePrice(product);
 
   return {
@@ -86,7 +43,6 @@ export function mapProductSummary(product, blueprintTitles) {
     price: `$${priceValue.toFixed(2)}`,
     priceValue,
     blueprint_id: product.blueprint_id,
-    blueprintTitle: blueprintTitles[product.blueprint_id] || "",
   };
 }
 
@@ -95,8 +51,8 @@ export function mapProductSummary(product, blueprintTitles) {
 // which variant ID to send to Printify at checkout). `cost` is stripped
 // from each variant -- that's Printify's wholesale price to you, not
 // something that should ever be visible in a customer's browser network tab.
-export function mapProductFull(product, blueprintTitles) {
-  const summary = mapProductSummary(product, blueprintTitles);
+export function mapProductFull(product) {
+  const summary = mapProductSummary(product);
 
   const variants = (product.variants || []).map((variant) => {
     const { cost, ...rest } = variant;
