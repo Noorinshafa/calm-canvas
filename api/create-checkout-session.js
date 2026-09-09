@@ -100,12 +100,8 @@ export default async function handler(req, res) {
         "create-checkout-session: no tracker in session response:",
         JSON.stringify(sessionResponse)
       );
-      // TEMPORARY: surface the raw Safepay response so we can see its real
-      // shape and fix the extraction paths above. Nothing sensitive here --
-      // just Safepay's own response structure. Will be removed once fixed.
       return res.status(502).json({
         error: "Could not start the payment. Please try again.",
-        debugRawSessionResponse: sessionResponse,
       });
     }
 
@@ -124,7 +120,11 @@ export default async function handler(req, res) {
       throw error;
     }
 
+    // Confirmed by a real sandbox test: this response's `data` field IS the
+    // token itself (a plain string), not an object containing a `.token`
+    // field -- unlike the payment session response above.
     const tbt = extractValue(passportResponse, [
+      "data",
       "data.token",
       "data.tbt",
       "token",
@@ -137,11 +137,8 @@ export default async function handler(req, res) {
         "create-checkout-session: no auth token in passport response:",
         JSON.stringify(passportResponse)
       );
-      // TEMPORARY debug output -- see note above.
       return res.status(502).json({
         error: "Could not start the payment. Please try again.",
-        debugRawSessionResponse: sessionResponse,
-        debugRawPassportResponse: passportResponse,
       });
     }
 
