@@ -32,10 +32,17 @@ export function createSafepayClient() {
   if (!merchantSecret) return null;
 
   const environment = getSafepayEnvironment();
+  // This MUST include the https:// scheme -- Safepay's own docs example
+  // shows it this way (host: 'https://sandbox.api.getsafepay.com'), and
+  // leaving it off makes the underlying HTTP library treat it as a relative
+  // path with no server to resolve it against, which fails before any
+  // request is even sent and surfaces only as a generic, unhelpful
+  // "Something happened in setting up the request" error -- confirmed by
+  // reproducing that exact failure locally with a schemeless host.
   const host =
     environment === "production"
-      ? "api.getsafepay.com"
-      : "sandbox.api.getsafepay.com";
+      ? "https://api.getsafepay.com"
+      : "https://sandbox.api.getsafepay.com";
 
   return new Safepay(merchantSecret, {
     authType: "secret",
