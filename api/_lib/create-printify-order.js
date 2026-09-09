@@ -1,6 +1,29 @@
+// Printify requires a 2-letter ISO country code in address_to.country.
+// This only had Pakistan mapped before -- fine for testing, but this
+// store's real customers are in the US/UK, so a plain "United States" or
+// "United Kingdom" typed into the checkout form would have been sent to
+// Printify as-is, which is not a valid code and Printify would reject (or
+// fail unpredictably on). Covering the countries this store actually
+// ships to; falling back to the raw value below still handles a customer
+// who types a 2-letter code directly (e.g. "US").
 const COUNTRY_CODE_MAP = {
   Pakistan: "PK",
   PK: "PK",
+  "United States": "US",
+  "United States of America": "US",
+  USA: "US",
+  US: "US",
+  "United Kingdom": "GB",
+  UK: "GB",
+  "Great Britain": "GB",
+  GB: "GB",
+  England: "GB",
+  Scotland: "GB",
+  Wales: "GB",
+  Canada: "CA",
+  CA: "CA",
+  Australia: "AU",
+  AU: "AU",
 };
 
 export async function createPrintifyOrder({ cart, shipping, externalId }) {

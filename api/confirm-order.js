@@ -89,13 +89,6 @@ export default async function handler(req, res) {
       });
     }
 
-    // We've read what we need from the cookie -- clear it so it isn't reused
-    // if this page is somehow visited again later.
-    res.setHeader(
-      "Set-Cookie",
-      "cc_order=; Max-Age=0; Path=/; HttpOnly; Secure; SameSite=Lax"
-    );
-
     const { cart, shipping } = savedOrder;
 
     const orderCart = (cart || []).map((item) => ({
@@ -110,6 +103,15 @@ export default async function handler(req, res) {
         shipping,
         externalId: `calmcanvas-card-${tracker}`,
       });
+
+      // Only clear the cookie once the order has actually been created --
+      // the customer already paid, so if Printify's call fails for any
+      // reason we want to be able to retry with the same saved details
+      // (e.g. by refreshing this page) instead of losing them forever.
+      res.setHeader(
+        "Set-Cookie",
+        "cc_order=; Max-Age=0; Path=/; HttpOnly; Secure; SameSite=Lax"
+      );
 
       return res.status(200).json({ success: true, order });
     } catch (orderError) {
@@ -131,9 +133,27 @@ export default async function handler(req, res) {
             details.includes("exist") ||
             details.includes("duplicate")))
       ) {
+        res.setHeader(
+          "Set-Cookie",
+          "cc_order=; Max-Age=0; Path=/; HttpOnly; Secure; SameSite=Lax"
+        );
         return res.status(200).json({ success: true, alreadyProcessed: true });
       }
 
+      console.error(
+        "confirm-order: createPrintifyOrder failed for tracker",
+        tracker,
+        "-- status:",
+        orderError.status,
+        "message:",
+        orderError.message,
+        "details:",
+        JSON.stringify(orderError.details)
+      );
+
+      // Leave the cookie in place -- the payment succeeded, so a page
+      // refresh (or the customer contacting support and us re-hitting this
+      // endpoint) can retry order creation without asking them to pay again.
       throw orderError;
     }
   } catch (error) {
