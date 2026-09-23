@@ -1,10 +1,15 @@
 import useProducts from "../../../hooks/useProducts";
-import useTitle from "../../../hooks/useTitle";
+import useSEO from "../../../hooks/useSEO";
 import { isInCategory } from "../../../utils/matchesCategory";
 import ProductCard from "../../ui/ProductCard";
 
 function PhoneCases() {
-  useTitle("Phone Cases");
+  useSEO({
+    title: "Phone Cases",
+    description:
+      "Premium phone cases that combine everyday protection with artistic designs you'll enjoy carrying everywhere.",
+    path: "/phonecases",
+  });
 
   const { products, loading, error } = useProducts();
 

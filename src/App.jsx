@@ -1,8 +1,9 @@
+import { Suspense, lazy } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 
 import Navbar from "./components/layout/Navbar";
 import ScrollToTop from "./components/common/ScrollToTop";
-import useTitle from "./hooks/useTitle";
+import useSEO from "./hooks/useSEO";
 
 import Hero from "./components/sections/Hero";
 import Marquee from "./components/sections/Marquee";
@@ -13,21 +14,27 @@ import ParallaxBanner from "./components/sections/ParallaxBanner";
 import ShopCategories from "./components/sections/ShopCategories";
 import Footer from "./components/sections/Footer";
 
-import ProductDetails from "./components/pages/ProductDetails";
-import Checkout from "./components/pages/Checkout";
-import Cart from "./components/pages/Cart";
-import About from "./components/pages/About";
-import Contact from "./components/pages/Contact";
-import OrderSuccess from "./components/pages/OrderSuccess";
+// Every one of these used to be imported eagerly, which meant a first-time
+// visitor to the homepage downloaded the JS for checkout, every collection
+// page, and the product-detail page before clicking anything. Lazy-loading
+// everything except the homepage means the initial bundle only contains
+// what the homepage actually needs; each route's code is fetched only when
+// someone navigates there.
+const ProductDetails = lazy(() => import("./components/pages/ProductDetails"));
+const Checkout = lazy(() => import("./components/pages/Checkout"));
+const Cart = lazy(() => import("./components/pages/Cart"));
+const About = lazy(() => import("./components/pages/About"));
+const Contact = lazy(() => import("./components/pages/Contact"));
+const OrderSuccess = lazy(() => import("./components/pages/OrderSuccess"));
 
-import CollectionPage from "./components/common/CollectionPage";
+const CollectionPage = lazy(() => import("./components/common/CollectionPage"));
 
-import Tshirts from "./components/pages/collections/Tshirts";
-import Hoodies from "./components/pages/collections/Hoodies";
-import Sweatshirts from "./components/pages/collections/Sweatshirts";
-import Totebags from "./components/pages/collections/Totebags";
-import PhoneCases from "./components/pages/collections/PhoneCases";
-import Mugs from "./components/pages/collections/Mugs";
+const Tshirts = lazy(() => import("./components/pages/collections/Tshirts"));
+const Hoodies = lazy(() => import("./components/pages/collections/Hoodies"));
+const Sweatshirts = lazy(() => import("./components/pages/collections/Sweatshirts"));
+const Totebags = lazy(() => import("./components/pages/collections/Totebags"));
+const PhoneCases = lazy(() => import("./components/pages/collections/PhoneCases"));
+const Mugs = lazy(() => import("./components/pages/collections/Mugs"));
 
 import "./styles/global.css";
 import "./styles/navbar.css";
@@ -36,7 +43,10 @@ import "./styles/featuredcollection.css";
 import "./App.css";
 
 function Home() {
-  useTitle();
+  // No overrides -- resets title/description/canonical/OG back to the site
+  // defaults (matching index.html) whenever someone navigates back to "/"
+  // after visiting a product or category page.
+  useSEO({ path: "/" });
 
   return (
     <>
@@ -52,6 +62,13 @@ function Home() {
   );
 }
 
+// A minimal, layout-neutral fallback -- routes below already show their own
+// "Loading..." state once mounted, this only covers the brief moment the
+// route's JS chunk itself is still being fetched.
+function RouteFallback() {
+  return <div className="route-loading" aria-hidden="true" />;
+}
+
 function App() {
   return (
     <div className="app">
@@ -59,6 +76,8 @@ function App() {
       <ScrollToTop />
 
       <Navbar />
+
+      <Suspense fallback={<RouteFallback />}>
 
       <Routes>
 
@@ -158,6 +177,8 @@ function App() {
         />
 
       </Routes>
+
+      </Suspense>
 
     </div>
   );

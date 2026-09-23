@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useCart } from "../../context/CartContext";
-import useTitle from "../../hooks/useTitle";
+import useSEO from "../../hooks/useSEO";
 import "../../styles/checkout.css";
 
 function Checkout() {
-  useTitle("Checkout");
+  useSEO({ title: "Checkout", path: "/checkout" });
 
   const { cart } = useCart();
 

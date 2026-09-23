@@ -1,10 +1,15 @@
 import useProducts from "../../../hooks/useProducts";
-import useTitle from "../../../hooks/useTitle";
+import useSEO from "../../../hooks/useSEO";
 import { isInCategory } from "../../../utils/matchesCategory";
 import ProductCard from "../../ui/ProductCard";
 
 function Sweatshirts() {
-  useTitle("Sweatshirts");
+  useSEO({
+    title: "Sweatshirts",
+    description:
+      "Soft, comfortable sweatshirts designed for relaxed everyday style with the Calm Canvas aesthetic.",
+    path: "/sweatshirts",
+  });
 
   const { products, loading, error } = useProducts();
 

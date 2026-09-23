@@ -1,10 +1,15 @@
 import useProducts from "../../../hooks/useProducts";
-import useTitle from "../../../hooks/useTitle";
+import useSEO from "../../../hooks/useSEO";
 import { isInCategory } from "../../../utils/matchesCategory";
 import ProductCard from "../../ui/ProductCard";
 
 function Mugs() {
-  useTitle("Mugs");
+  useSEO({
+    title: "Mugs",
+    description:
+      "Beautiful mugs made for peaceful mornings, cozy evenings, and every warm drink that brightens your day.",
+    path: "/mugs",
+  });
 
   const { products, loading, error } = useProducts();
 

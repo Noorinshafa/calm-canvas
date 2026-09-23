@@ -2,8 +2,8 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="/favicon.png" />
-    <link rel="apple-touch-icon" href="/favicon.png" />
+    <link rel="icon" type="image/png" sizes="64x64" href="/favicon.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>Calm Canvas | Premium Print-On-Demand Lifestyle Brand</title>
@@ -12,6 +12,7 @@
       content="Calm Canvas is a premium print-on-demand lifestyle brand offering minimal, artistic hoodies, t-shirts, sweatshirts, tote bags, phone cases and mugs — designed for everyday elegance."
     />
     <meta name="theme-color" content="#1c2b22" />
+    <link rel="canonical" href="https://shopcalmcanvas.com/" />
 
     <!-- Open Graph / social sharing preview -->
     <meta property="og:type" content="website" />
@@ -21,7 +22,7 @@
       property="og:description"
       content="Minimal, artistic hoodies, t-shirts, sweatshirts, tote bags, phone cases and mugs — designed for everyday elegance."
     />
-    <meta property="og:image" content="/logo.png" />
+    <meta property="og:image" content="https://shopcalmcanvas.com/logo.png" />
     <meta property="og:url" content="https://shopcalmcanvas.com/" />
 
     <!-- Twitter Card -->
@@ -31,7 +32,21 @@
       name="twitter:description"
       content="Minimal, artistic hoodies, t-shirts, sweatshirts, tote bags, phone cases and mugs — designed for everyday elegance."
     />
-    <meta name="twitter:image" content="/logo.png" />
+    <meta name="twitter:image" content="https://shopcalmcanvas.com/logo.png" />
+
+    <!-- Organization structured data -- static and always correct regardless
+         of route, so it lives here rather than being set per-page by
+         useSEO (see src/hooks/useSEO.js, which manages the per-route
+         Product/breadcrumb JSON-LD instead). -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Calm Canvas",
+        "url": "https://shopcalmcanvas.com/",
+        "logo": "https://shopcalmcanvas.com/logo.png"
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>

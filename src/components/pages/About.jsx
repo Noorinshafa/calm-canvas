@@ -1,6 +1,14 @@
 import "../../styles/about.css";
+import useSEO from "../../hooks/useSEO";
 
 function About() {
+
+  useSEO({
+    title: "About",
+    description:
+      "Calm Canvas is a place where elegance, creativity, and thoughtful design come together to make everyday moments feel special.",
+    path: "/about",
+  });
 
   return (
 

@@ -21,7 +21,7 @@ const features = [
   {
     icon: FiLock,
     title: "Secure Checkout",
-    text: "Payments are encrypted and processed through Stripe's secure system.",
+    text: "Payments are encrypted and processed through Safepay's secure system.",
   },
 ];
 

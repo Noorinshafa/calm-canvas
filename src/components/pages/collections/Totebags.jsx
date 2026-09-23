@@ -1,10 +1,15 @@
 import useProducts from "../../../hooks/useProducts";
-import useTitle from "../../../hooks/useTitle";
+import useSEO from "../../../hooks/useSEO";
 import { isInCategory } from "../../../utils/matchesCategory";
 import ProductCard from "../../ui/ProductCard";
 
 function Totebags() {
-  useTitle("Tote Bags");
+  useSEO({
+    title: "Tote Bags",
+    description:
+      "Elegant tote bags designed to make every outing feel lighter, more organized, and effortlessly stylish.",
+    path: "/totebags",
+  });
 
   const { products, loading, error } = useProducts();
 

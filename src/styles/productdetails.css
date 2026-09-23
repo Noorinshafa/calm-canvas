@@ -845,3 +845,19 @@
 }
 
 }
+
+.out-of-stock-notice{
+
+    margin-top: 16px;
+
+    padding: 12px 16px;
+
+    border-radius: 8px;
+
+    background: rgba(0,0,0,0.05);
+
+    color: var(--text, #6b6375);
+
+    font-size: 0.95rem;
+
+}

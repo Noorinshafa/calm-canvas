@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
-import useTitle from "../../hooks/useTitle";
+import useSEO from "../../hooks/useSEO";
 import "../../styles/ordersuccess.css";
 
 function OrderSuccess() {
-  useTitle("Order Confirmed");
+  useSEO({ title: "Order Confirmed", path: "/order-success" });
 
   const { setCart } = useCart();
   const [searchParams] = useSearchParams();

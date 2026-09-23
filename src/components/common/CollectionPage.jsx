@@ -1,5 +1,6 @@
 import "../../styles/collectionpage.css";
 import { Link } from "react-router-dom";
+import useSEO from "../../hooks/useSEO";
 
 import hoodies from "../../assets/categories/hoodies.webp";
 import tshirts from "../../assets/categories/tshirts.webp";
@@ -9,6 +10,13 @@ import mugs from "../../assets/categories/mugs.webp";
 import totebags from "../../assets/categories/totebags.webp";
 
 function CollectionPage() {
+
+  useSEO({
+    title: "Collections",
+    description:
+      "Discover beautifully designed products made to bring creativity into your everyday life — hoodies, t-shirts, sweatshirts, tote bags, phone cases and mugs.",
+    path: "/collections",
+  });
 
   const collections = [
 

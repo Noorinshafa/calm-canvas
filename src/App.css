@@ -1,3 +1,10 @@
 .app {
   overflow-x: hidden;
 }
+
+/* Route-chunk fetch is fast (a few KB over an already-warm connection), so
+   this only needs to avoid a jarring blank flash -- not communicate
+   progress. */
+.route-loading {
+  min-height: 40vh;
+}

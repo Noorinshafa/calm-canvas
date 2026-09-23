@@ -3,6 +3,7 @@ import {
   extractValue,
   getSafepayEnvironment,
 } from "./_lib/safepay-node-core.js";
+import { priceAndValidateCart } from "./_lib/printify-shared.js";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -51,16 +52,46 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "Missing shipping information." });
     }
 
-    const total = cart.reduce(
-      (sum, item) => sum + (item.priceValue || 0) * (item.quantity || 1),
-      0
-    );
-
-    if (!(total > 0)) {
-      return res.status(400).json({ error: "Your cart total looks invalid." });
+    // SECURITY: the amount charged is never taken from the browser. Every
+    // item is re-priced here from Printify's own live data -- a customer
+    // editing `priceValue` in devtools (or POSTing a hand-crafted request
+    // straight to this endpoint) cannot change what they're charged. This
+    // also re-checks that every selected variant still exists and is still
+    // purchasable, catching stale carts before any money moves.
+    let totalCents, pricedCart;
+    try {
+      ({ totalCents, pricedCart } = await priceAndValidateCart(cart));
+    } catch (validationError) {
+      return res
+        .status(validationError.status || 400)
+        .json({ error: validationError.message });
     }
 
     const environment = getSafepayEnvironment();
+
+    // Carried in the session's `metadata` field (Safepay's docs confirm
+    // this is an accepted field) so the webhook (api/safepay-webhook.js)
+    // can create the Printify order on its own if the customer never makes
+    // it back to /order-success -- e.g. they close the tab right after
+    // paying. Kept intentionally small (ids/qty, not full product data).
+    const metadataOrderState = JSON.stringify({
+      cart: pricedCart.map((item) => ({
+        id: item.id,
+        variantId: item.variantId,
+        qty: item.qty,
+      })),
+      shipping: {
+        firstName: shipping.firstName || "",
+        lastName: shipping.lastName || "",
+        phone: shipping.phone || "",
+        email: shipping.email || "",
+        country: shipping.country || "Pakistan",
+        city: shipping.city || "",
+        postalCode: shipping.postalCode || "",
+        address: shipping.address || "",
+        notes: shipping.notes || "",
+      },
+    });
 
     // Step 1: start a payment session with Safepay to get a tracker token.
     // Unlike the old SDK (which wanted plain currency units, e.g. 6.99),
@@ -69,22 +100,42 @@ export default async function handler(req, res) {
     // is exactly the kind of mistake that overcharged a customer once before
     // with the old integration, so double-check this carefully during
     // sandbox testing.
+    const basePayload = {
+      merchant_api_key: merchantApiKey,
+      intent: "CYBERSOURCE",
+      mode: "payment",
+      currency: "USD",
+      amount: totalCents,
+    };
+
     let sessionResponse;
     try {
+      // Try WITH metadata first (needed for the webhook fallback above).
+      // If Safepay rejects this specific call for any reason -- an
+      // unexpected field, a size limit, anything -- this isn't verified
+      // against a live account from here, so fall back to the known-working
+      // payload without metadata rather than breaking checkout entirely.
       sessionResponse = await safepay.payments.session.setup({
-        merchant_api_key: merchantApiKey,
-        intent: "CYBERSOURCE",
-        mode: "payment",
-        currency: "USD",
-        amount: Math.round(total * 100),
+        ...basePayload,
+        metadata: { orderState: metadataOrderState },
       });
-    } catch (error) {
+    } catch (metadataError) {
       console.error(
-        "create-checkout-session: session.setup failed:",
-        error.message,
-        error.status ? `(status ${error.status})` : ""
+        "create-checkout-session: session.setup with metadata failed, " +
+          "retrying without it:",
+        metadataError.message
       );
-      throw error;
+
+      try {
+        sessionResponse = await safepay.payments.session.setup(basePayload);
+      } catch (error) {
+        console.error(
+          "create-checkout-session: session.setup failed:",
+          error.message,
+          error.status ? `(status ${error.status})` : ""
+        );
+        throw error;
+      }
     }
 
     const tracker = extractValue(sessionResponse, [
@@ -145,16 +196,12 @@ export default async function handler(req, res) {
     // What we need to actually create the Printify order once payment is
     // confirmed. Carried in an HTTP-only cookie (not the web address), so a
     // shopper can't tamper with the price or items by editing the URL, and
-    // the redirect address stays short.
-    const cartForOrder = cart.map((item) => ({
-      id: item.id,
-      variantId: item.selectedVariant?.id,
-      qty: item.quantity || 1,
-    }));
-
+    // the redirect address stays short. `pricedCart` is the server-verified
+    // cart from priceAndValidateCart above -- not the raw client cart -- so
+    // the order that gets created always matches what was actually charged.
     const orderState = {
       tracker,
-      cart: cartForOrder,
+      cart: pricedCart,
       shipping: {
         firstName: shipping.firstName || "",
         lastName: shipping.lastName || "",

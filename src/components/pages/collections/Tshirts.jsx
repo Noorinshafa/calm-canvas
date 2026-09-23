@@ -1,10 +1,15 @@
 import useProducts from "../../../hooks/useProducts";
-import useTitle from "../../../hooks/useTitle";
+import useSEO from "../../../hooks/useSEO";
 import { isInCategory } from "../../../utils/matchesCategory";
 import ProductCard from "../../ui/ProductCard";
 
 function Tshirts() {
-  useTitle("T-Shirts");
+  useSEO({
+    title: "T-Shirts",
+    description:
+      "Minimal, comfortable, and beautifully designed T-shirts created to bring art and personality into your everyday wardrobe.",
+    path: "/tshirts",
+  });
 
   const { products, loading, error } = useProducts();
 

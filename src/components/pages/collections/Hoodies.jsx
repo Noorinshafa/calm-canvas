@@ -1,10 +1,15 @@
 import useProducts from "../../../hooks/useProducts";
-import useTitle from "../../../hooks/useTitle";
+import useSEO from "../../../hooks/useSEO";
 import { isInCategory } from "../../../utils/matchesCategory";
 import ProductCard from "../../ui/ProductCard";
 
 function Hoodies() {
-  useTitle("Hoodies");
+  useSEO({
+    title: "Hoodies",
+    description:
+      "Discover premium oversized hoodies designed for comfort, elegance and everyday style.",
+    path: "/hoodies",
+  });
 
   const { products, loading, error } = useProducts();
 

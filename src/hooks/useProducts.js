@@ -1,50 +1,12 @@
-import { useEffect, useState } from "react";
-import { getProducts } from "../services/printifyApi";
+import { useProductsContext } from "../context/ProductsContext";
 
+// Thin wrapper kept so every existing call site (`const { products, loading,
+// error } = useProducts()`) keeps working unchanged -- the actual fetch now
+// happens once, shared, in <ProductsProvider> (see
+// src/context/ProductsContext.jsx) instead of once per component.
 function useProducts() {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    let cancelled = false;
-
-    async function fetchProducts() {
-      try {
-        setLoading(true);
-        setError("");
-
-        const data = await getProducts();
-
-        if (!cancelled) {
-          setProducts(data);
-        }
-      } catch (err) {
-        if (!cancelled) {
-          setError(
-            err?.message ||
-              "Unable to load products."
-          );
-        }
-      } finally {
-        if (!cancelled) {
-          setLoading(false);
-        }
-      }
-    }
-
-    fetchProducts();
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  return {
-    products,
-    loading,
-    error,
-  };
+  const { products, loading, error } = useProductsContext();
+  return { products, loading, error };
 }
 
 export default useProducts;

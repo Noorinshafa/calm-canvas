@@ -6,6 +6,7 @@ import {
   FiShoppingBag,
   FiSearch,
 } from "react-icons/fi";
+import useProducts from "../../hooks/useProducts";
 
 import "../../styles/navbar.css";
 
@@ -13,45 +14,13 @@ function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const [products, setProducts] = useState([]);
   const [navbarHidden, setNavbarHidden] = useState(false);
 
-  /* =========================
-     FETCH PRODUCTS (only once search is actually opened -- this used to
-     run on every single page load, on every page, whether or not anyone
-     ever used search, downloading the entire product catalog for nothing
-     most of the time)
-  ========================= */
-
-  useEffect(() => {
-    if (!searchOpen || products.length > 0) return;
-
-    let cancelled = false;
-
-    async function fetchProducts() {
-      try {
-        const response = await fetch("/api/printify");
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch products");
-        }
-
-        const data = await response.json();
-
-        if (!cancelled) {
-          setProducts(data);
-        }
-      } catch (error) {
-        console.error("Search products error:", error);
-      }
-    }
-
-    fetchProducts();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [searchOpen, products.length]);
+  // Reads the catalog the app already fetched once via <ProductsProvider>
+  // (see src/context/ProductsContext.jsx) instead of firing its own
+  // separate request the first time search opens -- search is instant now
+  // since the data is already there by the time anyone clicks the icon.
+  const { products } = useProducts();
 
   /* =========================
      NAVBAR SCROLL BEHAVIOR
@@ -115,6 +84,8 @@ function Navbar() {
           <img
             src="/logo.png"
             alt="Calm Canvas"
+            width="68"
+            height="68"
           />
 
           <div className="navbar-brand">
@@ -297,6 +268,8 @@ function Navbar() {
             <img
               src="/logo.png"
               alt="Calm Canvas"
+              width="45"
+              height="45"
             />
 
             <span>

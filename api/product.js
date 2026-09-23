@@ -1,6 +1,7 @@
 import {
   printifyHeaders,
   mapProductFull,
+  getBlueprintTitleMap,
   PRINTIFY_SHOP_ID,
 } from "./_lib/printify-shared.js";
 
@@ -20,10 +21,13 @@ export default async function handler(req, res) {
   try {
     const headers = printifyHeaders();
 
-    const response = await fetch(
-      `https://api.printify.com/v1/shops/${PRINTIFY_SHOP_ID}/products/${id}.json`,
-      { headers }
-    );
+    const [response, blueprintTitles] = await Promise.all([
+      fetch(
+        `https://api.printify.com/v1/shops/${PRINTIFY_SHOP_ID}/products/${id}.json`,
+        { headers }
+      ),
+      getBlueprintTitleMap(),
+    ]);
 
     if (!response.ok) {
       const error = await response.text();
@@ -37,7 +41,14 @@ export default async function handler(req, res) {
       "public, max-age=300, s-maxage=300, stale-while-revalidate=86400"
     );
 
-    return res.status(200).json(mapProductFull(product));
+    return res
+      .status(200)
+      .json(
+        mapProductFull(
+          product,
+          blueprintTitles.get(Number(product.blueprint_id)) || ""
+        )
+      );
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }

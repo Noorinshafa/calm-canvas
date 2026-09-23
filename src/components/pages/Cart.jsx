@@ -1,8 +1,11 @@
 import "../../styles/cart.css";
 import { Link } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
+import useSEO from "../../hooks/useSEO";
 
 function Cart() {
+  useSEO({ title: "Cart", path: "/cart" });
+
   const {
     cart,
     increaseQuantity,
