@@ -24,16 +24,6 @@ function Contact() {
           feel free to reach out anytime.
         </p>
 
-        <div className="email-card">
-
-          <h3>Email</h3>
-
-          <a href="mailto:noorshafa7865@gmail.com">
-            noorshafa7865@gmail.com
-          </a>
-
-        </div>
-
         <div className="email-card complaints-card">
 
           <h3>Complaints &amp; Support</h3>
