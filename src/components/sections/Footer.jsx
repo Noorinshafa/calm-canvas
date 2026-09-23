@@ -57,17 +57,17 @@ function Footer() {
     Contact Us
   </Link>
 
-  <a href="#">
-    FAQs
-  </a>
+  <Link to="/shipping-returns">
+    Shipping &amp; Returns
+  </Link>
 
-  <a href="#">
-    Shipping
-  </a>
+  <Link to="/terms">
+    Terms &amp; Conditions
+  </Link>
 
-  <a href="#">
-    Returns
-  </a>
+  <Link to="/privacy-policy">
+    Privacy Policy
+  </Link>
 
 </div>
 

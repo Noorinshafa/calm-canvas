@@ -1,0 +1,182 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600&display=swap");
+
+.legal-page{
+
+    background:#fffdfc;
+
+    min-height:100vh;
+
+    padding:180px 8% 120px;
+
+}
+
+.legal-hero{
+
+    max-width:800px;
+
+    margin:0 auto 60px;
+
+    text-align:center;
+
+}
+
+.legal-hero span{
+
+    display:inline-block;
+
+    font-family:"Manrope",sans-serif;
+
+    font-size:.85rem;
+
+    font-weight:700;
+
+    letter-spacing:4px;
+
+    color:#d89caf;
+
+    margin-bottom:25px;
+
+}
+
+.legal-hero h1{
+
+    font-family:"Cormorant Garamond",serif;
+
+    font-size:3.6rem;
+
+    font-weight:600;
+
+    line-height:1.1;
+
+    color:#5f4549;
+
+    margin-bottom:20px;
+
+}
+
+.legal-hero p{
+
+    font-family:"Manrope",sans-serif;
+
+    font-size:1.02rem;
+
+    line-height:1.9;
+
+    color:#8a7378;
+
+}
+
+.legal-content{
+
+    max-width:780px;
+
+    margin:0 auto;
+
+    background:rgba(255,255,255,.75);
+
+    backdrop-filter:blur(25px);
+
+    border:1px solid rgba(255,255,255,.9);
+
+    border-radius:30px;
+
+    padding:55px 60px;
+
+    box-shadow:0 25px 60px rgba(232,183,201,.14);
+
+}
+
+.legal-content h2{
+
+    font-family:"Cormorant Garamond",serif;
+
+    font-size:1.7rem;
+
+    font-weight:600;
+
+    color:#60484d;
+
+    margin:40px 0 16px;
+
+}
+
+.legal-content h2:first-child{
+
+    margin-top:0;
+
+}
+
+.legal-content p{
+
+    font-family:"Manrope",sans-serif;
+
+    font-size:.98rem;
+
+    line-height:1.85;
+
+    color:#6d5c5f;
+
+    margin-bottom:14px;
+
+}
+
+.legal-content ul,
+.legal-content ol{
+
+    margin:0 0 16px 20px;
+
+    font-family:"Manrope",sans-serif;
+
+    font-size:.98rem;
+
+    line-height:1.85;
+
+    color:#6d5c5f;
+
+}
+
+.legal-content li{
+
+    margin-bottom:8px;
+
+}
+
+.legal-content a{
+
+    color:#d88da2;
+
+    font-weight:600;
+
+    transition:.3s;
+
+}
+
+.legal-content a:hover{
+
+    color:#b56d82;
+
+}
+
+.legal-content strong{
+
+    color:#5f4549;
+
+}
+
+.legal-updated{
+
+    display:block;
+
+    text-align:center;
+
+    max-width:780px;
+
+    margin:24px auto 0;
+
+    font-family:"Manrope",sans-serif;
+
+    font-size:.85rem;
+
+    color:#a8949770;
+
+}

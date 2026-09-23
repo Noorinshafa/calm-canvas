@@ -26,6 +26,9 @@ const Cart = lazy(() => import("./components/pages/Cart"));
 const About = lazy(() => import("./components/pages/About"));
 const Contact = lazy(() => import("./components/pages/Contact"));
 const OrderSuccess = lazy(() => import("./components/pages/OrderSuccess"));
+const Terms = lazy(() => import("./components/pages/Terms"));
+const Privacy = lazy(() => import("./components/pages/Privacy"));
+const ShippingReturns = lazy(() => import("./components/pages/ShippingReturns"));
 
 const CollectionPage = lazy(() => import("./components/common/CollectionPage"));
 
@@ -153,6 +156,24 @@ function App() {
         <Route
           path="/contact"
           element={<Contact />}
+        />
+
+
+        {/* ================= LEGAL ================= */}
+
+        <Route
+          path="/terms"
+          element={<Terms />}
+        />
+
+        <Route
+          path="/privacy-policy"
+          element={<Privacy />}
+        />
+
+        <Route
+          path="/shipping-returns"
+          element={<ShippingReturns />}
         />
 
 

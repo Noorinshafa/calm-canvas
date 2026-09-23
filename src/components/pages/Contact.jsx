@@ -34,6 +34,24 @@ function Contact() {
 
         </div>
 
+        <div className="email-card complaints-card">
+
+          <h3>Complaints &amp; Support</h3>
+
+          <p>
+            Have an issue with an order or our service? Email us at{" "}
+            <a href="mailto:shopcalmcanvas@gmail.com">
+              shopcalmcanvas@gmail.com
+            </a>{" "}
+            with your order number and a short description of the problem.
+            We aim to respond within 2 business days and to resolve most
+            complaints within 7 days. If you're not satisfied with how a
+            complaint has been handled, you're welcome to reply and ask for
+            it to be reviewed again.
+          </p>
+
+        </div>
+
       </div>
 
     </section>

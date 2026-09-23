@@ -16,6 +16,9 @@ const STATIC_ROUTES = [
   { path: "/mugs", priority: "0.8" },
   { path: "/about", priority: "0.5" },
   { path: "/contact", priority: "0.5" },
+  { path: "/shipping-returns", priority: "0.4" },
+  { path: "/terms", priority: "0.3" },
+  { path: "/privacy-policy", priority: "0.3" },
 ];
 
 function xmlEscape(value) {

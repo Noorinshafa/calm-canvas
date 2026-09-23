@@ -117,3 +117,25 @@
     color:#b56d82;
 
 }
+
+.complaints-card{
+
+    margin-top:30px;
+
+    text-align:left;
+
+}
+
+.complaints-card p{
+
+    font-family:"Manrope",sans-serif;
+
+    font-size:.98rem;
+
+    line-height:1.85;
+
+    color:#8a7378;
+
+    margin-bottom:0;
+
+}
