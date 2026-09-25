@@ -30,9 +30,11 @@ function Terms() {
         <h2>1. Introduction</h2>
 
         <p>
-          This website is owned and operated by <strong>ShopCalmCanvas</strong> (referred
-          to throughout this website as "we", "us" and "our"). Our registered
-          office and principal place of business is located in Islamabad, Pakistan.
+          This website is owned and operated by <strong>ShopCalmCanvas</strong>, a
+          sole proprietorship operated by <strong>Noorin</strong> (referred to
+          throughout this website as "we", "us" and "our"). Our registered
+          business address is: Boshet, PO Khas Sumayar, District Nagar,
+          Gilgit-Baltistan, Hunza Nagar, Nagar-I, Pakistan.
         </p>
 
         <p>
