@@ -52,6 +52,31 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "Missing shipping information." });
     }
 
+    // Server-side validation, deliberately duplicating Checkout.jsx's
+    // client-side checks. The client-side form can only ever be a
+    // convenience -- anyone can call this endpoint directly with a
+    // hand-crafted request, skipping the browser entirely, so the same
+    // required fields and email format are enforced here as the
+    // authoritative check before an order is ever created.
+    const requiredShippingFields = [
+      ["firstName", "First name"],
+      ["lastName", "Last name"],
+      ["phone", "Phone number"],
+      ["email", "Email address"],
+      ["city", "City"],
+      ["address", "Complete address"],
+    ];
+
+    for (const [field, label] of requiredShippingFields) {
+      if (!shipping[field] || !String(shipping[field]).trim()) {
+        return res.status(400).json({ error: `${label} is required.` });
+      }
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(shipping.email).trim())) {
+      return res.status(400).json({ error: "Enter a valid email address." });
+    }
+
     // SECURITY: the amount charged is never taken from the browser. Every
     // item is re-priced here from Printify's own live data -- a customer
     // editing `priceValue` in devtools (or POSTing a hand-crafted request

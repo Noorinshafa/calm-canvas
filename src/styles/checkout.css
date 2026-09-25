@@ -133,6 +133,14 @@
     border-color:#d89caf;
 }
 
+.checkout-left input:focus-visible,
+.checkout-left textarea:focus-visible{
+
+    outline:2px solid #d89caf;
+
+    outline-offset:2px;
+}
+
 .checkout-left textarea{
 
     resize:none;

@@ -44,6 +44,16 @@ function setMeta(selector, attr, value) {
   if (el) el.setAttribute(attr, value);
 }
 
+function setRobotsMeta(content) {
+  let meta = document.head.querySelector('meta[name="robots"]');
+  if (!meta) {
+    meta = document.createElement("meta");
+    meta.setAttribute("name", "robots");
+    document.head.appendChild(meta);
+  }
+  meta.setAttribute("content", content);
+}
+
 function setCanonical(href) {
   let link = document.head.querySelector('link[rel="canonical"]');
   if (!link) {
@@ -80,6 +90,13 @@ function setJsonLd(data) {
  * @param {string} [opts.image] - absolute or site-relative image URL for social previews.
  * @param {"website"|"product"} [opts.type] - og:type.
  * @param {object|object[]} [opts.jsonLd] - structured data to inject as JSON-LD.
+ * @param {boolean} [opts.noindex] - true for pages that should never appear
+ *   in search results (cart, checkout, order confirmation, 404) -- sets
+ *   <meta name="robots" content="noindex, follow"> instead of the default
+ *   "index, follow". This is a second, independent layer on top of
+ *   robots.txt (which only blocks crawling, not indexing a URL that's
+ *   linked to from elsewhere) and on top of /api/sitemap already leaving
+ *   these routes out.
  */
 export default function useSEO({
   title,
@@ -88,6 +105,7 @@ export default function useSEO({
   image,
   type = "website",
   jsonLd,
+  noindex = false,
 } = {}) {
   useEffect(() => {
     const fullTitle = title ? `${title} | ${SITE_NAME}` : DEFAULT_TITLE;
@@ -96,6 +114,8 @@ export default function useSEO({
     const img = absoluteUrl(image);
 
     document.title = fullTitle;
+
+    setRobotsMeta(noindex ? "noindex, follow" : "index, follow");
 
     setMeta('meta[name="description"]', "content", desc);
     setMeta('meta[property="og:title"]', "content", fullTitle);
@@ -109,7 +129,7 @@ export default function useSEO({
 
     setCanonical(url);
     setJsonLd(jsonLd);
-  }, [title, description, path, image, type, jsonLd]);
+  }, [title, description, path, image, type, jsonLd, noindex]);
 }
 
 // Strips tags from a Printify description (already sanitized separately for

@@ -5,7 +5,7 @@ import useSEO from "../../hooks/useSEO";
 import "../../styles/ordersuccess.css";
 
 function OrderSuccess() {
-  useSEO({ title: "Order Confirmed", path: "/order-success" });
+  useSEO({ title: "Order Confirmed", path: "/order-success", noindex: true });
 
   const { setCart } = useCart();
   const [searchParams] = useSearchParams();

@@ -4,7 +4,7 @@ import { useCart } from "../../context/CartContext";
 import useSEO from "../../hooks/useSEO";
 
 function Cart() {
-  useSEO({ title: "Cart", path: "/cart" });
+  useSEO({ title: "Cart", path: "/cart", noindex: true });
 
   const {
     cart,
@@ -91,11 +91,12 @@ function Cart() {
                       onClick={() =>
                         decreaseQuantity(item.cartItemId)
                       }
+                      aria-label={`Decrease quantity of ${item.title}`}
                     >
                       −
                     </button>
 
-                    <span>
+                    <span aria-live="polite">
                       {item.quantity}
                     </span>
 
@@ -103,6 +104,7 @@ function Cart() {
                       onClick={() =>
                         increaseQuantity(item.cartItemId)
                       }
+                      aria-label={`Increase quantity of ${item.title}`}
                     >
                       +
                     </button>
@@ -114,6 +116,7 @@ function Cart() {
                     onClick={() =>
                       removeFromCart(item.cartItemId)
                     }
+                    aria-label={`Remove ${item.title} from cart`}
                   >
                     Remove
                   </button>

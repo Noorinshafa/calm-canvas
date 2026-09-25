@@ -130,7 +130,19 @@ function Privacy() {
           a financial institution.
         </p>
 
-        <h2>7. Contact Us</h2>
+        <h2>7. Cookies and Local Storage</h2>
+
+        <p>
+          This website does not use advertising or tracking cookies, and we
+          do not run analytics software that profiles individual visitors.
+          The only information we store in your browser is your shopping
+          cart contents (the items you've added, saved locally on your own
+          device using your browser's storage) so that it's still there if
+          you refresh the page or come back later. This stays on your device
+          and is never sent to us until you choose to check out.
+        </p>
+
+        <h2>8. Contact Us</h2>
 
         <p>
           If you have any questions about this Privacy Policy or how we

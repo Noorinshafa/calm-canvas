@@ -1,8 +1,52 @@
 {
   "rewrites": [
+    { "source": "/", "destination": "/index.html" },
+    { "source": "/collections", "destination": "/index.html" },
+    { "source": "/tshirts", "destination": "/index.html" },
+    { "source": "/hoodies", "destination": "/index.html" },
+    { "source": "/sweatshirts", "destination": "/index.html" },
+    { "source": "/totebags", "destination": "/index.html" },
+    { "source": "/phonecases", "destination": "/index.html" },
+    { "source": "/mugs", "destination": "/index.html" },
+    { "source": "/product/:id", "destination": "/index.html" },
+    { "source": "/cart", "destination": "/index.html" },
+    { "source": "/about", "destination": "/index.html" },
+    { "source": "/contact", "destination": "/index.html" },
+    { "source": "/terms", "destination": "/index.html" },
+    { "source": "/privacy-policy", "destination": "/index.html" },
+    { "source": "/shipping-returns", "destination": "/index.html" },
+    { "source": "/checkout", "destination": "/index.html" },
+    { "source": "/order-success", "destination": "/index.html" }
+  ],
+  "headers": [
     {
-      "source": "/((?!api/).*)",
-      "destination": "/index.html"
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=(), usb=(), payment=(), interest-cohort=()"
+        },
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=63072000; includeSubDomains"
+        },
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://images-api.printify.com https://*.cloudfront.net; connect-src 'self'; form-action 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'"
+        }
+      ]
     }
   ]
 }

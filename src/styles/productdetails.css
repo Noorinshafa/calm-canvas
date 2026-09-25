@@ -278,6 +278,14 @@
 
 }
 
+.product-select:focus-visible{
+
+    outline:2px solid #d89caf;
+
+    outline-offset:2px;
+
+}
+
 .product-select:hover{
 
     border-color:#d89caf;

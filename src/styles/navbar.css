@@ -317,6 +317,12 @@
   background: transparent;
 }
 
+.navbar-search-inner input:focus-visible {
+  outline: 2px solid #d89caf;
+
+  outline-offset: 2px;
+}
+
 .navbar-search-inner input::placeholder {
   color: #9b9f9a;
 }

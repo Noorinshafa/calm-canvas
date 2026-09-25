@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
 import useProducts from "../../hooks/useProducts";
 import { getProduct } from "../../services/printifyApi";
@@ -181,7 +181,15 @@ function ProductDetails() {
   }
 
   if (!product) {
-    return <h2>Product not found.</h2>;
+    return (
+      <div style={{ textAlign: "center", padding: "180px 8% 120px" }}>
+        <h2>Product not found.</h2>
+        <p style={{ margin: "16px 0" }}>
+          This product may have been removed or the link may be incorrect.
+        </p>
+        <Link to="/collections">Browse all products</Link>
+      </div>
+    );
   }
 
   const relatedProducts = allProducts
@@ -309,6 +317,7 @@ function ProductDetails() {
     className="product-select"
     value={selectedSize}
     onChange={(e) => setSelectedSize(e.target.value)}
+    aria-label="Choose size"
   >
     {sizeOptions.map((size) => (
 
@@ -337,6 +346,7 @@ function ProductDetails() {
     className="product-select"
     value={selectedColor}
     onChange={(e) => setSelectedColor(e.target.value)}
+    aria-label="Choose color"
   >
     {colorOptions.map((color) => (
 
@@ -364,16 +374,18 @@ function ProductDetails() {
       onClick={() =>
         setQuantity((q) => Math.max(1, q - 1))
       }
+      aria-label="Decrease quantity"
     >
       −
     </button>
 
-    <span>{quantity}</span>
+    <span aria-live="polite">{quantity}</span>
 
     <button
       onClick={() =>
         setQuantity((q) => q + 1)
       }
+      aria-label="Increase quantity"
     >
       +
     </button>

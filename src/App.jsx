@@ -1,5 +1,5 @@
 import { Suspense, lazy } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 import Navbar from "./components/layout/Navbar";
 import ScrollToTop from "./components/common/ScrollToTop";
@@ -29,6 +29,7 @@ const OrderSuccess = lazy(() => import("./components/pages/OrderSuccess"));
 const Terms = lazy(() => import("./components/pages/Terms"));
 const Privacy = lazy(() => import("./components/pages/Privacy"));
 const ShippingReturns = lazy(() => import("./components/pages/ShippingReturns"));
+const NotFound = lazy(() => import("./components/pages/NotFound"));
 
 const CollectionPage = lazy(() => import("./components/common/CollectionPage"));
 
@@ -194,7 +195,7 @@ function App() {
 
         <Route
           path="*"
-          element={<Navigate to="/" replace />}
+          element={<NotFound />}
         />
 
       </Routes>

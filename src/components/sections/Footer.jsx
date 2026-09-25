@@ -83,20 +83,37 @@ function Footer() {
             collections and exclusive offers.
           </p>
 
-          <div className="newsletter-box">
+          {/* NOTE: this is not yet wired to an email/CRM service -- see
+              LAUNCH-AUDIT.md (requirement 16) for what's needed before this
+              can actually deliver a submitted address anywhere. Left as a
+              properly labelled, keyboard-accessible form in the meantime,
+              rather than faking a "subscribed" response with nowhere for
+              the email to go. */}
+          <form
+            className="newsletter-box"
+            onSubmit={(e) => e.preventDefault()}
+          >
+
+            <label htmlFor="newsletter-email" className="sr-only">
+              Email address
+            </label>
 
             <input
+              id="newsletter-email"
+              name="email"
               type="email"
               placeholder="Your email"
+              autoComplete="email"
+              required
             />
 
-            <button>
+            <button type="submit">
 
               Join
 
             </button>
 
-          </div>
+          </form>
 
         </div>
 
