@@ -14,7 +14,20 @@ function PhoneCases() {
   const { products, loading, error } = useProducts();
 
   const phonecases = products.filter((product) =>
-    isInCategory(product, ["case"], [269, 370, 421, 841, 1521, 1273])
+    isInCategory(
+      product,
+      // Printify's own blueprint names aren't consistently singular or
+      // plural ("iPhone Case" vs "Slim Phone Cases"), and the matching in
+      // matchesCategory.js only counts a WHOLE word as a match -- "case"
+      // deliberately does not match "cases" (same reason "hoodie" doesn't
+      // wrongly match "hoodies" by accident elsewhere). Listing both forms
+      // here, same pattern already used by Hoodies ("hoodie"/"hooded") and
+      // Totebags ("bag"/"tote").
+      ["case", "cases"],
+      // 268 = "Slim Phone Cases" blueprint, added as a fallback too so this
+      // specific blueprint still matches even if its name changes later.
+      [268, 269, 370, 421, 841, 1521, 1273]
+    )
   );
 
   if (loading) return <h2>Loading...</h2>;
