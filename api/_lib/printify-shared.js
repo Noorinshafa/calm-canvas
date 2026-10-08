@@ -1,3 +1,5 @@
+import { assignSlugs, hasGenericTitle } from "./product-slug.js";
+
 const PRINTIFY_SHOP_ID = "23619549";
 const PRINTIFY_API_BASE = "https://api.printify.com/v1";
 
@@ -109,6 +111,10 @@ export function mapProductSummary(product, blueprintTitle = "") {
     priceValue,
     blueprint_id: product.blueprint_id,
     blueprintTitle,
+    // false for products still carrying the supplier's default name (e.g.
+    // "Tough Phone Cases") -- kept out of the sitemap and set to noindex.
+    indexable: !hasGenericTitle(product.title, blueprintTitle),
+    updatedAt: product.updated_at || null,
   };
 }
 
@@ -275,12 +281,20 @@ export async function getAllProductSummaries() {
   // Deliberately lightweight -- see mapProductSummary's comment. Product
   // detail pages fetch their own full data from /api/product instead of
   // this endpoint.
-  return allProducts.map((product) =>
+  const summaries = allProducts.map((product) =>
     mapProductSummary(
       product,
       blueprintTitles.get(Number(product.blueprint_id)) || ""
     )
   );
+
+  // Clean, readable web address for each product (see product-slug.js).
+  const slugs = assignSlugs(summaries);
+
+  return summaries.map((summary) => ({
+    ...summary,
+    slug: slugs.get(String(summary.id)),
+  }));
 }
 
 export { PRINTIFY_SHOP_ID };

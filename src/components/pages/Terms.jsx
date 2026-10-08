@@ -1,12 +1,12 @@
 import "../../styles/legal.css";
 import useSEO from "../../hooks/useSEO";
+import { PAGES } from "../../config/site.js";
 
 function Terms() {
   useSEO({
-    title: "Terms & Conditions",
-    description:
-      "The terms and conditions that apply when you use the ShopCalmCanvas website or place an order with us.",
-    path: "/terms",
+    title: PAGES.terms.title,
+    description: PAGES.terms.description,
+    path: PAGES.terms.path,
   });
 
   return (

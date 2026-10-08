@@ -4,11 +4,23 @@ import { useCart } from "../../context/CartContext";
 import useProducts from "../../hooks/useProducts";
 import { getProduct } from "../../services/printifyApi";
 import { sanitizeHtml } from "../../utils/sanitizeHtml";
-import useSEO, { absoluteUrl, toPlainText } from "../../hooks/useSEO";
+import useSEO, { toPlainText } from "../../hooks/useSEO";
+import {
+  breadcrumbJsonLd,
+  buildProductSeo,
+  cleanProductName,
+  formatPrice,
+  productJsonLd,
+  productPath,
+} from "../../utils/seoShared.js";
+import { PRODUCT_COPY } from "../../content/productCopy.js";
+import { trackAddToCart, trackViewItem } from "../../utils/analytics";
 import toast from "react-hot-toast";
 
 import "../../styles/productdetails.css";
+import "../../styles/seo-extras.css";
 import ProductCard from "../ui/ProductCard";
+import Breadcrumbs from "../common/Breadcrumbs";
 
 // Printify variant titles aren't all "Size / Color" -- a mug or phone case
 // is often single-dimension ("11oz", "iPhone 15 Pro"), not two. Splitting
@@ -32,12 +44,41 @@ function parseVariantTitle(title) {
   return { size: null, color: null };
 }
 
+// The pre-built HTML for a product page (see scripts/postbuild.mjs) records
+// which product it is on the #root element. Reading it lets a page opened
+// directly at /products/<name> load its product immediately, without first
+// waiting for the whole catalog just to look the name up. It's only trusted
+// when it matches the address being shown.
+function readPrerenderHint(slug) {
+  if (!slug || typeof document === "undefined") return "";
+
+  const root = document.getElementById("root");
+
+  return root?.dataset?.productSlug === slug
+    ? root.dataset.productId || ""
+    : "";
+}
+
 function ProductDetails() {
-  const { id } = useParams();
+  const { id: idParam, slug } = useParams();
 
   const navigate = useNavigate();
 
   const { addToCart } = useCart();
+
+  const { products: allProducts, loading: catalogLoading } = useProducts();
+
+  // Product pages now live at /products/<readable-name>. Old links of the
+  // form /product/<id> still work. Either way we need the product's id to
+  // ask Printify for the full details.
+  const hintedId = useMemo(() => readPrerenderHint(slug), [slug]);
+
+  const productId = useMemo(() => {
+    if (idParam) return idParam;
+    if (hintedId) return hintedId;
+
+    return allProducts.find((item) => item.slug === slug)?.id || "";
+  }, [idParam, hintedId, allProducts, slug]);
 
   // Fetches just this one product (with its full variant details) instead
   // of the whole catalog -- see api/product.js for why. Related products
@@ -47,9 +88,9 @@ function ProductDetails() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const { products: allProducts } = useProducts();
-
   useEffect(() => {
+    if (!productId) return undefined;
+
     let cancelled = false;
 
     async function fetchProduct() {
@@ -58,7 +99,7 @@ function ProductDetails() {
         setError("");
         setProduct(null);
 
-        const data = await getProduct(id);
+        const data = await getProduct(productId);
 
         if (!cancelled) {
           setProduct(data);
@@ -79,7 +120,7 @@ function ProductDetails() {
     return () => {
       cancelled = true;
     };
-  }, [id]);
+  }, [productId]);
 
   const [selectedImage, setSelectedImage] = useState("");
   const [quantity, setQuantity] = useState(1);
@@ -89,7 +130,7 @@ function ProductDetails() {
   // The API now only ever sends enabled/purchasable variants (see
   // api/_lib/printify-shared.js), so anything listed here is safe to sell --
   // but a product can still legitimately have zero of them (fully sold out).
-  const variants = product?.variants || [];
+  const variants = useMemo(() => product?.variants || [], [product]);
   const hasVariants = variants.length > 0;
 
   const parsedVariants = useMemo(
@@ -112,6 +153,37 @@ function ProductDetails() {
     [parsedVariants, hasColorOptions]
   );
 
+  // The variant the shopper has picked right now. Variants of the same
+  // product can cost different amounts (e.g. larger hoodie sizes), and the
+  // server charges the price of the exact variant ordered -- so the price
+  // shown on the page, in the cart and at checkout must come from this, not
+  // from the product's lowest price.
+  const activeVariant = useMemo(() => {
+    if (!hasVariants) return undefined;
+
+    return (
+      parsedVariants.find(({ parsed }) => {
+        const sizeMatches = parsed.size === selectedSize;
+        const colorMatches = hasColorOptions
+          ? parsed.color === selectedColor
+          : true;
+        return sizeMatches && colorMatches;
+      })?.variant || variants[0]
+    );
+  }, [
+    hasVariants,
+    parsedVariants,
+    selectedSize,
+    selectedColor,
+    hasColorOptions,
+    variants,
+  ]);
+
+  const activePriceValue =
+    typeof activeVariant?.price === "number"
+      ? activeVariant.price / 100
+      : product?.priceValue;
+
   const safeDescription = useMemo(
     () => sanitizeHtml(product?.description || ""),
     [product?.description]
@@ -122,40 +194,70 @@ function ProductDetails() {
     [product?.description]
   );
 
-  const productJsonLd = useMemo(() => {
+  // The catalog entry carries the readable address (slug); the single-product
+  // response doesn't, so take it from the catalog when it has loaded.
+  const catalogEntry = useMemo(
+    () => allProducts.find((item) => item.id === product?.id),
+    [allProducts, product?.id]
+  );
+
+  const productSlug = slug || catalogEntry?.slug || "";
+
+  const canonicalPath = product
+    ? productPath({ id: product.id, slug: productSlug })
+    : slug
+    ? `/products/${slug}`
+    : `/product/${idParam || ""}`;
+
+  const seo = useMemo(
+    () => (product ? buildProductSeo(product) : null),
+    [product]
+  );
+
+  const crumbs = useMemo(() => {
+    if (!product || !seo) return [];
+
+    const list = [{ name: "Home", path: "/" }];
+
+    if (seo.collection) {
+      list.push({ name: "Collections", path: "/collections" });
+      list.push({ name: seo.collection.nav, path: seo.collection.path });
+    } else {
+      list.push({ name: "Collections", path: "/collections" });
+    }
+
+    list.push({ name: seo.name, path: canonicalPath });
+
+    return list;
+  }, [product, seo, canonicalPath]);
+
+  const jsonLd = useMemo(() => {
     if (!product) return undefined;
 
-    return {
-      "@context": "https://schema.org",
-      "@type": "Product",
-      name: product.title,
-      image: product.image ? [absoluteUrl(product.image)] : undefined,
-      description: plainDescription,
-      sku: String(product.id),
-      offers: {
-        "@type": "Offer",
-        url: absoluteUrl(`/product/${product.id}`),
-        priceCurrency: "USD",
-        price: product.priceValue,
-        availability: hasVariants
-          ? "https://schema.org/InStock"
-          : "https://schema.org/OutOfStock",
-      },
-    };
-  }, [product, plainDescription, hasVariants]);
+    return [
+      breadcrumbJsonLd(crumbs),
+      productJsonLd(
+        { ...product, slug: productSlug },
+        { inStock: hasVariants, plainDescription }
+      ),
+    ];
+  }, [product, crumbs, productSlug, hasVariants, plainDescription]);
 
   // Per-product title/description/canonical/OG + Product structured data --
   // see src/hooks/useSEO.js for why this matters. Runs unconditionally
   // (before the loading/error early-returns below) since hooks can't be
   // called conditionally; useSEO itself is safe to call with an
   // undefined/loading product.
+  const lookupFailed = !productId && !catalogLoading;
+
   useSEO({
-    title: product?.title,
-    description: plainDescription,
-    path: `/product/${id}`,
+    title: seo?.name || (lookupFailed || error ? "Product not found" : undefined),
+    description: seo?.description,
+    path: canonicalPath,
     image: product?.image,
     type: "product",
-    jsonLd: productJsonLd,
+    jsonLd,
+    noindex: lookupFailed || Boolean(error) || product?.indexable === false,
   });
 
   useEffect(() => {
@@ -164,13 +266,47 @@ function ProductDetails() {
       setQuantity(1);
 
       if (variants.length) {
-        const first = parseVariantTitle(variants[0].title);
+        // Start on the cheapest option so the price shown on arrival is the
+        // "from" price the listing and search results advertise.
+        const cheapest = variants.reduce(
+          (best, variant) =>
+            typeof variant.price === "number" &&
+            (!best || variant.price < best.price)
+              ? variant
+              : best,
+          null
+        );
+
+        const first = parseVariantTitle((cheapest || variants[0]).title);
         setSelectedSize(first.size || "");
         setSelectedColor(first.color || "");
       }
+
+      trackViewItem({
+        id: product.id,
+        name: cleanProductName(product.title),
+        price: product.priceValue,
+        category: seo?.collection?.nav,
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [product]);
+
+  if (!productId) {
+    if (catalogLoading) {
+      return <h2>Loading...</h2>;
+    }
+
+    return (
+      <div style={{ textAlign: "center", padding: "180px 8% 120px" }}>
+        <h1>Product not found</h1>
+        <p style={{ margin: "16px 0" }}>
+          This product may have been removed or the link may be incorrect.
+        </p>
+        <Link to="/collections">Browse all products</Link>
+      </div>
+    );
+  }
 
   if (loading) {
     return <h2>Loading...</h2>;
@@ -183,7 +319,7 @@ function ProductDetails() {
   if (!product) {
     return (
       <div style={{ textAlign: "center", padding: "180px 8% 120px" }}>
-        <h2>Product not found.</h2>
+        <h1>Product not found</h1>
         <p style={{ margin: "16px 0" }}>
           This product may have been removed or the link may be incorrect.
         </p>
@@ -191,6 +327,9 @@ function ProductDetails() {
       </div>
     );
   }
+
+  const productName = cleanProductName(product.title);
+  const extraCopy = PRODUCT_COPY[product.id];
 
   const relatedProducts = allProducts
     .filter(
@@ -200,46 +339,53 @@ function ProductDetails() {
     )
     .slice(0, 4);
 
-  function findSelectedVariant() {
-    if (!hasVariants) return undefined;
-
-    return (
-      parsedVariants.find(({ parsed }) => {
-        const sizeMatches = parsed.size === selectedSize;
-        const colorMatches = hasColorOptions
-          ? parsed.color === selectedColor
-          : true;
-        return sizeMatches && colorMatches;
-      })?.variant || variants[0]
-    );
-  }
-
   function handleAddToCart({ redirectToCheckout }) {
-    const selectedVariant = findSelectedVariant();
+    const selectedVariant = activeVariant;
 
     if (!selectedVariant) {
       toast.error("This product is currently out of stock.");
       return;
     }
 
+    // Price the cart line at the price of the variant actually chosen, so the
+    // cart and checkout totals match what Safepay will charge (the server
+    // always re-prices from Printify; see api/_lib/printify-shared.js).
+    const variantPrice =
+      typeof selectedVariant.price === "number"
+        ? selectedVariant.price / 100
+        : product.priceValue;
+
     addToCart({
       ...product,
+      price: formatPrice(variantPrice),
+      priceValue: variantPrice,
       quantity,
       selectedVariant,
       selectedSize,
       selectedColor,
     });
 
+    trackAddToCart({
+      id: product.id,
+      name: productName,
+      price: variantPrice,
+      quantity,
+      category: seo?.collection?.nav,
+      variant: selectedVariant.title,
+    });
+
     if (redirectToCheckout) {
       navigate("/checkout");
     } else {
-      toast.success(`${product.title} added to cart!`);
+      toast.success(`${productName} added to cart!`);
     }
   }
 
   return (
     <>
       <section className="product-details">
+        <Breadcrumbs items={crumbs} />
+
         <div className="product-container">
           <div className="details-image">
 
@@ -250,8 +396,11 @@ function ProductDetails() {
   <img
     className="details-image-img"
     src={selectedImage}
-    alt={product.title}
+    alt={productName}
+    width="760"
+    height="760"
     loading="eager"
+    fetchPriority="high"
     decoding="async"
   />
 
@@ -266,10 +415,12 @@ function ProductDetails() {
       <img
         key={index}
         src={img.src}
-        alt={`${product.title} ${index + 1}`}
+        alt={`${productName} — view ${index + 1}`}
         className={`thumbnail ${
           selectedImage === img.src ? "active" : ""
         }`}
+        width="95"
+        height="95"
         loading="lazy"
         decoding="async"
         onClick={() => setSelectedImage(img.src)}
@@ -287,11 +438,12 @@ function ProductDetails() {
     CALM CANVAS
   </span>
 
-  <h1>{product.title}</h1>
+  <h1>{productName}</h1>
 
-  <h2>{product.price}</h2>
+  <p className="product-price">{formatPrice(activePriceValue)}</p>
 
-  <p
+  <div
+    className="product-description"
     dangerouslySetInnerHTML={{
       __html: safeDescription,
     }}
@@ -441,6 +593,48 @@ function ProductDetails() {
 </div>
 
 </section>
+
+{extraCopy && (
+
+<section className="product-extra">
+
+  <h2>About this design</h2>
+
+  {extraCopy.map((paragraph) => (
+    <p key={paragraph.slice(0, 48)}>{paragraph}</p>
+  ))}
+
+</section>
+
+)}
+
+<section className="product-extra">
+
+  <h2>Shipping &amp; returns at a glance</h2>
+
+  <ul>
+    <li>
+      Made to order: each item is printed after you order it, so please
+      allow around 2–7 business days to print and prepare, plus delivery.
+    </li>
+    <li>
+      Damaged, defective or incorrect items are replaced with a free
+      reprint or fully refunded when you contact us within 14 days of
+      delivery.
+    </li>
+    <li>
+      Because every item is custom printed, we can't accept returns for the
+      wrong size or a change of mind, so check the size options above.
+    </li>
+    <li>
+      Secure checkout through Safepay. Read the full{" "}
+      <Link to="/shipping-returns">Shipping, Returns &amp; Refunds</Link>{" "}
+      policy.
+    </li>
+  </ul>
+
+</section>
+
 <section className="related-products">
 
   <div className="related-heading">

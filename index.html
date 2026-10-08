@@ -5,49 +5,98 @@
     <link rel="icon" type="image/png" sizes="64x64" href="/favicon.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#1c2b22" />
 
-    <title>Calm Canvas | Premium Print-On-Demand Lifestyle Brand</title>
+    <!-- Fonts: ONE request for every family the site uses (it used to be nine
+         separate @import lines spread across the CSS files, each one a
+         render-blocking round trip). -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,500..800;1,500..800&family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600;700&display=swap"
+    />
+
+    <!-- seo:start
+         Everything between seo:start and seo:end is replaced for each page by
+         scripts/postbuild.mjs (title, description, canonical, social tags).
+         What is written here is the fallback used for pages that are not
+         pre-generated. At runtime src/hooks/useSEO.js keeps these tags
+         correct as visitors move between pages. Defaults mirror
+         src/config/site.js. -->
+    <title>Calm Canvas | Aesthetic Hoodies, Tees, Mugs &amp; Phone Cases</title>
     <meta
       name="description"
-      content="Calm Canvas is a premium print-on-demand lifestyle brand offering minimal, artistic hoodies, t-shirts, sweatshirts, tote bags, phone cases and mugs — designed for everyday elegance."
+      content="Shop original-art hoodies, sweatshirts, T-shirts, tote bags, phone cases and mugs. Printed on demand and made for you. Browse Calm Canvas."
     />
-    <meta name="theme-color" content="#1c2b22" />
     <meta name="robots" content="index, follow" />
-    <link rel="canonical" href="https://shopcalmcanvas.com/" />
+    <link rel="canonical" href="https://www.shopcalmcanvas.com/" />
 
-    <!-- Open Graph / social sharing preview -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Calm Canvas" />
-    <meta property="og:title" content="Calm Canvas | Premium Print-On-Demand Lifestyle Brand" />
+    <meta property="og:title" content="Calm Canvas | Aesthetic Hoodies, Tees, Mugs &amp; Phone Cases" />
     <meta
       property="og:description"
-      content="Minimal, artistic hoodies, t-shirts, sweatshirts, tote bags, phone cases and mugs — designed for everyday elegance."
+      content="Shop original-art hoodies, sweatshirts, T-shirts, tote bags, phone cases and mugs. Printed on demand and made for you. Browse Calm Canvas."
     />
-    <meta property="og:image" content="https://shopcalmcanvas.com/logo.png" />
-    <meta property="og:url" content="https://shopcalmcanvas.com/" />
+    <meta property="og:image" content="https://www.shopcalmcanvas.com/og/calm-canvas.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:url" content="https://www.shopcalmcanvas.com/" />
 
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="Calm Canvas | Premium Print-On-Demand Lifestyle Brand" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Calm Canvas | Aesthetic Hoodies, Tees, Mugs &amp; Phone Cases" />
     <meta
       name="twitter:description"
-      content="Minimal, artistic hoodies, t-shirts, sweatshirts, tote bags, phone cases and mugs — designed for everyday elegance."
+      content="Shop original-art hoodies, sweatshirts, T-shirts, tote bags, phone cases and mugs. Printed on demand and made for you. Browse Calm Canvas."
     />
-    <meta name="twitter:image" content="https://shopcalmcanvas.com/logo.png" />
+    <meta name="twitter:image" content="https://www.shopcalmcanvas.com/og/calm-canvas.png" />
+    <script type="application/ld+json" id="seo-jsonld"></script>
+    <!-- seo:end -->
 
-    <!-- Organization structured data -- static and always correct regardless
-         of route, so it lives here rather than being set per-page by
-         useSEO (see src/hooks/useSEO.js, which manages the per-route
-         Product/breadcrumb JSON-LD instead). -->
+    <!-- Business details: the same on every page, so they live here rather
+         than being set per page by useSEO. Keep in sync with
+         organizationJsonLd()/websiteJsonLd() in src/utils/seoShared.js. -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "Calm Canvas",
-        "url": "https://shopcalmcanvas.com/",
-        "logo": "https://shopcalmcanvas.com/logo.png"
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://www.shopcalmcanvas.com/#organization",
+            "name": "Calm Canvas",
+            "url": "https://www.shopcalmcanvas.com/",
+            "logo": "https://www.shopcalmcanvas.com/logo.png",
+            "email": "shopcalmcanvas@gmail.com",
+            "contactPoint": [
+              {
+                "@type": "ContactPoint",
+                "contactType": "customer support",
+                "email": "shopcalmcanvas@gmail.com",
+                "availableLanguage": ["English"]
+              }
+            ]
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://www.shopcalmcanvas.com/#website",
+            "name": "Calm Canvas",
+            "url": "https://www.shopcalmcanvas.com/",
+            "publisher": { "@id": "https://www.shopcalmcanvas.com/#organization" },
+            "inLanguage": "en"
+          }
+        ]
       }
     </script>
+
+    <!-- Minimal styling for the pre-generated page content shown for an instant
+         before the app takes over (see scripts/postbuild.mjs). -->
+    <style>
+      .prerendered { max-width: 1100px; margin: 0 auto; padding: 120px 5% 60px; }
+      .prerendered > img { display: block; max-width: min(100%, 520px); height: auto; margin: 0 auto 16px; }
+      .prerendered .prerender-products { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; }
+      .prerendered .prerender-products img { display: block; width: 100%; height: auto; }
+    </style>
   </head>
   <body>
     <div id="root"></div>

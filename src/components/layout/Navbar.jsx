@@ -7,6 +7,7 @@ import {
   FiSearch,
 } from "react-icons/fi";
 import useProducts from "../../hooks/useProducts";
+import { productPath, cleanProductName } from "../../utils/seoShared.js";
 
 import "../../styles/navbar.css";
 
@@ -89,7 +90,7 @@ function Navbar() {
           />
 
           <div className="navbar-brand">
-            <h2>Calm Canvas</h2>
+            <span className="brand-name">Calm Canvas</span>
 
             <p>
               Minimal Lifestyle Store
@@ -208,14 +209,14 @@ function Navbar() {
 
                     <Link
                       key={product.id}
-                      to={`/product/${product.id}`}
+                      to={productPath(product)}
                       className="navbar-search-product"
                       onClick={closeSearch}
                     >
 
                       <img
                         src={product.image}
-                        alt={product.title}
+                        alt={cleanProductName(product.title)}
                       />
 
                       <div>

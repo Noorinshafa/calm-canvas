@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import useProducts from "../../hooks/useProducts";
 import TiltCard from "../ui/TiltCard";
+import { productPath, cleanProductName } from "../../utils/seoShared.js";
 import "../../styles/bestsellers.css";
 
 // Shows real, live products straight from the shop (not stock photos),
@@ -41,21 +42,21 @@ function BestSellers() {
             maxTilt={8}
           >
             <Link
-              to={`/product/${product.id}`}
+              to={productPath(product)}
               className="bestseller-link"
             >
 
               <div className="bestseller-image">
                 <img
                   src={product.image}
-                  alt={product.title}
+                  alt={cleanProductName(product.title)}
                   loading="lazy"
                   decoding="async"
                 />
               </div>
 
               <div className="bestseller-info">
-                <h3>{product.title}</h3>
+                <h3>{cleanProductName(product.title)}</h3>
                 <span>{product.price}</span>
               </div>
 

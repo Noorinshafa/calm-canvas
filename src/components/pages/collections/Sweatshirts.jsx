@@ -1,59 +1,7 @@
-import useProducts from "../../../hooks/useProducts";
-import useSEO from "../../../hooks/useSEO";
-import { isInCategory } from "../../../utils/matchesCategory";
-import ProductCard from "../../ui/ProductCard";
+import CollectionView from "../../common/CollectionView";
 
 function Sweatshirts() {
-  useSEO({
-    title: "Sweatshirts",
-    description:
-      "Soft, comfortable sweatshirts designed for relaxed everyday style with the Calm Canvas aesthetic.",
-    path: "/sweatshirts",
-  });
-
-  const { products, loading, error } = useProducts();
-
-  const sweatshirts = products.filter((product) =>
-    isInCategory(product, ["sweatshirt"], [49, 1405], ["hooded"])
-  );
-
-  if (loading) {
-    return <h2>Loading...</h2>;
-  }
-
-  if (error) {
-    return <h2>{error}</h2>;
-  }
-
-  return (
-    <section className="collection-page">
-
-      <div className="collection-header">
-
-        <span>CALM CANVAS COLLECTION</span>
-
-        <h1>Effortless Comfort</h1>
-
-        <p>
-          Soft, comfortable sweatshirts designed for relaxed
-          everyday style with the Calm Canvas aesthetic.
-        </p>
-
-      </div>
-
-      <div className="products-grid">
-
-        {sweatshirts.map((product) => (
-          <ProductCard
-            key={product.id}
-            {...product}
-          />
-        ))}
-
-      </div>
-
-    </section>
-  );
+  return <CollectionView collectionKey="sweatshirts" />;
 }
 
 export default Sweatshirts;

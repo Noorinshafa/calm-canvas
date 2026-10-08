@@ -1,13 +1,19 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
 import useSEO from "../../hooks/useSEO";
+import { trackPurchase } from "../../utils/analytics";
 import "../../styles/ordersuccess.css";
 
 function OrderSuccess() {
   useSEO({ title: "Order Confirmed", path: "/order-success", noindex: true });
 
-  const { setCart } = useCart();
+  const { cart, setCart } = useCart();
+
+  // Keeps the latest cart so the purchase can be reported to analytics at
+  // the moment the payment is confirmed, just before the cart is cleared.
+  const cartRef = useRef(cart);
+  cartRef.current = cart;
   const [searchParams] = useSearchParams();
   // Safepay redirects back here with its own "order_id" -- which we set
   // equal to our tracker when the payment page was created -- rather than
@@ -36,6 +42,27 @@ function OrderSuccess() {
         }
 
         if (!cancelled) {
+          const items = cartRef.current;
+
+          // Only report when there is something to report (a refreshed
+          // success page has an empty cart, and must not add a $0 sale).
+          if (items.length > 0) {
+            trackPurchase({
+              transactionId: tracker,
+              value: items.reduce(
+                (sum, item) => sum + (item.priceValue || 0) * item.quantity,
+                0
+              ),
+              items: items.map((item) => ({
+                id: item.id,
+                name: item.title,
+                price: item.priceValue,
+                quantity: item.quantity,
+                variant: item.selectedVariant?.title,
+              })),
+            });
+          }
+
           setCart([]);
           setStatus("done");
         }

@@ -1,12 +1,12 @@
 import "../../styles/contact.css";
 import useSEO from "../../hooks/useSEO";
+import { PAGES } from "../../config/site.js";
 
 function Contact() {
   useSEO({
-    title: "Contact",
-    description:
-      "Get in touch with Calm Canvas — questions, collaboration ideas, or just to say hello.",
-    path: "/contact",
+    title: PAGES.contact.title,
+    description: PAGES.contact.description,
+    path: PAGES.contact.path,
   });
 
   return (

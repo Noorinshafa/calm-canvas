@@ -1,24 +1,36 @@
 import { getAllProductSummaries } from "./_lib/printify-shared.js";
+import { SITE_URL, COLLECTIONS } from "../src/config/site.js";
+import { POSTS } from "../src/content/posts.js";
+import { productPath, productInCollection } from "../src/utils/seoShared.js";
 
-const SITE_URL = "https://shopcalmcanvas.com";
+// Sitemaps for Google and Bing, split into four files that a small index
+// (/sitemap.xml) points to:
+//
+//   /sitemap-pages.xml        the main pages
+//   /sitemap-collections.xml  the six category pages
+//   /sitemap-products.xml     every product (with its photos), read live from
+//                             Printify so new products appear automatically
+//   /sitemap-blog.xml         the journal posts
+//
+// vercel.json maps each of those addresses to this one function using the
+// ?type= value. Every address uses the www version of the site, which is the
+// version Google should index.
+//
+// "lastmod" dates are only given where we really know them (product edit
+// time from Printify, blog post dates). Search engines ignore sitemaps that
+// claim everything changed today, so we never invent dates.
 
-// Static marketing/category routes. Cart and Checkout are deliberately
-// excluded -- robots.txt already disallows crawling them, and there's
-// nothing there for a search engine to index.
-const STATIC_ROUTES = [
-  { path: "/", priority: "1.0" },
-  { path: "/collections", priority: "0.9" },
-  { path: "/hoodies", priority: "0.8" },
-  { path: "/tshirts", priority: "0.8" },
-  { path: "/sweatshirts", priority: "0.8" },
-  { path: "/totebags", priority: "0.8" },
-  { path: "/phonecases", priority: "0.8" },
-  { path: "/mugs", priority: "0.8" },
-  { path: "/about", priority: "0.5" },
-  { path: "/contact", priority: "0.5" },
-  { path: "/shipping-returns", priority: "0.4" },
-  { path: "/terms", priority: "0.3" },
-  { path: "/privacy-policy", priority: "0.3" },
+const NS = 'xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"';
+
+const STATIC_PAGES = [
+  "/",
+  "/collections",
+  "/about",
+  "/contact",
+  "/shipping-returns",
+  "/terms",
+  "/privacy-policy",
+  "/blog",
 ];
 
 function xmlEscape(value) {
@@ -32,66 +44,134 @@ function xmlEscape(value) {
         return "&amp;";
       case "'":
         return "&apos;";
-      case '"':
-        return "&quot;";
       default:
-        return char;
+        return "&quot;";
     }
   });
 }
 
-function urlEntry(loc, priority) {
-  return `  <url>\n    <loc>${xmlEscape(loc)}</loc>\n    <priority>${priority}</priority>\n  </url>`;
+function dateOnly(value) {
+  if (!value) return "";
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? "" : date.toISOString().slice(0, 10);
 }
 
-// public/sitemap.xml previously listed only the 10 static routes above,
-// hand-maintained, with zero product URLs -- meaning none of the actual
-// product pages (the pages that should rank in Google/Google Shopping) were
-// ever listed for crawling. This generates a complete sitemap from the live
-// Printify catalog on every request instead, so it's always in sync with
-// what's actually for sale. Wired up via robots.txt's Sitemap: line
-// (https://shopcalmcanvas.com/api/sitemap) rather than replacing the static
-// /sitemap.xml file directly, since Vercel serves an existing static file
-// in preference to a rewrite at the same path.
+function urlEntry(path, { lastmod, images = [] } = {}) {
+  const parts = [`    <loc>${xmlEscape(`${SITE_URL}${path}`)}</loc>`];
+
+  const modified = dateOnly(lastmod);
+  if (modified) parts.push(`    <lastmod>${modified}</lastmod>`);
+
+  for (const image of images) {
+    parts.push(
+      `    <image:image>\n      <image:loc>${xmlEscape(image)}</image:loc>\n    </image:image>`
+    );
+  }
+
+  return `  <url>\n${parts.join("\n")}\n  </url>`;
+}
+
+function urlset(entries, { withImages = false } = {}) {
+  const namespaces = withImages
+    ? `${NS} xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"`
+    : NS;
+
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset ${namespaces}>\n${entries.join(
+    "\n"
+  )}\n</urlset>\n`;
+}
+
+function sitemapIndex() {
+  const entries = ["pages", "collections", "products", "blog"].map(
+    (name) =>
+      `  <sitemap>\n    <loc>${SITE_URL}/sitemap-${name}.xml</loc>\n  </sitemap>`
+  );
+
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex ${NS}>\n${entries.join(
+    "\n"
+  )}\n</sitemapindex>\n`;
+}
+
+function latest(dates) {
+  const valid = dates.map(dateOnly).filter(Boolean).sort();
+  return valid.length ? valid[valid.length - 1] : "";
+}
+
 export default async function handler(req, res) {
+  const type = String(req.query?.type || "index");
+
+  const send = (xml, cache) => {
+    res.setHeader("Content-Type", "application/xml; charset=utf-8");
+    res.setHeader("Cache-Control", cache);
+    return res.status(200).send(xml);
+  };
+
+  // An hour is plenty for a sitemap; a day of stale-while-revalidate means a
+  // slow Printify response never makes this endpoint slow for crawlers.
+  const CACHE = "public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400";
+
   try {
-    const products = await getAllProductSummaries();
+    if (type === "pages") {
+      return send(urlset(STATIC_PAGES.map((path) => urlEntry(path))), CACHE);
+    }
 
-    const staticEntries = STATIC_ROUTES.map((route) =>
-      urlEntry(`${SITE_URL}${route.path}`, route.priority)
-    );
+    if (type === "blog") {
+      return send(
+        urlset(
+          POSTS.map((post) =>
+            urlEntry(`/blog/${post.slug}`, { lastmod: post.updated || post.date })
+          )
+        ),
+        CACHE
+      );
+    }
 
-    const productEntries = products.map((product) =>
-      urlEntry(`${SITE_URL}/product/${product.id}`, "0.7")
-    );
+    if (type === "collections" || type === "products") {
+      const products = await getAllProductSummaries();
+      const indexable = products.filter((product) => product.indexable !== false);
 
-    const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${[
-      ...staticEntries,
-      ...productEntries,
-    ].join("\n")}\n</urlset>\n`;
+      if (type === "collections") {
+        return send(
+          urlset(
+            COLLECTIONS.map((collection) =>
+              urlEntry(collection.path, {
+                lastmod: latest(
+                  indexable
+                    .filter((product) => productInCollection(product, collection))
+                    .map((product) => product.updatedAt)
+                ),
+              })
+            )
+          ),
+          CACHE
+        );
+      }
 
-    res.setHeader("Content-Type", "application/xml; charset=utf-8");
-    // Sitemaps don't need to be second-fresh -- an hour of caching is fine,
-    // with a day of stale-while-revalidate so a slow Printify response never
-    // makes this endpoint itself slow to crawlers.
-    res.setHeader(
-      "Cache-Control",
-      "public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400"
-    );
+      return send(
+        urlset(
+          indexable.map((product) =>
+            urlEntry(productPath(product), {
+              lastmod: product.updatedAt,
+              images: (product.images || [])
+                .map((image) => image.src)
+                .filter(Boolean)
+                .slice(0, 5),
+            })
+          ),
+          { withImages: true }
+        ),
+        CACHE
+      );
+    }
 
-    return res.status(200).send(xml);
+    // Default (and the old /api/sitemap address): the index.
+    return send(sitemapIndex(), CACHE);
   } catch (error) {
-    // Fail back to just the static routes rather than a hard error -- a
-    // temporarily-down Printify shouldn't make the whole sitemap
-    // disappear from crawlers.
-    console.error("sitemap: failed to fetch products:", error.message);
+    console.error("sitemap: failed:", error.message);
 
-    const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${STATIC_ROUTES.map(
-      (route) => urlEntry(`${SITE_URL}${route.path}`, route.priority)
-    ).join("\n")}\n</urlset>\n`;
-
-    res.setHeader("Content-Type", "application/xml; charset=utf-8");
+    // Tell crawlers to come back later rather than giving them an empty file.
+    res.setHeader("Retry-After", "3600");
     res.setHeader("Cache-Control", "public, max-age=60, s-maxage=60");
-    return res.status(200).send(xml);
+    return res.status(503).send("Sitemap temporarily unavailable.");
   }
 }

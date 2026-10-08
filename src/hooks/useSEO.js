@@ -3,40 +3,27 @@ import { useEffect } from "react";
 // ---------------------------------------------------------------------------
 // Lightweight, dependency-free per-page SEO metadata.
 //
-// WHY THIS EXISTS: this is a client-rendered SPA with no server-side
-// rendering. Previously every route reused the exact same static
-// <title>/<meta description>/Open Graph/Twitter tags from index.html, so a
-// crawler or a link-preview bot that doesn't execute JS saw the identical
-// generic "Calm Canvas | Premium Print-On-Demand..." info for the
-// homepage, every category page, and every individual product -- meaning
-// none of them could show up correctly in search results or link previews.
-//
-// This hook updates the real <head> tags (the same ones index.html
-// declares, matched by selector -- not duplicates) on every route change,
-// and manages a single JSON-LD <script> for structured data. It runs after
-// first paint, so it helps crawlers that execute JS (which is how Google
-// indexes SPAs today) and social/link-preview bots that fetch the page
-// fresh; it does NOT help a crawler that reads only the raw initial HTML.
-// True first-byte-correct metadata for every crawler would need
-// prerendering/SSR for these routes -- worth scoping as a follow-up once
-// this is in place; see the audit doc's SEO section (#7).
+// WHY THIS EXISTS: this is a client-rendered React app. The build step
+// (scripts/postbuild.mjs) now writes real HTML -- title, description,
+// canonical, social tags, structured data and visible content -- into every
+// page's initial response, so search engines and link-preview bots no longer
+// depend on JavaScript. This hook keeps those same tags correct while a
+// visitor moves between pages WITHOUT a full page reload (client-side
+// navigation), by updating the real <head> tags (matched by selector, not
+// duplicated) and a single JSON-LD <script>. It reads its titles and text
+// from src/config/site.js and src/utils/seoShared.js, the same sources the
+// build script uses, so the two can never disagree.
 // ---------------------------------------------------------------------------
 
-export const SITE_URL = "https://shopcalmcanvas.com";
-export const SITE_NAME = "Calm Canvas";
-const DEFAULT_TITLE = "Calm Canvas | Premium Print-On-Demand Lifestyle Brand";
-const DEFAULT_DESCRIPTION =
-  "Calm Canvas is a premium print-on-demand lifestyle brand offering minimal, artistic hoodies, t-shirts, sweatshirts, tote bags, phone cases and mugs — designed for everyday elegance.";
-const DEFAULT_IMAGE = `${SITE_URL}/logo.png`;
+import {
+  SITE_URL,
+  SITE_NAME,
+  DEFAULT_DESCRIPTION,
+  DEFAULT_OG_IMAGE,
+} from "../config/site.js";
+import { absoluteUrl, buildTitle, buildDescription } from "../utils/seoShared.js";
 
-export function absoluteUrl(pathOrUrl) {
-  if (!pathOrUrl) return DEFAULT_IMAGE;
-  try {
-    return new URL(pathOrUrl, SITE_URL).href;
-  } catch {
-    return DEFAULT_IMAGE;
-  }
-}
+export { SITE_URL, SITE_NAME, absoluteUrl };
 
 function setMeta(selector, attr, value) {
   if (!value) return;
@@ -108,10 +95,10 @@ export default function useSEO({
   noindex = false,
 } = {}) {
   useEffect(() => {
-    const fullTitle = title ? `${title} | ${SITE_NAME}` : DEFAULT_TITLE;
-    const desc = description || DEFAULT_DESCRIPTION;
+    const fullTitle = buildTitle(title);
+    const desc = description ? buildDescription(description) : DEFAULT_DESCRIPTION;
     const url = absoluteUrl(path);
-    const img = absoluteUrl(image);
+    const img = absoluteUrl(image || DEFAULT_OG_IMAGE);
 
     document.title = fullTitle;
 
@@ -123,6 +110,7 @@ export default function useSEO({
     setMeta('meta[property="og:image"]', "content", img);
     setMeta('meta[property="og:url"]', "content", url);
     setMeta('meta[property="og:type"]', "content", type);
+    setMeta('meta[name="twitter:card"]', "content", "summary_large_image");
     setMeta('meta[name="twitter:title"]', "content", fullTitle);
     setMeta('meta[name="twitter:description"]', "content", desc);
     setMeta('meta[name="twitter:image"]', "content", img);

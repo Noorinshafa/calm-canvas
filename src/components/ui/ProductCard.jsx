@@ -1,20 +1,23 @@
 import "../../styles/productcard.css";
 import { Link } from "react-router-dom";
+import { productPath, cleanProductName } from "../../utils/seoShared.js";
 
-function ProductCard({ id, image, title, price }) {
+function ProductCard({ id, slug, image, title, price }) {
+  const href = productPath({ id, slug });
+
   return (
     <div className="product-wrapper">
 
       <div className="product-card">
 
         <Link
-          to={`/product/${id}`}
+          to={href}
           className="product-image"
         >
           {image && (
             <img
               src={image}
-              alt={title}
+              alt={cleanProductName(title)}
               loading="lazy"
               decoding="async"
             />
@@ -23,12 +26,12 @@ function ProductCard({ id, image, title, price }) {
 
         <div className="product-content">
 
-          <h3>{title}</h3>
+          <h3>{cleanProductName(title)}</h3>
 
           <span>{price}</span>
 
           <Link
-            to={`/product/${id}`}
+            to={href}
             className="view-details-btn"
           >
             View Details

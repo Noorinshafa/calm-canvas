@@ -1,9 +1,10 @@
-import { Suspense, lazy } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Suspense, lazy, useEffect } from "react";
+import { Routes, Route, useLocation } from "react-router-dom";
 
 import Navbar from "./components/layout/Navbar";
 import ScrollToTop from "./components/common/ScrollToTop";
 import useSEO from "./hooks/useSEO";
+import { trackPageView } from "./utils/analytics";
 
 import Hero from "./components/sections/Hero";
 import Marquee from "./components/sections/Marquee";
@@ -30,6 +31,8 @@ const Terms = lazy(() => import("./components/pages/Terms"));
 const Privacy = lazy(() => import("./components/pages/Privacy"));
 const ShippingReturns = lazy(() => import("./components/pages/ShippingReturns"));
 const NotFound = lazy(() => import("./components/pages/NotFound"));
+const BlogIndex = lazy(() => import("./components/pages/BlogIndex"));
+const BlogPost = lazy(() => import("./components/pages/BlogPost"));
 
 const CollectionPage = lazy(() => import("./components/common/CollectionPage"));
 
@@ -73,11 +76,26 @@ function RouteFallback() {
   return <div className="route-loading" aria-hidden="true" />;
 }
 
+// Sends one analytics page view per navigation (single-page app: the browser
+// never reloads, so the analytics script can't see page changes by itself).
+// Does nothing unless analytics is switched on -- see src/utils/analytics.js.
+function PageViewTracker() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    trackPageView(pathname, document.title);
+  }, [pathname]);
+
+  return null;
+}
+
 function App() {
   return (
     <div className="app">
 
       <ScrollToTop />
+
+      <PageViewTracker />
 
       <Navbar />
 
@@ -134,8 +152,27 @@ function App() {
         {/* ================= PRODUCT ================= */}
 
         <Route
+          path="/products/:slug"
+          element={<ProductDetails />}
+        />
+
+        {/* Older links (shared before readable addresses existed) */}
+        <Route
           path="/product/:id"
           element={<ProductDetails />}
+        />
+
+
+        {/* ================= BLOG ================= */}
+
+        <Route
+          path="/blog"
+          element={<BlogIndex />}
+        />
+
+        <Route
+          path="/blog/:slug"
+          element={<BlogPost />}
         />
 
 

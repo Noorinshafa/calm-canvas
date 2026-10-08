@@ -9,6 +9,9 @@ import { Toaster } from "react-hot-toast";
 import "./styles/global.css";
 import "./styles/theme.css";
 import App from "./App";
+import { initAnalytics } from "./utils/analytics";
+
+initAnalytics();
 
 createRoot(document.getElementById("root")).render(
 

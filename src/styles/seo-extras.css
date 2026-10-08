@@ -1,0 +1,338 @@
+/*=====================================================
+   BREADCRUMBS, COLLECTION INTRO, RELATED LINKS, BLOG
+   (added for SEO / internal linking -- see
+   src/config/site.js for the text these pages show)
+=====================================================*/
+
+.breadcrumbs{
+    max-width:1450px;
+    margin:0 auto 28px;
+    font-size:.88rem;
+}
+
+.breadcrumbs ol{
+    list-style:none;
+    margin:0;
+    padding:0;
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px 10px;
+    align-items:center;
+}
+
+.breadcrumbs li{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    color:#7B7B7B;
+}
+
+.breadcrumbs li + li::before{
+    content:"/";
+    color:#c7bcc1;
+}
+
+.breadcrumbs a{
+    color:#95627F;
+    text-decoration:none;
+}
+
+.breadcrumbs a:hover,
+.breadcrumbs a:focus-visible{
+    text-decoration:underline;
+}
+
+.breadcrumbs [aria-current="page"]{
+    color:#35504B;
+}
+
+/* Long keyword headings need to scale down on small screens */
+.collection-page .collection-header h1{
+    font-size:clamp(2.3rem, 6vw, 4rem);
+    line-height:1.08;
+}
+
+.collection-intro{
+    max-width:820px;
+    margin:90px auto 0;
+    color:#35504B;
+    line-height:1.85;
+    font-size:1.02rem;
+}
+
+.collection-intro h2{
+    font-size:clamp(1.6rem, 3.4vw, 2.2rem);
+    color:#153E3B;
+    margin-bottom:18px;
+}
+
+.collection-page .collection-intro p{
+    text-align:left;
+    color:#35504B;
+    margin:0;
+}
+
+.collection-page .collection-intro p + p{
+    margin-top:14px;
+}
+
+.collection-page .collection-intro h2{
+    text-align:left;
+}
+
+.collection-links{
+    max-width:820px;
+    margin:44px auto 0;
+}
+
+.collection-links h2{
+    font-size:1.25rem;
+    color:#153E3B;
+    margin-bottom:14px;
+}
+
+.collection-links ul{
+    list-style:none;
+    margin:0;
+    padding:0;
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+}
+
+.collection-links a{
+    display:inline-block;
+    padding:10px 18px;
+    border:1px solid #E7D8E2;
+    border-radius:999px;
+    color:#35504B;
+    text-decoration:none;
+    background:#fff;
+    font-size:.95rem;
+}
+
+.collection-links a:hover,
+.collection-links a:focus-visible{
+    border-color:#D67A9B;
+    color:#95627F;
+}
+
+.collection-empty{
+    text-align:center;
+    color:#666;
+    padding:20px 0 0;
+}
+
+/* Product page extras */
+.product-info .product-price{
+    font-size:2.2rem;
+    color:#d69a57;
+    margin:0 0 28px;
+    font-weight:700;
+    line-height:1.2;
+}
+
+.product-info .product-description{
+    color:#6c6465;
+    line-height:1.9;
+    font-size:15px;
+    margin-bottom:35px;
+}
+
+.product-info .product-description p{
+    margin:0 0 12px;
+}
+
+.product-info .product-description ul{
+    margin:0 0 12px 1.2rem;
+}
+
+@media (max-width:768px){
+    .product-info .product-price{ font-size:1.8rem; margin-bottom:20px; }
+}
+
+.product-extra{
+    max-width:1100px;
+    margin:70px auto 0;
+    padding:0 7%;
+    color:#35504B;
+    line-height:1.8;
+}
+
+.product-extra h2{
+    font-size:clamp(1.5rem, 3vw, 2rem);
+    color:#153E3B;
+    margin-bottom:14px;
+}
+
+.product-extra p + p{
+    margin-top:12px;
+}
+
+.product-extra ul{
+    margin:12px 0 0 1.2rem;
+}
+
+/* FAQ block (Shipping & Returns) */
+.faq-list{
+    margin-top:12px;
+}
+
+.faq-list details{
+    border-bottom:1px solid #E7D8E2;
+    padding:14px 0;
+}
+
+.faq-list summary{
+    cursor:pointer;
+    font-weight:600;
+    color:#153E3B;
+}
+
+.faq-list details p{
+    margin-top:10px;
+}
+
+/* Blog */
+.blog-page{
+    padding:140px 7% 90px;
+    background:#F8F5EF;
+}
+
+.blog-wrap{
+    max-width:820px;
+    margin:0 auto;
+}
+
+.blog-head{
+    text-align:center;
+    margin-bottom:56px;
+}
+
+.blog-head span{
+    display:inline-block;
+    color:#D68496;
+    font-size:.9rem;
+    font-weight:700;
+    letter-spacing:4px;
+    text-transform:uppercase;
+    margin-bottom:16px;
+}
+
+.blog-head h1{
+    font-size:clamp(2.3rem, 6vw, 3.6rem);
+    color:#153E3B;
+    line-height:1.08;
+    margin-bottom:18px;
+}
+
+.blog-head p{
+    color:#666;
+    line-height:1.8;
+}
+
+.blog-list{
+    list-style:none;
+    margin:0;
+    padding:0;
+    display:grid;
+    gap:22px;
+}
+
+.blog-card{
+    background:#fff;
+    border-radius:18px;
+    padding:28px 30px;
+    box-shadow:0 8px 30px rgba(20,60,53,.06);
+}
+
+.blog-card time{
+    color:#95627F;
+    font-size:.85rem;
+    letter-spacing:1px;
+}
+
+.blog-card h2{
+    font-size:1.6rem;
+    margin:8px 0 10px;
+}
+
+.blog-card h2 a{
+    color:#153E3B;
+    text-decoration:none;
+}
+
+.blog-card h2 a:hover,
+.blog-card h2 a:focus-visible{
+    text-decoration:underline;
+}
+
+.blog-card p{
+    color:#555;
+    line-height:1.75;
+}
+
+.blog-post h1{
+    font-size:clamp(2rem, 5vw, 3.2rem);
+    color:#153E3B;
+    line-height:1.12;
+    margin:0 0 14px;
+}
+
+.blog-meta{
+    color:#7B7B7B;
+    font-size:.92rem;
+    margin-bottom:34px;
+}
+
+.blog-body{
+    color:#35504B;
+    line-height:1.9;
+    font-size:1.05rem;
+}
+
+.blog-body h2{
+    font-size:clamp(1.5rem, 3.4vw, 2rem);
+    color:#153E3B;
+    margin:38px 0 12px;
+}
+
+.blog-body h3{
+    font-size:1.2rem;
+    color:#153E3B;
+    margin:26px 0 8px;
+}
+
+.blog-body p{
+    margin:0 0 16px;
+}
+
+.blog-body ul{
+    margin:0 0 18px 1.3rem;
+}
+
+.blog-body a{
+    color:#95627F;
+}
+
+.blog-picks{
+    margin-top:46px;
+    padding-top:26px;
+    border-top:1px solid #E7D8E2;
+}
+
+.blog-picks h2{
+    font-size:1.5rem;
+    color:#153E3B;
+    margin-bottom:14px;
+}
+
+@media (max-width:640px){
+    .collection-page{ padding-left:5%; padding-right:5%; }
+    .collection-intro{ margin-top:60px; }
+    .blog-card{ padding:22px 20px; }
+}
+
+.product-details .breadcrumbs{
+    max-width:1650px;
+}

@@ -1,7 +1,20 @@
 import { useState } from "react";
 import { useCart } from "../../context/CartContext";
 import useSEO from "../../hooks/useSEO";
+import { trackBeginCheckout } from "../../utils/analytics";
 import "../../styles/checkout.css";
+
+// The countries the order system can ship to. These exact names are what
+// api/_lib/create-printify-order.js converts into Printify's 2-letter codes --
+// a free-text country field let a typo (e.g. "United sates") through, and
+// the order would then be rejected by Printify AFTER the customer had paid.
+const COUNTRIES = [
+  "United States",
+  "United Kingdom",
+  "Canada",
+  "Australia",
+  "Pakistan",
+];
 
 function Checkout() {
   useSEO({ title: "Checkout", path: "/checkout", noindex: true });
@@ -13,7 +26,7 @@ function Checkout() {
     lastName: "",
     phone: "",
     email: "",
-    country: "Pakistan",
+    country: "",
     city: "",
     postalCode: "",
     address: "",
@@ -56,6 +69,9 @@ function Checkout() {
       newErrors.email = "Enter a valid email address.";
     }
 
+    if (!COUNTRIES.includes(formData.country))
+      newErrors.country = "Please choose your country.";
+
     if (!formData.city.trim())
       newErrors.city = "City is required.";
 
@@ -77,6 +93,17 @@ function Checkout() {
 
     setOrderError("");
     setSubmitting(true);
+
+    trackBeginCheckout(
+      cart.map((item) => ({
+        id: item.id,
+        name: item.title,
+        price: item.priceValue,
+        quantity: item.quantity,
+        variant: item.selectedVariant?.title,
+      })),
+      total
+    );
 
     try {
       const response = await fetch("/api/create-checkout-session", {
@@ -191,13 +218,26 @@ function Checkout() {
               <label htmlFor="country" className="sr-only">
                 Country
               </label>
-              <input
+              <select
                 id="country"
                 name="country"
                 value={formData.country}
                 onChange={handleChange}
                 autoComplete="country-name"
-              />
+                required
+                aria-invalid={!!errors.country}
+                aria-describedby="country-error"
+              >
+                <option value="" disabled>
+                  Country
+                </option>
+                {COUNTRIES.map((country) => (
+                  <option key={country} value={country}>
+                    {country}
+                  </option>
+                ))}
+              </select>
+              <small id="country-error">{errors.country}</small>
             </div>
 
             <div>

@@ -1,6 +1,8 @@
 import "../../styles/collectionpage.css";
 import { Link } from "react-router-dom";
 import useSEO from "../../hooks/useSEO";
+import { PAGES } from "../../config/site.js";
+import { breadcrumbJsonLd } from "../../utils/seoShared.js";
 
 import hoodies from "../../assets/categories/hoodies.webp";
 import tshirts from "../../assets/categories/tshirts.webp";
@@ -12,10 +14,13 @@ import totebags from "../../assets/categories/totebags.webp";
 function CollectionPage() {
 
   useSEO({
-    title: "Collections",
-    description:
-      "Discover beautifully designed products made to bring creativity into your everyday life — hoodies, t-shirts, sweatshirts, tote bags, phone cases and mugs.",
-    path: "/collections",
+    title: PAGES.collections.title,
+    description: PAGES.collections.description,
+    path: PAGES.collections.path,
+    jsonLd: breadcrumbJsonLd([
+      { name: "Home", path: "/" },
+      { name: "Collections", path: "/collections" },
+    ]),
   });
 
   const collections = [
@@ -87,7 +92,7 @@ function CollectionPage() {
 
             <img
               src={item.image}
-              alt={item.title}
+              alt={`${item.title} by Calm Canvas`}
             />
 
             <div className="collection-content">

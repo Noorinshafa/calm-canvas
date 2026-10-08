@@ -53,6 +53,10 @@ function Footer() {
     About Us
   </Link>
 
+  <Link to="/blog">
+    Gift &amp; Style Journal
+  </Link>
+
   <Link to="/contact">
     Contact Us
   </Link>

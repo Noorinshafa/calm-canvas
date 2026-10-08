@@ -1,12 +1,12 @@
 import "../../styles/legal.css";
 import useSEO from "../../hooks/useSEO";
+import { PAGES } from "../../config/site.js";
 
 function Privacy() {
   useSEO({
-    title: "Privacy Policy",
-    description:
-      "How ShopCalmCanvas collects, uses, and protects your personal data.",
-    path: "/privacy-policy",
+    title: PAGES.privacy.title,
+    description: PAGES.privacy.description,
+    path: PAGES.privacy.path,
   });
 
   return (
