@@ -30,8 +30,9 @@ export const DEFAULT_OG_IMAGE = "/og/calm-canvas.png";
 // the site's structured data so Google can connect them to the brand.
 export const SOCIAL_LINKS = [];
 
-// Where orders can be delivered (ISO country codes) -- matches the countries
-// the order system supports (see api/_lib/create-printify-order.js).
+// Main markets named in the product structured data (ISO country codes). The
+// store itself ships to most countries worldwide -- the full list customers can
+// pick at checkout is in src/config/countries.js.
 export const SHIPPING_COUNTRIES = ["US", "GB", "CA", "AU", "PK"];
 
 // Printed-to-order timing, matching the Shipping & Returns page.
