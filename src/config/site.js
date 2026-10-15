@@ -293,6 +293,14 @@ export const SHIPPING_SECTIONS = [
     ],
   },
   {
+    heading: "Shipping Costs & Delivery Options",
+    paragraphs: [
+      "Shipping is charged in addition to the price of your items. It is worked out at checkout from the items in your cart and the country you are sending them to, and you see the exact price before you pay. We charge what our production partner charges to ship your order, with no hidden fees.",
+      "Where available you can choose between Standard and Priority delivery. Priority costs more and is faster. As a guide, once your order has been printed, Standard delivery usually takes about 2–5 business days within the United States and about 10–30 business days to other countries, and Priority usually takes about 2–3 business days within the United States and about 3–5 business days to other countries. These are estimates from our production partner. Carriers, customs and local holidays can cause delays.",
+      "We ship to most countries worldwide. A few destinations cannot be served because of legal or carrier restrictions. If we can't ship your items to your country, checkout will tell you before you pay. Customs duties, import taxes or local fees may apply to international orders depending on your country. They are set by the destination country, are not included in our shipping price, and are the recipient's responsibility.",
+    ],
+  },
+  {
     heading: "Order Cancellations & Changes",
     paragraphs: [
       `Because production begins shortly after an order is placed, we can only cancel or change an order (such as the size, color, or shipping address) if you contact us within a few hours of placing it, before it has entered production. Once an order has entered production, it can no longer be cancelled, changed, or refunded for reasons other than those described below. If you need to make a change, email us immediately at ${CONTACT_EMAIL} with your order number.`,
@@ -321,6 +329,10 @@ export const SHIPPING_SECTIONS = [
 // Real questions customers ask, answered from the policies above. Used for
 // the FAQ section and FAQPage structured data on the Shipping & Returns page.
 export const SHIPPING_FAQ = [
+  {
+    q: "How much does shipping cost?",
+    a: "Shipping is added at checkout and depends on the items in your cart and your country. Choose your country on a product page or at checkout to see the exact price before you pay. You can usually pick Standard or the faster Priority option.",
+  },
   {
     q: "How long does it take to receive my order?",
     a: "Each item is printed after you order it, so please allow around 2–7 business days for printing and preparation. Delivery time then depends on your location and the shipping method.",

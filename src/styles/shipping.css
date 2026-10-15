@@ -1,0 +1,149 @@
+/* Shipping estimate (product page) and delivery options (checkout). */
+
+.ship-estimate {
+  margin-top: 22px;
+  padding: 18px 20px;
+  border: 1px solid #eadfdf;
+  border-radius: 16px;
+  background: #fffdfb;
+}
+
+.ship-estimate h4 {
+  margin: 0 0 12px;
+}
+
+.ship-estimate .product-select {
+  width: 100%;
+}
+
+.ship-estimate-result {
+  margin-top: 12px;
+}
+
+.ship-note {
+  margin: 10px 0 0;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: #7a6668;
+}
+
+.ship-note a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.ship-problem {
+  margin: 8px 0 0;
+  font-size: 0.9rem;
+  color: #c0392b;
+}
+
+.ship-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.ship-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.ship-eta {
+  display: block;
+  font-size: 0.82rem;
+  color: #7a6668;
+}
+
+.ship-price {
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* Checkout: the delivery choices */
+.shipping-options {
+  display: grid;
+  gap: 12px;
+}
+
+.checkout-left .shipping-option {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid #e5dede;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.checkout-left .shipping-option.selected {
+  border-color: #d89caf;
+  background: #fff7f9;
+}
+
+.checkout-left .shipping-option input {
+  width: auto;
+  margin: 0;
+  padding: 0;
+  flex: none;
+  accent-color: #d89caf;
+}
+
+.shipping-option-text {
+  flex: 1;
+  display: block;
+}
+
+.shipping-option-text strong {
+  display: block;
+}
+
+.shipping-option-text .ship-eta {
+  display: block;
+}
+
+.shipping-option-price {
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.shipping-hint {
+  margin: 0;
+  color: #7a6668;
+}
+
+.shipping-problem {
+  margin: 0;
+  color: #c0392b;
+  font-weight: 500;
+}
+
+.shipping-retry {
+  margin-top: 8px;
+  background: none;
+  border: 1px solid #d89caf;
+  border-radius: 999px;
+  padding: 6px 16px;
+  cursor: pointer;
+  color: inherit;
+}
+
+/* Order summary lines */
+.summary-line {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 10px 0;
+  color: #5f4446;
+}
+
+.cart-shipping-note {
+  margin: 4px 0 18px;
+  font-size: 0.9rem;
+  color: #7a6668;
+}

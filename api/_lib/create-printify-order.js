@@ -4,7 +4,15 @@
 // value isn't recognised it is passed through unchanged, exactly as before.
 import { countryCodeFor } from "../../src/config/countries.js";
 
-export async function createPrintifyOrder({ cart, shipping, externalId }) {
+// shippingMethod is Printify's number for the delivery speed the customer paid
+// for (1 = standard, 2 = priority; see src/config/shipping.js). Orders saved
+// before shipping options existed have none and use standard, as before.
+export async function createPrintifyOrder({
+  cart,
+  shipping,
+  externalId,
+  shippingMethod = 1,
+}) {
   const line_items = cart.map((item) => ({
     product_id: item.id,
     variant_id: item.selectedVariant?.id,
@@ -25,7 +33,7 @@ export async function createPrintifyOrder({ cart, shipping, externalId }) {
     external_id:
       externalId || `calmcanvas-${Math.random().toString(36).slice(2)}`,
     line_items,
-    shipping_method: 1,
+    shipping_method: Number.isInteger(shippingMethod) ? shippingMethod : 1,
     send_shipping_notification: false,
     address_to: {
       first_name: shipping.firstName,

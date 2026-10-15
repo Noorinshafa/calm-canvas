@@ -1,4 +1,5 @@
 import "../../styles/cart.css";
+import "../../styles/shipping.css";
 import { Link } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
 import useSEO from "../../hooks/useSEO";
@@ -136,8 +137,13 @@ function Cart() {
             <h2>Order Summary</h2>
 
             <h3>
-              Total: ${total.toFixed(2)}
+              Subtotal: ${total.toFixed(2)}
             </h3>
+
+            <p className="cart-shipping-note">
+              Shipping is worked out at checkout from your country, so you
+              see the exact price before you pay.
+            </p>
 
             <Link
               to="/checkout"

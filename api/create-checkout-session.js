@@ -4,6 +4,7 @@ import {
   getSafepayEnvironment,
 } from "./_lib/safepay-node-core.js";
 import { priceAndValidateCart } from "./_lib/printify-shared.js";
+import { quoteShipping } from "./_lib/shipping.js";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -33,7 +34,8 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { cart, shipping } = req.body || {};
+    const { cart, shipping, shippingOption, expectedShippingCents } =
+      req.body || {};
 
     if (!Array.isArray(cart) || cart.length === 0) {
       return res.status(400).json({ error: "Your cart is empty." });
@@ -83,14 +85,60 @@ export default async function handler(req, res) {
     // straight to this endpoint) cannot change what they're charged. This
     // also re-checks that every selected variant still exists and is still
     // purchasable, catching stale carts before any money moves.
-    let totalCents, pricedCart;
+    let itemsCents, pricedCart;
     try {
-      ({ totalCents, pricedCart } = await priceAndValidateCart(cart));
+      ({ totalCents: itemsCents, pricedCart } = await priceAndValidateCart(cart));
     } catch (validationError) {
       return res
         .status(validationError.status || 400)
         .json({ error: validationError.message });
     }
+
+    // SHIPPING: like the item prices, the shipping price is never taken from
+    // the browser. It is asked from Printify again here, for these exact
+    // items and this country, and only an option Printify really offers can
+    // be chosen. If it differs from what the customer was shown (Printify
+    // changed a rate in the meantime) we stop and ask them to review rather
+    // than charge a different amount than they agreed to.
+    let shippingChoice;
+    try {
+      const quote = await quoteShipping({
+        lines: pricedCart.map((item) => ({
+          id: item.id,
+          variantId: item.variantId,
+          quantity: item.qty,
+        })),
+        country: shipping.country,
+      });
+
+      shippingChoice = quote.options.find(
+        (option) => option.key === shippingOption
+      );
+    } catch (shippingError) {
+      return res
+        .status(shippingError.status || 502)
+        .json({ error: shippingError.message });
+    }
+
+    if (!shippingChoice) {
+      return res.status(409).json({
+        error:
+          "Please choose a delivery option. The options for your order may have changed.",
+        code: "SHIPPING_CHANGED",
+      });
+    }
+
+    if (Number(expectedShippingCents) !== shippingChoice.cents) {
+      return res.status(409).json({
+        error: `Shipping for your order is now $${(
+          shippingChoice.cents / 100
+        ).toFixed(2)}. Please check the total and continue.`,
+        code: "SHIPPING_CHANGED",
+      });
+    }
+
+    // What the customer pays: the items plus shipping.
+    const totalCents = itemsCents + shippingChoice.cents;
 
     const environment = getSafepayEnvironment();
 
@@ -100,6 +148,8 @@ export default async function handler(req, res) {
     // it back to /order-success -- e.g. they close the tab right after
     // paying. Kept intentionally small (ids/qty, not full product data).
     const metadataOrderState = JSON.stringify({
+      shippingMethodId: shippingChoice.methodId,
+      shippingCents: shippingChoice.cents,
       cart: pricedCart.map((item) => ({
         id: item.id,
         variantId: item.variantId,
@@ -226,6 +276,8 @@ export default async function handler(req, res) {
     // the order that gets created always matches what was actually charged.
     const orderState = {
       tracker,
+      shippingMethodId: shippingChoice.methodId,
+      shippingCents: shippingChoice.cents,
       cart: pricedCart,
       shipping: {
         firstName: shipping.firstName || "",

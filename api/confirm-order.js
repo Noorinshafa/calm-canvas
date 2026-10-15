@@ -102,7 +102,21 @@ export default async function handler(req, res) {
         cart: orderCart,
         shipping,
         externalId: `calmcanvas-card-${tracker}`,
+        shippingMethod: savedOrder.shippingMethodId,
       });
+
+      // Safety net: Printify's own shipping charge for this order should equal
+      // what the customer paid for shipping. If it ever doesn't, we want to
+      // know about it (this only logs; the order is already paid and made).
+      if (
+        Number.isInteger(savedOrder.shippingCents) &&
+        Number.isInteger(order?.total_shipping) &&
+        order.total_shipping !== savedOrder.shippingCents
+      ) {
+        console.error(
+          `confirm-order: shipping mismatch for tracker ${tracker} -- customer paid ${savedOrder.shippingCents}, Printify charges ${order.total_shipping} (cents)`
+        );
+      }
 
       // Only clear the cookie once the order has actually been created --
       // the customer already paid, so if Printify's call fails for any

@@ -21,6 +21,7 @@ import "../../styles/productdetails.css";
 import "../../styles/seo-extras.css";
 import ProductCard from "../ui/ProductCard";
 import OptimizedImage from "../ui/OptimizedImage";
+import ShippingEstimate from "../ui/ShippingEstimate";
 import { ProductPageSkeleton } from "../ui/Skeletons";
 import Breadcrumbs from "../common/Breadcrumbs";
 
@@ -572,6 +573,12 @@ function ProductDetails() {
   </button>
 
 </div>
+
+<ShippingEstimate
+  productId={product.id}
+  variantId={activeVariant?.id}
+  quantity={quantity}
+/>
 
     </>
 

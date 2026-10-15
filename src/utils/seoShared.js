@@ -16,7 +16,6 @@ import {
   DEFAULT_OG_IMAGE,
   SOCIAL_LINKS,
   SHIPPING_COUNTRIES,
-  HANDLING_DAYS,
   CURRENCY,
   CONTACT_EMAIL,
   COLLECTIONS,
@@ -200,30 +199,6 @@ export function collectionJsonLd(collection, products) {
   };
 }
 
-function shippingDetailsJsonLd() {
-  return {
-    "@type": "OfferShippingDetails",
-    shippingRate: {
-      "@type": "MonetaryAmount",
-      value: 0,
-      currency: CURRENCY,
-    },
-    shippingDestination: SHIPPING_COUNTRIES.map((country) => ({
-      "@type": "DefinedRegion",
-      addressCountry: country,
-    })),
-    deliveryTime: {
-      "@type": "ShippingDeliveryTime",
-      handlingTime: {
-        "@type": "QuantitativeValue",
-        minValue: HANDLING_DAYS.min,
-        maxValue: HANDLING_DAYS.max,
-        unitCode: "DAY",
-      },
-    },
-  };
-}
-
 function returnPolicyJsonLd() {
   return {
     "@type": "MerchantReturnPolicy",
@@ -277,7 +252,6 @@ export function productJsonLd(product, { inStock = true, plainDescription } = {}
         ? "https://schema.org/InStock"
         : "https://schema.org/OutOfStock",
       seller: { "@id": `${SITE_URL}/#organization` },
-      shippingDetails: shippingDetailsJsonLd(),
       hasMerchantReturnPolicy: returnPolicyJsonLd(),
     },
   };

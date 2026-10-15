@@ -4,7 +4,10 @@ import useSEO from "../../hooks/useSEO";
 import OptimizedImage from "../ui/OptimizedImage";
 import { trackBeginCheckout } from "../../utils/analytics";
 import { COUNTRIES } from "../../config/countries.js";
+import useShippingQuote from "../../hooks/useShippingQuote";
+import { getSavedCountry } from "../../utils/shippingCountry";
 import "../../styles/checkout.css";
+import "../../styles/shipping.css";
 
 function Checkout() {
   useSEO({ title: "Checkout", path: "/checkout", noindex: true });
@@ -16,7 +19,7 @@ function Checkout() {
     lastName: "",
     phone: "",
     email: "",
-    country: "",
+    country: getSavedCountry(),
     city: "",
     postalCode: "",
     address: "",
@@ -32,6 +35,30 @@ function Checkout() {
     (sum, item) => sum + (item.priceValue || 0) * item.quantity,
     0
   );
+
+  // Shipping: the price for these exact items and this country comes from
+  // Printify (via /api/shipping-quote) and is checked again on the server
+  // before any payment is taken.
+  const [shippingChoice, setShippingChoice] = useState("standard");
+
+  const quote = useShippingQuote(
+    cart.map((item) => ({
+      id: item.id,
+      variantId: item.selectedVariant?.id,
+      quantity: item.quantity,
+    })),
+    formData.country
+  );
+
+  const chosenShipping =
+    quote.status === "ready"
+      ? quote.options.find((option) => option.key === shippingChoice) ||
+        quote.options[0] ||
+        null
+      : null;
+
+  const shippingCost = chosenShipping ? chosenShipping.cents / 100 : null;
+  const orderTotal = total + (shippingCost || 0);
 
   function handleChange(e) {
     const { name, value, type, checked } = e.target;
@@ -68,6 +95,13 @@ function Checkout() {
     if (!formData.address.trim())
       newErrors.address = "Complete address is required.";
 
+    if (!chosenShipping) {
+      newErrors.shipping =
+        quote.status === "loading"
+          ? "We're still working out shipping. One moment, then try again."
+          : quote.error || "Choose your country to see delivery options.";
+    }
+
     if (!formData.agree)
       newErrors.agree = "Please accept the Terms & Conditions.";
 
@@ -99,12 +133,21 @@ function Checkout() {
       const response = await fetch("/api/create-checkout-session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ cart, shipping: formData }),
+        body: JSON.stringify({
+          cart,
+          shipping: formData,
+          shippingOption: chosenShipping.key,
+          expectedShippingCents: chosenShipping.cents,
+        }),
       });
 
       const result = await response.json();
 
       if (!response.ok) {
+        // Printify changed a shipping rate while the customer was filling in
+        // the form: show the new price and let them confirm it.
+        if (result.code === "SHIPPING_CHANGED") quote.refresh();
+
         throw new Error(
           result.error || "Could not start the payment. Please try again."
         );
@@ -290,6 +333,64 @@ function Checkout() {
             onChange={handleChange}
           />
 
+          <h2>Delivery</h2>
+
+          <div
+            className="shipping-options"
+            role="radiogroup"
+            aria-label="Delivery options"
+            aria-live="polite"
+          >
+            {!formData.country && (
+              <p className="shipping-hint">
+                Choose your country above to see delivery prices.
+              </p>
+            )}
+
+            {formData.country && quote.status === "loading" && (
+              <p className="shipping-hint">Calculating shipping…</p>
+            )}
+
+            {formData.country && quote.status === "error" && (
+              <div>
+                <p className="shipping-problem" role="alert">
+                  {quote.error}
+                </p>
+                <button
+                  type="button"
+                  className="shipping-retry"
+                  onClick={quote.refresh}
+                >
+                  Try again
+                </button>
+              </div>
+            )}
+
+            {quote.status === "ready" &&
+              quote.options.map((option) => (
+                <label
+                  key={option.key}
+                  className={`shipping-option ${
+                    chosenShipping?.key === option.key ? "selected" : ""
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    name="shippingOption"
+                    value={option.key}
+                    checked={chosenShipping?.key === option.key}
+                    onChange={() => setShippingChoice(option.key)}
+                  />
+                  <span className="shipping-option-text">
+                    <strong>{option.label}</strong>
+                    <span className="ship-eta">{option.estimate}</span>
+                  </span>
+                  <span className="shipping-option-price">{option.price}</span>
+                </label>
+              ))}
+          </div>
+          <small id="shipping-error">{errors.shipping}</small>
+
           <h2>Payment</h2>
 
           <div className="payment-card active">
@@ -350,9 +451,26 @@ function Checkout() {
 
           <hr />
 
+          <div className="summary-line">
+            <span>Subtotal</span>
+            <span>${total.toFixed(2)}</span>
+          </div>
+
+          <div className="summary-line">
+            <span>
+              Shipping
+              {chosenShipping ? ` (${chosenShipping.label})` : ""}
+            </span>
+            <span>
+              {shippingCost !== null
+                ? `$${shippingCost.toFixed(2)}`
+                : "Choose your country"}
+            </span>
+          </div>
+
           <h3>
             <span>Total</span>
-            <span>${total.toFixed(2)}</span>
+            <span>${orderTotal.toFixed(2)}</span>
           </h3>
         </div>
       </div>

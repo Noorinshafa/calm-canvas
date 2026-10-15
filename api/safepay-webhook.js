@@ -129,6 +129,7 @@ export default async function handler(req, res) {
       cart: orderCart,
       shipping: orderState.shipping,
       externalId: `calmcanvas-card-${tracker}`,
+      shippingMethod: orderState.shippingMethodId,
     });
 
     console.log(`safepay-webhook: created fallback order for tracker ${tracker}`);
