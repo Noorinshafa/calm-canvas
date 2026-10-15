@@ -118,6 +118,27 @@ export function mapProductSummary(product, blueprintTitle = "") {
   };
 }
 
+// The smallest version of a product, for the lists the website itself shows
+// (collection pages, home page, search). A card needs only a name, price,
+// one photo and the details used to sort it into a collection. Left out on
+// purpose: the long description and all ~19 photos per product. Together
+// those made the whole list about 700 KB; the list a visitor downloads is now
+// a small fraction of that. The sitemap, product feed and page generator keep
+// using the full summaries above.
+export function mapProductCard(summary) {
+  return {
+    id: summary.id,
+    slug: summary.slug,
+    title: summary.title,
+    image: summary.image,
+    price: summary.price,
+    priceValue: summary.priceValue,
+    blueprint_id: summary.blueprint_id,
+    blueprintTitle: summary.blueprintTitle,
+    indexable: summary.indexable,
+  };
+}
+
 // Used for a single PRODUCT DETAIL page -- this is the only place that
 // actually needs variants (to let a customer pick size/color and to know
 // which variant ID to send to Printify at checkout). `cost` is stripped

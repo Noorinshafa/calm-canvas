@@ -2,9 +2,31 @@
   overflow-x: hidden;
 }
 
-/* Route-chunk fetch is fast (a few KB over an already-warm connection), so
-   this only needs to avoid a jarring blank flash -- not communicate
-   progress. */
+/* Shown for a moment while a page's code is fetched. */
 .route-loading {
   min-height: 40vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.route-spinner {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 3px solid #e7dfda;
+  border-top-color: #153e3b;
+  animation: route-spin 0.8s linear infinite;
+}
+
+@keyframes route-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .route-spinner {
+    animation-duration: 2.4s;
+  }
 }

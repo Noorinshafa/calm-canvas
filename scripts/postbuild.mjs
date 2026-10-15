@@ -73,6 +73,8 @@ async function prerender() {
   const blocks = await load("src/utils/blocks.js");
   const { POSTS } = await load("src/content/posts.js");
   const { PRODUCT_COPY } = await load("src/content/productCopy.js");
+  const { CHRISTMAS_PAGE, resolvePicks } = await load("src/content/christmas.js");
+  const { optimizedImageUrl } = await load("src/utils/imageUrl.js");
 
   const {
     SITE_URL,
@@ -113,11 +115,13 @@ async function prerender() {
   // The product list (needs the Printify token)
   // ------------------------------------------------------------------
   let products = [];
+  let mapProductCard = null;
 
   if (process.env.PRINTIFY_API_TOKEN) {
     try {
-      const { getAllProductSummaries } = await load("api/_lib/printify-shared.js");
-      products = await getAllProductSummaries();
+      const shared = await load("api/_lib/printify-shared.js");
+      mapProductCard = shared.mapProductCard;
+      products = await shared.getAllProductSummaries();
       log(`loaded ${products.length} products from Printify`);
     } catch (error) {
       console.warn(
@@ -167,8 +171,10 @@ async function prerender() {
       list
         .map((product) => {
           const name = cleanProductName(product.title);
+          // A small resized copy, not Printify's full-size original, because a
+          // browser starts downloading these before the app takes over.
           const image = product.image
-            ? `<img src="${esc(product.image)}" alt="${esc(name)}" width="300" height="300" loading="lazy" decoding="async">`
+            ? `<img src="${esc(optimizedImageUrl(product.image, 384))}" alt="${esc(name)}" width="300" height="300" loading="lazy" decoding="async">`
             : "";
 
           return `<li>${image}${link(productPath(product), name)} <span>${esc(
@@ -284,10 +290,13 @@ async function prerender() {
             indexableProducts.slice(0, 12)
           )}</section>`
         : "") +
-      `<p>${link("/about", "About Calm Canvas")} · ${link(
-        "/blog",
-        "Gift & style ideas"
-      )} · ${link("/shipping-returns", "Shipping & returns")}</p>`,
+      `<p>${link(CHRISTMAS_PAGE.path, "Christmas gifts")} · ${link(
+        "/about",
+        "About Calm Canvas"
+      )} · ${link("/blog", "Gift & style ideas")} · ${link(
+        "/shipping-returns",
+        "Shipping & returns"
+      )}</p>`,
   });
 
   // ---- Collections index ----
@@ -359,6 +368,46 @@ async function prerender() {
           .map((c) => `<li>${link(c.path, c.nav)}</li>`)
           .join("") +
         `<li>${link("/blog", "Gift & style ideas")}</li></ul></nav>`,
+    });
+  }
+
+  // ---- Christmas gifts ----
+  {
+    const crumbs = [
+      { name: "Home", path: "/" },
+      { name: "Christmas Gifts", path: CHRISTMAS_PAGE.path },
+    ];
+
+    const picks = resolvePicks(products).map((entry) => entry.product);
+
+    pages.push({
+      path: CHRISTMAS_PAGE.path,
+      head: {
+        title: CHRISTMAS_PAGE.title,
+        description: CHRISTMAS_PAGE.description,
+        path: CHRISTMAS_PAGE.path,
+        image: CHRISTMAS_PAGE.ogImage,
+        jsonLd: [breadcrumbJsonLd(crumbs), collectionJsonLd(CHRISTMAS_PAGE, picks)],
+      },
+      body: () =>
+        crumbsHtml(crumbs) +
+        `<h1>${esc(CHRISTMAS_PAGE.h1)}</h1>` +
+        `<p>${esc(CHRISTMAS_PAGE.tagline)}</p>` +
+        productListHtml(picks) +
+        `<h2>Christmas gifts from Calm Canvas</h2>` +
+        CHRISTMAS_PAGE.intro.map((p) => `<p>${esc(p)}</p>`).join("") +
+        CHRISTMAS_PAGE.sections
+          .map(
+            (s) =>
+              `<h2>${esc(s.heading)}</h2>` +
+              s.paragraphs.map((p) => `<p>${esc(p)}</p>`).join("") +
+              (s.links
+                ? `<ul>${s.links
+                    .map((l) => `<li>${link(l.to, l.text)}</li>`)
+                    .join("")}</ul>`
+                : "")
+          )
+          .join(""),
     });
   }
 
@@ -611,7 +660,9 @@ async function prerender() {
       images
         .map(
           (img, index) =>
-            `<img src="${esc(img.src)}" alt="${esc(name)}${
+            `<img src="${esc(
+              optimizedImageUrl(img.src, index === 0 ? 768 : 384)
+            )}" alt="${esc(name)}${
               index ? ` - view ${index + 1}` : ""
             }" width="800" height="800"${
               index === 0 ? ' fetchpriority="high"' : ' loading="lazy"'
@@ -702,6 +753,18 @@ async function prerender() {
   }
 
   log(`wrote ${written} pre-generated pages`);
+
+  // A small list of every product (name, price, one photo), served as a
+  // plain static file. The website reads this first, so product lists appear
+  // straight away instead of waiting on a live request to Printify (which can
+  // take 10 seconds when nothing is cached), then quietly refreshes from the
+  // live list in the background. Only written when the full catalog loaded.
+  if (haveProducts && mapProductCard) {
+    const catalog = JSON.stringify(products.map(mapProductCard));
+
+    await writeFile(path.join(DIST, "catalog.json"), catalog);
+    log(`wrote catalog.json (${(catalog.length / 1024).toFixed(0)} KB, ${products.length} products)`);
+  }
 
   // ------------------------------------------------------------------
   // Step 3: sitemap index with today's date, and IndexNow

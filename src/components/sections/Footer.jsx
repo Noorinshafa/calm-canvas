@@ -40,6 +40,8 @@ function Footer() {
 
           <Link to="/totebags">Tote Bags</Link>
 
+          <Link to="/christmas-gifts">Christmas Gifts</Link>
+
         </div>
 
 
@@ -138,4 +140,4 @@ function Footer() {
   );
 }
 
-export default Footer;
+export default Footer;

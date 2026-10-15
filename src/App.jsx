@@ -13,6 +13,7 @@ import FeaturedCollection from "./components/sections/FeaturedCollection";
 import WhyCalmCanvas from "./components/sections/WhyCalmCanvas";
 import ParallaxBanner from "./components/sections/ParallaxBanner";
 import ShopCategories from "./components/sections/ShopCategories";
+import ChristmasGifts from "./components/sections/ChristmasGifts";
 import Footer from "./components/sections/Footer";
 
 // Every one of these used to be imported eagerly, which meant a first-time
@@ -33,6 +34,7 @@ const ShippingReturns = lazy(() => import("./components/pages/ShippingReturns"))
 const NotFound = lazy(() => import("./components/pages/NotFound"));
 const BlogIndex = lazy(() => import("./components/pages/BlogIndex"));
 const BlogPost = lazy(() => import("./components/pages/BlogPost"));
+const ChristmasGiftsPage = lazy(() => import("./components/pages/ChristmasGiftsPage"));
 
 const CollectionPage = lazy(() => import("./components/common/CollectionPage"));
 
@@ -59,6 +61,7 @@ function Home() {
     <>
       <Hero />
       <Marquee />
+      <ChristmasGifts />
       <BestSellers />
       <FeaturedCollection />
       <ShopCategories />
@@ -69,11 +72,15 @@ function Home() {
   );
 }
 
-// A minimal, layout-neutral fallback -- routes below already show their own
-// "Loading..." state once mounted, this only covers the brief moment the
-// route's JS chunk itself is still being fetched.
+// A small spinner shown for the brief moment a page's code is still being
+// fetched. Each page then shows its own grey placeholders while products load.
 function RouteFallback() {
-  return <div className="route-loading" aria-hidden="true" />;
+  return (
+    <div className="route-loading" role="status" aria-live="polite">
+      <span className="route-spinner" aria-hidden="true" />
+      <span className="sr-only">Loading page</span>
+    </div>
+  );
 }
 
 // Sends one analytics page view per navigation (single-page app: the browser
@@ -146,6 +153,14 @@ function App() {
         <Route
           path="/mugs"
           element={<Mugs />}
+        />
+
+
+        {/* ================= CHRISTMAS ================= */}
+
+        <Route
+          path="/christmas-gifts"
+          element={<ChristmasGiftsPage />}
         />
 
 

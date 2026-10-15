@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import useProducts from "../../hooks/useProducts";
 import useSEO from "../../hooks/useSEO";
 import ProductCard from "../ui/ProductCard";
+import { ProductGridSkeleton } from "../ui/Skeletons";
 import Breadcrumbs from "./Breadcrumbs";
 import { COLLECTIONS, getCollection } from "../../config/site.js";
 import {
@@ -54,10 +55,6 @@ function CollectionView({ collectionKey }) {
     jsonLd,
   });
 
-  if (loading) return <h2>Loading...</h2>;
-
-  if (error) return <h2>{error}</h2>;
-
   const otherCollections = COLLECTIONS.filter((item) => item.key !== collection.key);
 
   return (
@@ -72,15 +69,21 @@ function CollectionView({ collectionKey }) {
         <p>{collection.tagline}</p>
       </div>
 
-      {items.length === 0 ? (
+      {loading ? (
+        <ProductGridSkeleton count={10} />
+      ) : error ? (
+        <p className="collection-empty">
+          We couldn't load the products just now. Please refresh the page in a moment.
+        </p>
+      ) : items.length === 0 ? (
         <p className="collection-empty">
           New designs are on the way. Browse our{" "}
           <Link to="/collections">other collections</Link> in the meantime.
         </p>
       ) : (
         <div className="products-grid">
-          {items.map((product) => (
-            <ProductCard key={product.id} {...product} />
+          {items.map((product, index) => (
+            <ProductCard key={product.id} {...product} priority={index < 4} />
           ))}
         </div>
       )}

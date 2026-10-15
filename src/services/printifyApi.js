@@ -23,6 +23,28 @@ export async function getProducts() {
   return data;
 }
 
+// A small list of every product, written to a plain file when the site is
+// built (see scripts/postbuild.mjs). It comes straight from the CDN, so it
+// arrives in a fraction of a second, unlike getProducts() above, which asks
+// the server to fetch from Printify (up to about 10 seconds when nothing is
+// cached). It can be a little out of date (it is only as new as the last
+// deploy), so the live list is always fetched too and replaces it.
+// Returns null if the file is missing or unusable (for example while
+// developing on your own computer).
+export async function getCatalogSnapshot() {
+  try {
+    const response = await fetch("/catalog.json");
+
+    if (!response.ok) return null;
+
+    const data = await response.json();
+
+    return Array.isArray(data) && data.length > 0 ? data : null;
+  } catch {
+    return null;
+  }
+}
+
 // Fetches just ONE product's full details (including variants, needed for
 // size/color selection) instead of downloading the entire catalog to find
 // it -- see api/product.js for why this exists.

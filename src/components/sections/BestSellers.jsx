@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import useProducts from "../../hooks/useProducts";
 import TiltCard from "../ui/TiltCard";
+import OptimizedImage from "../ui/OptimizedImage";
+import { ProductRowSkeleton } from "../ui/Skeletons";
 import { productPath, cleanProductName } from "../../utils/seoShared.js";
 import "../../styles/bestsellers.css";
 
@@ -11,9 +13,10 @@ function BestSellers() {
 
   const featured = products.filter((product) => product.image).slice(0, 8);
 
-  // Don't show an empty or broken-looking section while products are
-  // still loading, or if something went wrong fetching them.
-  if (loading || error || featured.length === 0) {
+  // If something went wrong, or there is nothing to show, leave the section
+  // out rather than show a broken-looking block. While products are still
+  // loading, show grey placeholders so the page keeps its shape.
+  if (!loading && (error || featured.length === 0)) {
     return null;
   }
 
@@ -33,6 +36,9 @@ function BestSellers() {
 
       </div>
 
+      {loading ? (
+        <ProductRowSkeleton />
+      ) : (
       <div className="bestsellers-row">
 
         {featured.map((product) => (
@@ -47,11 +53,13 @@ function BestSellers() {
             >
 
               <div className="bestseller-image">
-                <img
+                <OptimizedImage
                   src={product.image}
                   alt={cleanProductName(product.title)}
-                  loading="lazy"
-                  decoding="async"
+                  widths={[384, 768]}
+                  sizes="(max-width: 640px) 200px, 260px"
+                  width="600"
+                  height="600"
                 />
               </div>
 
@@ -65,6 +73,7 @@ function BestSellers() {
         ))}
 
       </div>
+      )}
 
       <div className="bestsellers-footer">
         <Link to="/collections" className="bestsellers-btn">

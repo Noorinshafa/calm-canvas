@@ -1,0 +1,461 @@
+/*=====================================================
+   CHRISTMAS SECTION (home page) AND /christmas-gifts PAGE
+   Everything is scoped to .xmas-section / .xmas-page so it
+   cannot change any other part of the site.
+=====================================================*/
+
+.xmas-section,
+.xmas-page{
+    --xmas-cream:#FBF5EC;
+    --xmas-red:#9E2B3E;
+    --xmas-red-dark:#7A1D2E;
+    --xmas-green:#17483F;
+    --xmas-forest:#143C35;
+    --xmas-gold:#C9A15B;
+    --xmas-gold-soft:#F0D08A;
+    --xmas-blush:#F6DDE2;
+    --xmas-ink:#2B1A1E;
+    --xmas-text:#FFF8EE;
+    container-type:inline-size;
+    container-name:xmas;
+}
+
+/*-------------------- home section --------------------*/
+
+.xmas-section{
+    position:relative;
+    overflow:hidden;
+    isolation:isolate;
+    background:var(--xmas-cream);
+    color:var(--xmas-ink);
+    padding:clamp(48px, 8vw, 96px) clamp(18px, 6vw, 80px) clamp(44px, 7vw, 80px);
+    font-family:"Manrope", system-ui, sans-serif;
+}
+
+.xmas-section::before,
+.xmas-page::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    z-index:-1;
+    pointer-events:none;
+    background:
+        radial-gradient(circle at 12% 8%, rgba(214,132,150,.20), transparent 34%),
+        radial-gradient(circle at 92% 4%, rgba(201,161,91,.20), transparent 30%),
+        radial-gradient(circle at 80% 96%, rgba(20,60,53,.10), transparent 36%);
+}
+
+.xmas-snow{
+    position:absolute;
+    inset:0;
+    z-index:-1;
+    pointer-events:none;
+    overflow:hidden;
+}
+
+.xmas-snow i{
+    position:absolute;
+    top:-14px;
+    border-radius:50%;
+    background:#fff;
+    box-shadow:0 0 0 1px rgba(158,43,62,.08);
+    animation:xmas-fall linear infinite;
+}
+
+@keyframes xmas-fall{
+    to{ transform:translate3d(var(--dx, 20px), 1400px, 0); }
+}
+
+.xmas-head{
+    display:grid;
+    gap:14px;
+    justify-items:center;
+    text-align:center;
+    max-width:720px;
+    margin:0 auto;
+}
+
+.xmas-count{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background:var(--xmas-red);
+    color:#fff;
+    border-radius:999px;
+    padding:7px 16px 7px 12px;
+    font-size:.8rem;
+    font-weight:700;
+    letter-spacing:.04em;
+}
+
+.xmas-count svg{ width:16px; height:16px; flex:none; }
+
+.xmas-section h2,
+.xmas-page h1{
+    font-family:"Bodoni Moda", "Cormorant Garamond", Georgia, serif;
+    font-weight:600;
+    line-height:1.08;
+    letter-spacing:-.015em;
+    text-wrap:balance;
+    color:var(--xmas-forest);
+    margin:0;
+}
+
+.xmas-section h2{ font-size:clamp(1.9rem, 6.4cqw, 3.3rem); }
+.xmas-page h1{ font-size:clamp(2.1rem, 6.6cqw, 3.8rem); }
+
+.xmas-section h2 em,
+.xmas-page h1 em{
+    color:var(--xmas-red);
+    font-style:italic;
+    font-weight:500;
+}
+
+.xmas-lede{
+    margin:0;
+    font-size:clamp(.95rem, 2.2cqw, 1.05rem);
+    line-height:1.75;
+    color:#5B454A;
+    max-width:58ch;
+    text-wrap:pretty;
+}
+
+.xmas-ribbon{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    color:var(--xmas-gold);
+    width:min(320px, 70%);
+    margin:0 auto;
+}
+
+.xmas-ribbon::before,
+.xmas-ribbon::after{
+    content:"";
+    height:1px;
+    flex:1;
+    background:linear-gradient(90deg, transparent, var(--xmas-gold));
+}
+
+.xmas-ribbon::after{ background:linear-gradient(270deg, transparent, var(--xmas-gold)); }
+.xmas-ribbon svg{ width:26px; height:26px; flex:none; }
+
+/*-------------------- filter buttons --------------------*/
+
+.xmas-chips{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    justify-content:center;
+    margin:26px 0 24px;
+}
+
+.xmas-chip{
+    font:600 .84rem "Manrope", system-ui, sans-serif;
+    color:var(--xmas-forest);
+    background:#fff;
+    border:1px solid #E6D6CB;
+    border-radius:999px;
+    padding:9px 16px;
+    cursor:pointer;
+    transition:background .15s, color .15s, transform .15s, border-color .15s;
+}
+
+.xmas-chip:hover{ transform:translateY(-1px); border-color:var(--xmas-red); }
+
+.xmas-chip[aria-pressed="true"]{
+    background:var(--xmas-forest);
+    color:#fff;
+    border-color:var(--xmas-forest);
+}
+
+.xmas-chip:focus-visible,
+.xmas-card-link:focus-visible,
+.xmas-cta:focus-visible{
+    outline:3px solid var(--xmas-gold);
+    outline-offset:2px;
+}
+
+/*-------------------- the cards --------------------
+   Green and red like Christmas, in a checkerboard. The order
+   changes with the number of columns, so it is set per width.   */
+
+.xmas-grid{
+    list-style:none;
+    margin:0;
+    padding:0;
+    display:grid;
+    gap:clamp(12px, 2.2cqw, 22px);
+    grid-template-columns:repeat(4, minmax(0, 1fr));
+}
+
+@container xmas (max-width:900px){
+    .xmas-grid{ grid-template-columns:repeat(3, minmax(0, 1fr)); }
+}
+
+@container xmas (max-width:640px){
+    .xmas-grid{ grid-template-columns:repeat(2, minmax(0, 1fr)); }
+}
+
+.xmas-card{
+    --c:var(--xmas-green);
+    position:relative;
+    display:flex;
+    background:var(--c);
+    color:var(--xmas-text);
+    border:1px solid rgba(240,208,138,.45);
+    border-radius:18px;
+    overflow:hidden;
+    box-shadow:0 10px 30px rgba(43,26,30,.16);
+    transition:transform .2s ease, box-shadow .2s ease;
+}
+
+.xmas-card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 16px 38px rgba(43,26,30,.26);
+}
+
+/* 4 columns */
+@container xmas (min-width:901px){
+    .xmas-card:nth-child(8n+2),
+    .xmas-card:nth-child(8n+4),
+    .xmas-card:nth-child(8n+5),
+    .xmas-card:nth-child(8n+7){ --c:var(--xmas-red); }
+}
+
+/* 3 columns */
+@container xmas (min-width:641px) and (max-width:900px){
+    .xmas-card:nth-child(even){ --c:var(--xmas-red); }
+}
+
+/* 2 columns */
+@container xmas (max-width:640px){
+    .xmas-card:nth-child(4n+2),
+    .xmas-card:nth-child(4n+3){ --c:var(--xmas-red); }
+}
+
+.xmas-card-link{
+    display:flex;
+    flex-direction:column;
+    width:100%;
+    color:inherit;
+    text-decoration:none;
+    border-radius:18px;
+}
+
+.xmas-ph{
+    position:relative;
+    display:block;
+    aspect-ratio:1;
+    background:var(--xmas-blush);
+    overflow:hidden;
+}
+
+.xmas-ph img{
+    display:block;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    transition:transform .5s ease;
+}
+
+.xmas-card:hover .xmas-ph img{ transform:scale(1.04); }
+
+.xmas-badge{
+    position:absolute;
+    left:10px;
+    top:10px;
+    font-size:.66rem;
+    font-weight:700;
+    letter-spacing:.07em;
+    text-transform:uppercase;
+    padding:5px 10px;
+    border-radius:999px;
+    background:var(--xmas-text);
+    color:var(--c);
+}
+
+.xmas-tx{
+    display:grid;
+    gap:6px;
+    align-content:start;
+    padding:14px 14px 16px;
+    flex:1;
+}
+
+.xmas-tx h3{
+    margin:0;
+    font-family:"Bodoni Moda", "Cormorant Garamond", Georgia, serif;
+    font-weight:600;
+    font-size:1.02rem;
+    line-height:1.25;
+    color:var(--xmas-text);
+    text-wrap:balance;
+}
+
+.xmas-for{
+    margin:0;
+    font-size:.78rem;
+    line-height:1.45;
+    color:rgba(255,248,238,.82);
+}
+
+.xmas-price{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    gap:8px;
+    margin:2px 0 0;
+    font-weight:700;
+    font-size:.95rem;
+    color:var(--xmas-gold-soft);
+    font-variant-numeric:tabular-nums;
+}
+
+.xmas-price span{
+    font-weight:600;
+    font-size:.78rem;
+    color:var(--xmas-text);
+    text-decoration:underline;
+    text-underline-offset:3px;
+    text-decoration-color:var(--xmas-gold-soft);
+}
+
+/* On narrow screens the whole card is the button, so drop the extra label */
+@container xmas (max-width:640px){
+    .xmas-price span{ display:none; }
+}
+
+/*-------------------- footer of the section --------------------*/
+
+.xmas-foot{
+    display:grid;
+    gap:18px;
+    justify-items:center;
+    margin-top:34px;
+    text-align:center;
+}
+
+.xmas-cta{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    background:var(--xmas-red);
+    color:#fff;
+    text-decoration:none;
+    font-weight:700;
+    font-size:.95rem;
+    border-radius:999px;
+    padding:14px 28px;
+    box-shadow:0 8px 20px rgba(158,43,62,.28);
+    transition:background .15s, transform .15s;
+}
+
+.xmas-cta:hover{ background:var(--xmas-red-dark); transform:translateY(-1px); }
+
+.xmas-trust{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px 22px;
+    justify-content:center;
+    margin:0;
+    padding:0;
+    list-style:none;
+    font-size:.8rem;
+    color:#5B454A;
+}
+
+.xmas-trust li{ display:inline-flex; align-items:center; gap:7px; }
+.xmas-trust svg{ width:14px; height:14px; color:var(--xmas-gold); flex:none; }
+
+.xmas-note{
+    margin:0;
+    font-size:.78rem;
+    color:#7A6468;
+    max-width:52ch;
+}
+
+.xmas-empty{
+    text-align:center;
+    color:#5B454A;
+    padding:20px 0;
+}
+
+/*-------------------- the /christmas-gifts page --------------------*/
+
+.xmas-page{
+    position:relative;
+    overflow:hidden;
+    isolation:isolate;
+    background:var(--xmas-cream);
+    color:var(--xmas-ink);
+    padding:clamp(110px, 14vw, 150px) clamp(18px, 6vw, 80px) clamp(56px, 8vw, 96px);
+    font-family:"Manrope", system-ui, sans-serif;
+}
+
+.xmas-page .breadcrumbs{ margin-bottom:34px; }
+
+.xmas-page .xmas-grid-wrap{ max-width:1450px; margin:0 auto; }
+
+.xmas-page .xmas-guide{
+    max-width:820px;
+    margin:80px auto 0;
+    display:grid;
+    gap:34px;
+}
+
+.xmas-page .xmas-guide h2{
+    margin:0 0 12px;
+    font-family:"Bodoni Moda", "Cormorant Garamond", Georgia, serif;
+    font-weight:600;
+    font-size:clamp(1.5rem, 3.6vw, 2.1rem);
+    color:var(--xmas-forest);
+    text-wrap:balance;
+}
+
+.xmas-page .xmas-guide p{
+    margin:0;
+    color:#4C3A3F;
+    line-height:1.85;
+    font-size:1.02rem;
+}
+
+.xmas-page .xmas-guide p + p{ margin-top:14px; }
+
+.xmas-page .xmas-guide ul{
+    list-style:none;
+    padding:0;
+    margin:16px 0 0;
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+}
+
+.xmas-page .xmas-guide ul a{
+    display:inline-block;
+    padding:9px 18px;
+    border:1px solid #E6D6CB;
+    border-radius:999px;
+    background:#fff;
+    color:var(--xmas-forest);
+    text-decoration:none;
+    font-size:.92rem;
+    font-weight:600;
+}
+
+.xmas-page .xmas-guide ul a:hover,
+.xmas-page .xmas-guide ul a:focus-visible{
+    border-color:var(--xmas-red);
+    color:var(--xmas-red);
+}
+
+.xmas-page .breadcrumbs li,
+.xmas-page .breadcrumbs [aria-current="page"]{ color:#7A6468; }
+.xmas-page .breadcrumbs a{ color:var(--xmas-red); }
+
+@media (prefers-reduced-motion:reduce){
+    .xmas-snow i{ animation:none; }
+    .xmas-card, .xmas-ph img, .xmas-chip, .xmas-cta{ transition:none; }
+    .xmas-card:hover, .xmas-chip:hover, .xmas-cta:hover{ transform:none; }
+    .xmas-card:hover .xmas-ph img{ transform:none; }
+}

@@ -2,6 +2,7 @@ import "../../styles/cart.css";
 import { Link } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
 import useSEO from "../../hooks/useSEO";
+import OptimizedImage from "../ui/OptimizedImage";
 
 function Cart() {
   useSEO({ title: "Cart", path: "/cart", noindex: true });
@@ -59,10 +60,11 @@ function Cart() {
                 key={item.cartItemId}
               >
 
-                <img
+                <OptimizedImage
                   src={item.image}
                   alt={item.title}
                   className="cart-item-image"
+                  widths={[384]}
                 />
 
                 <div className="cart-item-info">

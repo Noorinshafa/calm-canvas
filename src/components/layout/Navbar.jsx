@@ -7,6 +7,7 @@ import {
   FiSearch,
 } from "react-icons/fi";
 import useProducts from "../../hooks/useProducts";
+import OptimizedImage from "../ui/OptimizedImage";
 import { productPath, cleanProductName } from "../../utils/seoShared.js";
 
 import "../../styles/navbar.css";
@@ -214,9 +215,12 @@ function Navbar() {
                       onClick={closeSearch}
                     >
 
-                      <img
+                      <OptimizedImage
                         src={product.image}
                         alt={cleanProductName(product.title)}
+                        widths={[256]}
+                        width="256"
+                        height="256"
                       />
 
                       <div>
@@ -346,4 +350,4 @@ function Navbar() {
   );
 }
 
-export default Navbar;
+export default Navbar;

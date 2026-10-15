@@ -20,6 +20,8 @@ import toast from "react-hot-toast";
 import "../../styles/productdetails.css";
 import "../../styles/seo-extras.css";
 import ProductCard from "../ui/ProductCard";
+import OptimizedImage from "../ui/OptimizedImage";
+import { ProductPageSkeleton } from "../ui/Skeletons";
 import Breadcrumbs from "../common/Breadcrumbs";
 
 // Printify variant titles aren't all "Size / Color" -- a mug or phone case
@@ -294,7 +296,7 @@ function ProductDetails() {
 
   if (!productId) {
     if (catalogLoading) {
-      return <h2>Loading...</h2>;
+      return <ProductPageSkeleton />;
     }
 
     return (
@@ -309,11 +311,19 @@ function ProductDetails() {
   }
 
   if (loading) {
-    return <h2>Loading...</h2>;
+    return <ProductPageSkeleton />;
   }
 
   if (error) {
-    return <h2>{error}</h2>;
+    return (
+      <div style={{ textAlign: "center", padding: "180px 8% 120px" }}>
+        <h1>We couldn't load this product</h1>
+        <p style={{ margin: "16px 0" }}>
+          Something went wrong while loading this product. Please try again in a moment.
+        </p>
+        <Link to="/collections">Browse all products</Link>
+      </div>
+    );
   }
 
   if (!product) {
@@ -393,15 +403,15 @@ function ProductDetails() {
 
     {selectedImage && (
 
-  <img
+  <OptimizedImage
     className="details-image-img"
     src={selectedImage}
     alt={productName}
+    widths={[768, 1024]}
+    sizes="(max-width: 900px) 100vw, 50vw"
     width="760"
     height="760"
-    loading="eager"
-    fetchPriority="high"
-    decoding="async"
+    priority
   />
 
 )}
@@ -412,17 +422,16 @@ function ProductDetails() {
 
     {product.images.map((img, index) => (
 
-      <img
+      <OptimizedImage
         key={index}
         src={img.src}
         alt={`${productName} — view ${index + 1}`}
         className={`thumbnail ${
           selectedImage === img.src ? "active" : ""
         }`}
+        widths={[256]}
         width="95"
         height="95"
-        loading="lazy"
-        decoding="async"
         onClick={() => setSelectedImage(img.src)}
       />
 

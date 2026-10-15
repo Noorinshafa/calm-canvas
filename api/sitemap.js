@@ -25,6 +25,7 @@ const NS = 'xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"';
 const STATIC_PAGES = [
   "/",
   "/collections",
+  "/christmas-gifts",
   "/about",
   "/contact",
   "/shipping-returns",

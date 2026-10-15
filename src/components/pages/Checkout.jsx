@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useCart } from "../../context/CartContext";
 import useSEO from "../../hooks/useSEO";
+import OptimizedImage from "../ui/OptimizedImage";
 import { trackBeginCheckout } from "../../utils/analytics";
 import { COUNTRIES } from "../../config/countries.js";
 import "../../styles/checkout.css";
@@ -338,7 +339,7 @@ function Checkout() {
 
           {cart.map((item) => (
             <div className="summary-item" key={item.id}>
-              <img src={item.image} alt={item.title} />
+              <OptimizedImage src={item.image} alt={item.title} widths={[256]} />
               <div>
                 <h4>{item.title}</h4>
                 <p>{item.price}</p>
