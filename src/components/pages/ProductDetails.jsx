@@ -250,16 +250,36 @@ function ProductDetails() {
           (image) => image.src === product.image
         );
 
-        const start =
-          (firstPhoto?.variantIds?.length
-            ? variants.find(
-                (variant) =>
-                  variant.price === cheapest?.price &&
-                  firstPhoto.variantIds.includes(variant.id)
-              )
-            : null) ||
-          cheapest ||
-          variants[0];
+        const cheapestOnes = variants.filter(
+          (variant) => variant.price === cheapest?.price
+        );
+
+        const withFirstPhoto = firstPhoto?.variantIds?.length
+          ? cheapestOnes.filter((variant) =>
+              firstPhoto.variantIds.includes(variant.id)
+            )
+          : [];
+
+        const pool = withFirstPhoto.length
+          ? withFirstPhoto
+          : cheapestOnes.length
+          ? cheapestOnes
+          : variants;
+
+        // When several options cost the same (often every size), start on the
+        // one that reads first in the dropdowns -- size S, not 5XL.
+        const position = (variant) =>
+          (optionModel.picksByVariantId.get(variant.id) || []).reduce(
+            (sum, pick, index) =>
+              sum +
+              Math.max(0, optionModel.groups[index]?.values.indexOf(pick)),
+            0
+          );
+
+        const start = pool.reduce(
+          (best, variant) => (position(variant) < position(best) ? variant : best),
+          pool[0]
+        );
 
         setSelection(optionModel.picksByVariantId.get(start.id) || []);
 
