@@ -156,7 +156,34 @@ export function mapProductFull(product, blueprintTitle = "") {
     return rest;
   });
 
-  return { ...summary, variants };
+  // Printify describes the choices a shopper makes (colour, size, phone
+  // model, finish...) in the product's `options` list, and each variant's own
+  // `options` is a list of value IDs that point into it. The ORDER of those
+  // IDs is not guaranteed, and a variant's title ("White / S" or "S / White")
+  // follows whatever order the product happens to use -- so the website must
+  // use this list, not the title, to know which part is the size and which is
+  // the colour. Only the fields the page needs are passed on.
+  const options = (product.options || []).map((option) => ({
+    name: option.name,
+    type: option.type,
+    values: (option.values || []).map((value) => ({
+      id: value.id,
+      title: value.title,
+    })),
+  }));
+
+  // Each product photo records which variants it shows (`variant_ids`) -- for
+  // clothing, usually every size of one colour. Keeping that lets the product
+  // page show the photos that match the colour a shopper picks. Photos with no
+  // list belong to every variant.
+  const images = (product.images || [])
+    .filter((image) => image.src)
+    .map((image) => ({
+      src: image.src,
+      variantIds: Array.isArray(image.variant_ids) ? image.variant_ids : [],
+    }));
+
+  return { ...summary, images, options, variants };
 }
 
 // ---------------------------------------------------------------------------

@@ -14,6 +14,12 @@ import {
   productPath,
 } from "../../utils/seoShared.js";
 import { PRODUCT_COPY } from "../../content/productCopy.js";
+import {
+  buildOptionModel,
+  findVariant,
+  imagesForVariant,
+  nextSelection,
+} from "../../utils/variantOptions.js";
 import { trackAddToCart, trackViewItem } from "../../utils/analytics";
 import toast from "react-hot-toast";
 
@@ -24,28 +30,6 @@ import OptimizedImage from "../ui/OptimizedImage";
 import ShippingEstimate from "../ui/ShippingEstimate";
 import { ProductPageSkeleton } from "../ui/Skeletons";
 import Breadcrumbs from "../common/Breadcrumbs";
-
-// Printify variant titles aren't all "Size / Color" -- a mug or phone case
-// is often single-dimension ("11oz", "iPhone 15 Pro"), not two. Splitting
-// blindly on "/" and always treating part [1] as "the color" left those
-// products with a blank, unusable "Choose Color" dropdown. This parses
-// however many dimensions a variant title actually has.
-function parseVariantTitle(title) {
-  const parts = (title || "")
-    .split("/")
-    .map((part) => part.trim())
-    .filter(Boolean);
-
-  if (parts.length >= 2) {
-    return { size: parts[0], color: parts.slice(1).join(" / ") };
-  }
-
-  if (parts.length === 1) {
-    return { size: parts[0], color: null };
-  }
-
-  return { size: null, color: null };
-}
 
 // The pre-built HTML for a product page (see scripts/postbuild.mjs) records
 // which product it is on the #root element. Reading it lets a page opened
@@ -127,8 +111,9 @@ function ProductDetails() {
 
   const [selectedImage, setSelectedImage] = useState("");
   const [quantity, setQuantity] = useState(1);
-  const [selectedSize, setSelectedSize] = useState("");
-  const [selectedColor, setSelectedColor] = useState("");
+  // One entry per dropdown (colour, size, phone model, finish...), holding the
+  // shopper's current choice for that dropdown.
+  const [selection, setSelection] = useState([]);
 
   // The API now only ever sends enabled/purchasable variants (see
   // api/_lib/printify-shared.js), so anything listed here is safe to sell --
@@ -136,25 +121,10 @@ function ProductDetails() {
   const variants = useMemo(() => product?.variants || [], [product]);
   const hasVariants = variants.length > 0;
 
-  const parsedVariants = useMemo(
-    () => variants.map((variant) => ({ variant, parsed: parseVariantTitle(variant.title) })),
-    [variants]
-  );
-
-  const hasColorOptions = parsedVariants.some((v) => v.parsed.color);
-
-  const sizeOptions = useMemo(
-    () => [...new Set(parsedVariants.map((v) => v.parsed.size).filter(Boolean))],
-    [parsedVariants]
-  );
-
-  const colorOptions = useMemo(
-    () =>
-      hasColorOptions
-        ? [...new Set(parsedVariants.map((v) => v.parsed.color).filter(Boolean))]
-        : [],
-    [parsedVariants, hasColorOptions]
-  );
+  // Which dropdowns this product has and what each one is called, taken from
+  // Printify's own option list rather than guessed from the variant title --
+  // see src/utils/variantOptions.js.
+  const optionModel = useMemo(() => buildOptionModel(product), [product]);
 
   // The variant the shopper has picked right now. Variants of the same
   // product can cost different amounts (e.g. larger hoodie sizes), and the
@@ -164,23 +134,16 @@ function ProductDetails() {
   const activeVariant = useMemo(() => {
     if (!hasVariants) return undefined;
 
-    return (
-      parsedVariants.find(({ parsed }) => {
-        const sizeMatches = parsed.size === selectedSize;
-        const colorMatches = hasColorOptions
-          ? parsed.color === selectedColor
-          : true;
-        return sizeMatches && colorMatches;
-      })?.variant || variants[0]
-    );
-  }, [
-    hasVariants,
-    parsedVariants,
-    selectedSize,
-    selectedColor,
-    hasColorOptions,
-    variants,
-  ]);
+    return findVariant(optionModel, variants, selection) || variants[0];
+  }, [hasVariants, optionModel, variants, selection]);
+
+  // The thumbnails show only the photos made for the colour/variant that is
+  // picked right now (when Printify has any -- see imagesForVariant), instead
+  // of every colour's photos at once.
+  const galleryImages = useMemo(
+    () => imagesForVariant(product?.images || [], activeVariant?.id),
+    [product, activeVariant]
+  );
 
   const activePriceValue =
     typeof activeVariant?.price === "number"
@@ -280,9 +243,35 @@ function ProductDetails() {
           null
         );
 
-        const first = parseVariantTitle((cheapest || variants[0]).title);
-        setSelectedSize(first.size || "");
-        setSelectedColor(first.color || "");
+        // Among equally cheap options, prefer the one whose colour the first
+        // photo shows, so that photo (the one the pre-built page loads) doesn't
+        // change as the page finishes loading.
+        const firstPhoto = (product.images || []).find(
+          (image) => image.src === product.image
+        );
+
+        const start =
+          (firstPhoto?.variantIds?.length
+            ? variants.find(
+                (variant) =>
+                  variant.price === cheapest?.price &&
+                  firstPhoto.variantIds.includes(variant.id)
+              )
+            : null) ||
+          cheapest ||
+          variants[0];
+
+        setSelection(optionModel.picksByVariantId.get(start.id) || []);
+
+        // Show a photo of the colour the page starts on.
+        const startGallery = imagesForVariant(product.images, start.id);
+
+        if (
+          startGallery.length &&
+          !startGallery.some((image) => image.src === product.image)
+        ) {
+          setSelectedImage(startGallery[0].src);
+        }
       }
 
       trackViewItem({
@@ -350,6 +339,27 @@ function ProductDetails() {
     )
     .slice(0, 4);
 
+  function handleOptionChange(groupIndex, value) {
+    const next = nextSelection(
+      optionModel,
+      variants,
+      selection,
+      groupIndex,
+      value
+    );
+
+    const nextVariant = findVariant(optionModel, variants, next);
+    const gallery = imagesForVariant(product.images, nextVariant?.id);
+
+    setSelection(next);
+
+    // Show the new colour's photo. If the photo on screen already belongs to
+    // the new choice (e.g. only the size changed), leave it where it is.
+    if (gallery.length && !gallery.some((image) => image.src === selectedImage)) {
+      setSelectedImage(gallery[0].src);
+    }
+  }
+
   function handleAddToCart({ redirectToCheckout }) {
     const selectedVariant = activeVariant;
 
@@ -366,14 +376,22 @@ function ProductDetails() {
         ? selectedVariant.price / 100
         : product.priceValue;
 
+    // What the cart shows under the product name, e.g. "Color: White",
+    // "Size: M". The variant itself (selectedVariant) is what is actually
+    // priced and ordered; these are labels for the shopper only.
+    const picks = optionModel.picksByVariantId.get(selectedVariant.id) || [];
+    const selectedOptions = optionModel.groups.map((group, index) => ({
+      label: group.label,
+      value: picks[index],
+    }));
+
     addToCart({
       ...product,
       price: formatPrice(variantPrice),
       priceValue: variantPrice,
       quantity,
       selectedVariant,
-      selectedSize,
-      selectedColor,
+      selectedOptions,
     });
 
     trackAddToCart({
@@ -421,7 +439,7 @@ function ProductDetails() {
 
   <div className="thumbnail-row">
 
-    {product.images.map((img, index) => (
+    {galleryImages.map((img, index) => (
 
       <OptimizedImage
         key={index}
@@ -469,25 +487,25 @@ function ProductDetails() {
 
     <>
 
-  {sizeOptions.length > 0 && (
+  {optionModel.groups.map((group, groupIndex) => (
 
-  <div className="option-group">
+  <div className="option-group" key={`${group.label}-${groupIndex}`}>
 
-  <h4>Choose Size</h4>
+  <h4>Choose {group.label}</h4>
 
   <select
     className="product-select"
-    value={selectedSize}
-    onChange={(e) => setSelectedSize(e.target.value)}
-    aria-label="Choose size"
+    value={selection[groupIndex] ?? ""}
+    onChange={(e) => handleOptionChange(groupIndex, e.target.value)}
+    aria-label={`Choose ${group.label.toLowerCase()}`}
   >
-    {sizeOptions.map((size) => (
+    {group.values.map((value) => (
 
       <option
-        key={size}
-        value={size}
+        key={value}
+        value={value}
       >
-        {size}
+        {value}
       </option>
 
     ))}
@@ -496,36 +514,8 @@ function ProductDetails() {
 
 </div>
 
-  )}
+  ))}
 
-  {hasColorOptions && (
-
- <div className="option-group">
-
-  <h4>Choose Color</h4>
-
-  <select
-    className="product-select"
-    value={selectedColor}
-    onChange={(e) => setSelectedColor(e.target.value)}
-    aria-label="Choose color"
-  >
-    {colorOptions.map((color) => (
-
-      <option
-        key={color}
-        value={color}
-      >
-        {color}
-      </option>
-
-    ))}
-
-  </select>
-
-</div>
-
-  )}
   <div className="quantity-section">
 
   <h4>Quantity</h4>

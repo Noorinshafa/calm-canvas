@@ -76,16 +76,19 @@ function Cart() {
                     {item.price}
                   </p>
 
-                  {item.selectedSize && (
-                    <p>
-                      Size: {item.selectedSize}
-                    </p>
-                  )}
-
-                  {item.selectedColor && (
-                    <p>
-                      Color: {item.selectedColor}
-                    </p>
+                  {Array.isArray(item.selectedOptions) &&
+                  item.selectedOptions.length > 0 ? (
+                    item.selectedOptions.map((option) => (
+                      <p key={option.label}>
+                        {option.label}: {option.value}
+                      </p>
+                    ))
+                  ) : (
+                    // Carts saved before this change only know the variant's
+                    // own title (e.g. "White / S"), which is always correct.
+                    item.selectedVariant?.title && (
+                      <p>Options: {item.selectedVariant.title}</p>
+                    )
                   )}
 
                   <div className="quantity-box">
