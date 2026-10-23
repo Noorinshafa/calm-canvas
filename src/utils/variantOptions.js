@@ -31,6 +31,28 @@ function singular(name) {
   return text.slice(0, -1);
 }
 
+// What the dropdown is called. Printify's option NAMES come from each
+// supplier and are inconsistent ("Gildan Colors", "Comfort Colors® Colors",
+// "Clothing sizes", "Phone case sizes", "Phone case surface"), so the label
+// is chosen from the option's TYPE, and the longer name is only kept where it
+// says something the type doesn't ("Handle Color", "Seam Color").
+export function optionLabel(definition) {
+  const name = String(definition?.name || "").trim();
+  const type = definition?.type;
+
+  if (type === "color") {
+    return /handle|seam|trim|lining/i.test(name) ? singular(name) : "Color";
+  }
+
+  if (type === "size") {
+    return /phone|model/i.test(name) ? "Phone Model" : "Size";
+  }
+
+  if (type === "surface") return "Finish";
+
+  return singular(name) || "Option";
+}
+
 // Clothing sizes read S, M, L, XL, 2XL... instead of Printify's arbitrary
 // order. Only applied when every value is a known clothing size; anything
 // else (phone models, bag dimensions) keeps its original order.
@@ -125,7 +147,7 @@ export function buildOptionModel(product) {
     if (definition.type === "size") values = sortSizes(values);
 
     return {
-      label: singular(definition.name) || "Option",
+      label: optionLabel(definition),
       type: definition.type,
       values,
     };
