@@ -269,7 +269,7 @@ export const ABOUT_SECTIONS = [
   {
     heading: "What ShopCalmCanvas is",
     paragraphs: [
-      "ShopCalmCanvas is an online store for artwork-led everyday pieces: hoodies, sweatshirts, T-shirts, tote bags, phone cases and mugs. Our designs lean toward calm and thoughtful: soft watercolor florals, quiet illustrations, cozy seasonal scenes and a few playful surprises.",
+      "ShopCalmCanvas (also written as Calm Canvas) is an online store for artwork-led everyday pieces: hoodies, sweatshirts, T-shirts, tote bags, phone cases and mugs. Our designs lean toward calm and thoughtful: soft watercolor florals, quiet illustrations, cozy seasonal scenes and a few playful surprises.",
     ],
   },
   {

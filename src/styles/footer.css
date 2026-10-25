@@ -141,10 +141,10 @@
 
 
 /*=====================================================
-                NEWSLETTER
+                FOLLOW
 =====================================================*/
 
-.footer-newsletter h3{
+.footer-follow h3{
 
     color:#D68496;
 
@@ -152,87 +152,41 @@
 
 }
 
-.footer-newsletter p{
+.footer-follow p{
 
     color:rgba(255,255,255,.75);
 
     line-height:1.8;
 
-    margin-bottom:28px;
+    max-width:380px;
 
 }
 
-.newsletter-box{
+.footer-follow .footer-social{
 
-    display:flex;
-
-    gap:12px;
+    margin:22px 0 26px;
 
 }
 
-.newsletter-box input:focus-visible{
+.footer-contact a{
 
-    outline:2px solid #F8F5EF;
+    color:#fff;
 
-    outline-offset:2px;
+    text-decoration:underline;
 
-}
+    text-decoration-color:rgba(214,132,150,.7);
 
-.newsletter-box input{
+    text-underline-offset:3px;
 
-    flex:1;
-
-    padding:16px 20px;
-
-    border:none;
-
-    outline:none;
-
-    border-radius:50px;
-
-    background:rgba(255,255,255,.08);
-
-    backdrop-filter:blur(16px);
-
-    color:white;
-
-    font-size:1rem;
+    overflow-wrap:anywhere;
 
 }
 
-.newsletter-box input::placeholder{
+.footer-contact a:hover,
 
-    color:rgba(255,255,255,.55);
+.footer-contact a:focus-visible{
 
-}
-
-.newsletter-box button{
-
-    padding:16px 30px;
-
-    border:none;
-
-    border-radius:50px;
-
-    background:#D68496;
-
-    color:white;
-
-    cursor:pointer;
-
-    font-weight:700;
-
-    transition:.35s;
-
-}
-
-.newsletter-box button:hover{
-
-    background:white;
-
-    color:#153E3B;
-
-    transform:translateY(-3px);
+    color:#D68496;
 
 }
 
@@ -287,18 +241,6 @@ padding:70px 5% 25px;
 grid-template-columns:1fr;
 
 gap:50px;
-
-}
-
-.newsletter-box{
-
-flex-direction:column;
-
-}
-
-.newsletter-box button{
-
-width:100%;
 
 }
 

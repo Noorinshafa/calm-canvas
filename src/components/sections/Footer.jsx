@@ -1,6 +1,6 @@
 import "../../styles/footer.css";
 import { Link } from "react-router-dom";
-import { SOCIAL_LINKS } from "../../config/site";
+import { SOCIAL_LINKS, CONTACT_EMAIL } from "../../config/site";
 
 // "https://www.instagram.com/shopcalmcanvas/" -> "Instagram"
 function socialLabel(url) {
@@ -25,21 +25,6 @@ function Footer() {
             Premium print-on-demand products
             designed to inspire creativity.
           </p>
-
-          {SOCIAL_LINKS.length > 0 && (
-            <nav className="footer-social" aria-label="Social media">
-              {SOCIAL_LINKS.map((url) => (
-                <a
-                  key={url}
-                  href={url}
-                  target="_blank"
-                  rel="me noopener noreferrer"
-                >
-                  {socialLabel(url)}
-                </a>
-              ))}
-            </nav>
-          )}
 
         </div>
 
@@ -100,48 +85,36 @@ function Footer() {
 </div>
 
 
-        {/* NEWSLETTER */}
+        {/* FOLLOW */}
 
-        <div className="footer-newsletter">
+        <div className="footer-follow">
 
-          <h3>Stay Inspired</h3>
+          <h3>Follow Along</h3>
 
           <p>
-            Join our newsletter for new
-            collections and exclusive offers.
+            Find new designs and collections
+            on our social profiles.
           </p>
 
-          {/* NOTE: this is not yet wired to an email/CRM service -- see
-              LAUNCH-AUDIT.md (requirement 16) for what's needed before this
-              can actually deliver a submitted address anywhere. Left as a
-              properly labelled, keyboard-accessible form in the meantime,
-              rather than faking a "subscribed" response with nowhere for
-              the email to go. */}
-          <form
-            className="newsletter-box"
-            onSubmit={(e) => e.preventDefault()}
-          >
+          {SOCIAL_LINKS.length > 0 && (
+            <nav className="footer-social" aria-label="Social media">
+              {SOCIAL_LINKS.map((url) => (
+                <a
+                  key={url}
+                  href={url}
+                  target="_blank"
+                  rel="me noopener noreferrer"
+                >
+                  {socialLabel(url)}
+                </a>
+              ))}
+            </nav>
+          )}
 
-            <label htmlFor="newsletter-email" className="sr-only">
-              Email address
-            </label>
-
-            <input
-              id="newsletter-email"
-              name="email"
-              type="email"
-              placeholder="Your email"
-              autoComplete="email"
-              required
-            />
-
-            <button type="submit">
-
-              Join
-
-            </button>
-
-          </form>
+          <p className="footer-contact">
+            Questions about an order?{" "}
+            <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
+          </p>
 
         </div>
 

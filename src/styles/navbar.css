@@ -548,10 +548,12 @@
 
 
 /* ========================================
-   MOBILE
+   TABLET AND MOBILE
+   Below 1280px the row of links no longer fits beside the logo, so the menu
+   button is used instead.
 ======================================== */
 
-@media (max-width: 850px) {
+@media (max-width: 1279px) {
 
   .navbar-links {
     display: none;
@@ -635,17 +637,3 @@
 
 }
 
-/* ========================================
-   LAPTOP / TABLET LANDSCAPE
-   The desktop links and the longer brand name share one row here, so the
-   brand is a little smaller until there is room for the full size (1280px+).
-======================================== */
-
-@media (min-width: 851px) and (max-width: 1279px) {
-
-  .navbar-brand h2,
-  .navbar-brand .brand-name {
-    font-size: 1.45rem;
-  }
-
-}

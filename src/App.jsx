@@ -67,7 +67,6 @@ function Home() {
       <ShopCategories />
       <WhyCalmCanvas />
       <ParallaxBanner />
-      <Footer />
     </>
   );
 }
@@ -251,6 +250,13 @@ function App() {
         />
 
       </Routes>
+
+      {/* One footer for every page, so the shipping, returns, terms,
+          privacy and contact links are always one tap away. It sits inside
+          the Suspense boundary on purpose: while a page's code is loading
+          only the spinner shows, and the footer appears together with the
+          page instead of jumping down when the page arrives. */}
+      <Footer />
 
       </Suspense>
 

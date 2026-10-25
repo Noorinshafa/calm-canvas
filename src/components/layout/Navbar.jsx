@@ -83,9 +83,10 @@ function Navbar() {
           to="/"
           className="navbar-logo"
         >
+          {/* Decorative: the brand name is written out next to it. */}
           <img
             src="/logo.png"
-            alt="ShopCalmCanvas"
+            alt=""
             width="68"
             height="68"
           />
