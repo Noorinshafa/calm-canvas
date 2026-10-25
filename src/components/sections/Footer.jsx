@@ -1,5 +1,12 @@
 import "../../styles/footer.css";
 import { Link } from "react-router-dom";
+import { SOCIAL_LINKS } from "../../config/site";
+
+// "https://www.instagram.com/shopcalmcanvas/" -> "Instagram"
+function socialLabel(url) {
+  const name = new URL(url).hostname.replace(/^www\./, "").split(".")[0];
+  return name.charAt(0).toUpperCase() + name.slice(1);
+}
 
 function Footer() {
   return (
@@ -11,13 +18,28 @@ function Footer() {
 
         <div className="footer-brand">
 
-          <h2>Calm Canvas</h2>
+          <h2>ShopCalmCanvas</h2>
 
           <p>
             Art made for everyday living.
             Premium print-on-demand products
             designed to inspire creativity.
           </p>
+
+          {SOCIAL_LINKS.length > 0 && (
+            <nav className="footer-social" aria-label="Social media">
+              {SOCIAL_LINKS.map((url) => (
+                <a
+                  key={url}
+                  href={url}
+                  target="_blank"
+                  rel="me noopener noreferrer"
+                >
+                  {socialLabel(url)}
+                </a>
+              ))}
+            </nav>
+          )}
 
         </div>
 
@@ -130,7 +152,7 @@ function Footer() {
 
         <p>
 
-          © 2026 Calm Canvas. All rights reserved.
+          © 2026 ShopCalmCanvas. All rights reserved.
 
         </p>
 

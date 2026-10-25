@@ -86,7 +86,7 @@ function ChristmasGiftsPage() {
 
       <div className="xmas-guide">
         <div>
-          <h2>Christmas gifts from Calm Canvas</h2>
+          <h2>Christmas gifts from ShopCalmCanvas</h2>
 
           {CHRISTMAS_PAGE.intro.map((paragraph) => (
             <p key={paragraph.slice(0, 40)}>{paragraph}</p>

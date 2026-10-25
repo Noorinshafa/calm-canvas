@@ -85,13 +85,13 @@ function Navbar() {
         >
           <img
             src="/logo.png"
-            alt="Calm Canvas"
+            alt="ShopCalmCanvas"
             width="68"
             height="68"
           />
 
           <div className="navbar-brand">
-            <span className="brand-name">Calm Canvas</span>
+            <span className="brand-name">ShopCalmCanvas</span>
 
             <p>
               Minimal Lifestyle Store
@@ -272,7 +272,7 @@ function Navbar() {
 
             <img
               src="/logo.png"
-              alt="Calm Canvas"
+              alt="ShopCalmCanvas"
               width="45"
               height="45"
             />

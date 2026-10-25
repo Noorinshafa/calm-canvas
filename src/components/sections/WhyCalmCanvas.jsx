@@ -6,7 +6,7 @@ const features = [
   {
     icon: FiHeart,
     title: "Original Designs",
-    text: "Every print starts as original art, made in-house for Calm Canvas.",
+    text: "Every print starts as original art, made in-house for ShopCalmCanvas.",
   },
   {
     icon: FiPackage,
@@ -30,7 +30,7 @@ function WhyCalmCanvas() {
     <section className="why-section">
 
       <div className="why-heading">
-        <span className="why-tag">THE CALM CANVAS DIFFERENCE</span>
+        <span className="why-tag">THE SHOPCALMCANVAS DIFFERENCE</span>
         <h2>Why Shop With Us</h2>
       </div>
 

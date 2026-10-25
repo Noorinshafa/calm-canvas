@@ -15,6 +15,7 @@ import {
   DEFAULT_DESCRIPTION,
   DEFAULT_OG_IMAGE,
   SOCIAL_LINKS,
+  BRAND_ALTERNATE_NAMES,
   SHIPPING_COUNTRIES,
   CURRENCY,
   CONTACT_EMAIL,
@@ -58,7 +59,7 @@ export function truncateAtWord(text, max, ellipsis = false) {
   return ellipsis ? `${cut}…` : cut;
 }
 
-// Page <title>: "<title> | Calm Canvas", kept to 60 characters or fewer.
+// Page <title>: "<title> | ShopCalmCanvas", kept to 60 characters or fewer.
 export function buildTitle(title) {
   if (!title) return DEFAULT_TITLE;
 
@@ -120,6 +121,7 @@ export function organizationJsonLd() {
     "@type": "Organization",
     "@id": `${SITE_URL}/#organization`,
     name: SITE_NAME,
+    alternateName: BRAND_ALTERNATE_NAMES,
     url: `${SITE_URL}/`,
     logo: `${SITE_URL}/logo.png`,
     email: CONTACT_EMAIL,
@@ -146,6 +148,7 @@ export function websiteJsonLd() {
     "@type": "WebSite",
     "@id": `${SITE_URL}/#website`,
     name: SITE_NAME,
+    alternateName: BRAND_ALTERNATE_NAMES,
     url: `${SITE_URL}/`,
     publisher: { "@id": `${SITE_URL}/#organization` },
     inLanguage: "en",

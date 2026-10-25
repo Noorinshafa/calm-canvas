@@ -71,7 +71,7 @@ function setJsonLd(data) {
 
 /**
  * @param {Object} opts
- * @param {string} [opts.title] - page title, shown as "<title> | Calm Canvas". Omit for the default site title.
+ * @param {string} [opts.title] - page title, shown as "<title> | ShopCalmCanvas". Omit for the default site title.
  * @param {string} [opts.description] - meta/OG/Twitter description. Omit for the default site description.
  * @param {string} [opts.path] - route path (e.g. "/tshirts") used to build the canonical URL and og:url.
  * @param {string} [opts.image] - absolute or site-relative image URL for social previews.

@@ -483,7 +483,7 @@ function ProductDetails() {
 <div className="product-info">
 
   <span className="product-category">
-    CALM CANVAS
+    SHOPCALMCANVAS
   </span>
 
   <h1>{productName}</h1>

@@ -139,10 +139,10 @@ export const CHRISTMAS_HOME = {
   heading: "Christmas gifts for",
   headingEm: "everyone on your list",
   lede:
-    "Sparkly Christmas mugs, cozy hoodies for winter nights, phone cases and totes with real personality. Original Calm Canvas art, printed to order and easy to wrap.",
+    "Sparkly Christmas mugs, cozy hoodies for winter nights, phone cases and totes with real personality. Original ShopCalmCanvas art, printed to order and easy to wrap.",
   button: "Shop all Christmas gifts",
   note: "Every item is made after you order, so place Christmas orders early.",
-  trust: ["Original Calm Canvas art", "Printed to order", "Secure Safepay checkout"],
+  trust: ["Original ShopCalmCanvas art", "Printed to order", "Secure Safepay checkout"],
 };
 
 // The /christmas-gifts page.
@@ -151,12 +151,12 @@ export const CHRISTMAS_PAGE = {
   title: "Christmas Gifts for Her, Mugs & Cozy Hoodies",
   h1: "Christmas Gifts with Original Art",
   tagline:
-    "Christmas mugs, cozy hoodies and sweatshirts, phone cases and totes, printed to order from original Calm Canvas artwork.",
+    "Christmas mugs, cozy hoodies and sweatshirts, phone cases and totes, printed to order from original ShopCalmCanvas artwork.",
   description:
     "Original-art Christmas mugs, cozy hoodies, phone cases and totes, printed to order. Find a gift for her, for dog lovers and for cat lovers.",
   ogImage: "/og/christmas-gifts.png",
   intro: [
-    "Christmas gifts feel best when they say something about the person who opens them. Everything here is printed to order from original Calm Canvas artwork: sparkly red Christmas mugs, a holiday phone case, cozy hoodies and sweatshirts for winter nights, and totes and weekender bags for the person who is always on the move.",
+    "Christmas gifts feel best when they say something about the person who opens them. Everything here is printed to order from original ShopCalmCanvas artwork: sparkly red Christmas mugs, a holiday phone case, cozy hoodies and sweatshirts for winter nights, and totes and weekender bags for the person who is always on the move.",
     "Use the buttons above to narrow the list. Christmas picks are the pieces made for the season. Cozy winter wear gathers the hoodies and sweatshirts. Dog and cat lovers shows designs for people who adore their pets, and Under $25 shows the easiest stocking stuffers.",
   ],
   sections: [
@@ -195,7 +195,7 @@ export const CHRISTMAS_PAGE = {
     {
       heading: "Ordering for Christmas",
       paragraphs: [
-        "Every Calm Canvas item is printed after you order it, so it needs time to print before it ships. Place your Christmas order early and read the timings on our Shipping, Returns & Refunds page before you buy. Because each item is custom printed, check the size and options carefully before you pay.",
+        "Every ShopCalmCanvas item is printed after you order it, so it needs time to print before it ships. Place your Christmas order early and read the timings on our Shipping, Returns & Refunds page before you buy. Because each item is custom printed, check the size and options carefully before you pay.",
       ],
       links: [{ to: "/shipping-returns", text: "Shipping, returns & refunds" }],
     },

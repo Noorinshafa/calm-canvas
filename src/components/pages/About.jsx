@@ -22,7 +22,7 @@ function About() {
   return (
     <section className="about">
       <div className="about-hero">
-        <span>ABOUT CALM CANVAS</span>
+        <span>ABOUT SHOPCALMCANVAS</span>
 
         <h1>
           More Than Accessories.
@@ -31,7 +31,7 @@ function About() {
         </h1>
 
         <p>
-          Calm Canvas is a place where elegance, creativity, and thoughtful
+          ShopCalmCanvas is a place where elegance, creativity, and thoughtful
           design come together to make everyday moments feel special.
         </p>
       </div>

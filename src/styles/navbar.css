@@ -602,26 +602,50 @@
     display: none;
   }
 
+  /* The brand name is one long word ("ShopCalmCanvas"), so on phones its
+     size follows the screen width: just big enough to fit beside the logo and
+     the three buttons, never pushing the menu button off the edge. */
   .navbar-brand h2,
 .navbar-brand .brand-name {
-    font-size: 1.55rem;
+    font-size: clamp(0.85rem, calc((92vw - 198px) / 7.2), 1.55rem);
+  }
+
+  .navbar-logo {
+    gap: 10px;
   }
 
   .navbar-logo img {
-    width: 52px;
-    height: 52px;
+    width: 48px;
+    height: 48px;
   }
 
   .navbar-inner {
     width: 92%;
+
+    gap: 10px;
   }
 
   .navbar-icon,
   .navbar-menu-button {
-    width: 42px;
-    height: 42px;
+    width: 38px;
+    height: 38px;
 
     font-size: 1.2rem;
+  }
+
+}
+
+/* ========================================
+   LAPTOP / TABLET LANDSCAPE
+   The desktop links and the longer brand name share one row here, so the
+   brand is a little smaller until there is room for the full size (1280px+).
+======================================== */
+
+@media (min-width: 851px) and (max-width: 1279px) {
+
+  .navbar-brand h2,
+  .navbar-brand .brand-name {
+    font-size: 1.45rem;
   }
 
 }

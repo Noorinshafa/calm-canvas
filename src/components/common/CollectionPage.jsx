@@ -69,7 +69,7 @@ function CollectionPage() {
 
       <div className="collection-header">
 
-        <span>CALM CANVAS</span>
+        <span>SHOPCALMCANVAS</span>
 
         <h1>Explore Our Collections</h1>
 
@@ -92,7 +92,7 @@ function CollectionPage() {
 
             <img
               src={item.image}
-              alt={`${item.title} by Calm Canvas`}
+              alt={`${item.title} by ShopCalmCanvas`}
             />
 
             <div className="collection-content">

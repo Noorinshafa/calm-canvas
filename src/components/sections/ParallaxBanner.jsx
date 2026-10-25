@@ -16,7 +16,7 @@ function ParallaxBanner() {
 
       <div className="parallax-overlay">
 
-        <span>CALM CANVAS</span>
+        <span>SHOPCALMCANVAS</span>
 
         <h2>
           Wear Art.

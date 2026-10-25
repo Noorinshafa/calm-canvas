@@ -31,7 +31,7 @@ export const POSTS = [
       { type: "h2", text: "Before you order: the practical bits" },
       {
         type: "p",
-        text: "Everything at [Calm Canvas](/about) is printed on demand, which means your item is made after you order it rather than pulled from a shelf. That keeps the range of designs wide, but it matters when you are buying a gift. Allow 2-7 business days for printing, then add delivery time on top. If the gift has a date attached, order early instead of hoping.",
+        text: "Everything at [ShopCalmCanvas](/about) is printed on demand, which means your item is made after you order it rather than pulled from a shelf. That keeps the range of designs wide, but it matters when you are buying a gift. Allow 2-7 business days for printing, then add delivery time on top. If the gift has a date attached, order early instead of hoping.",
       },
       {
         type: "p",
@@ -139,7 +139,7 @@ export const POSTS = [
     blocks: [
       {
         type: "p",
-        text: "Cat people are lovely to shop for and slightly harder than they look. The obvious route, anything with a cat on it, can end up feeling generic. A better approach is to match the style of the design to the person: playful, dry-humored, vintage or quietly sweet. Here are the cat designs in the Calm Canvas shop, who each one suits, and what to check before you order.",
+        text: "Cat people are lovely to shop for and slightly harder than they look. The obvious route, anything with a cat on it, can end up feeling generic. A better approach is to match the style of the design to the person: playful, dry-humored, vintage or quietly sweet. Here are the cat designs in the ShopCalmCanvas shop, who each one suits, and what to check before you order.",
       },
       { type: "h2", text: "Start with the person, not the cat" },
       {
@@ -249,7 +249,7 @@ export const POSTS = [
     blocks: [
       {
         type: "p",
-        text: "An oversized hoodie is one of the easiest things to wear and one of the easiest to get wrong. Done well, it looks relaxed and intentional. Done badly, it looks like you grabbed the nearest thing off the floor. The difference usually comes down to two things: how the hoodie fits and what you put around it. Here are six outfit ideas that work with hoodies from the Calm Canvas [hoodie collection](/hoodies), plus a few notes on sizing so the look comes out the way you picture it.",
+        text: "An oversized hoodie is one of the easiest things to wear and one of the easiest to get wrong. Done well, it looks relaxed and intentional. Done badly, it looks like you grabbed the nearest thing off the floor. The difference usually comes down to two things: how the hoodie fits and what you put around it. Here are six outfit ideas that work with hoodies from the ShopCalmCanvas [hoodie collection](/hoodies), plus a few notes on sizing so the look comes out the way you picture it.",
       },
       { type: "h2", text: "First, decide what oversized means for you" },
       {
@@ -372,7 +372,7 @@ export const POSTS = [
       },
       {
         type: "p",
-        text: "At Calm Canvas, the designs begin as original artwork, and a large part of the shop leans floral across [sweatshirts](/sweatshirts), [T-shirts](/tshirts), tote bags, phone cases and mugs. You can read more about the shop on the [about page](/about).",
+        text: "At ShopCalmCanvas, the designs begin as original artwork, and a large part of the shop leans floral across [sweatshirts](/sweatshirts), [T-shirts](/tshirts), tote bags, phone cases and mugs. You can read more about the shop on the [about page](/about).",
       },
       { type: "h2", text: "In your wardrobe: let one piece do the work" },
       {

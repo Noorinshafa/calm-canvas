@@ -11,7 +11,7 @@ import useSEO from "../../hooks/useSEO";
 function NotFound() {
   useSEO({
     title: "Page Not Found",
-    description: "The page you're looking for doesn't exist. Browse our collections or head back to the Calm Canvas home page.",
+    description: "The page you're looking for doesn't exist. Browse our collections or head back to the ShopCalmCanvas home page.",
     path: "/404",
     noindex: true,
   });

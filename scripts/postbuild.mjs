@@ -292,7 +292,7 @@ async function prerender() {
         : "") +
       `<p>${link(CHRISTMAS_PAGE.path, "Christmas gifts")} · ${link(
         "/about",
-        "About Calm Canvas"
+        "About ShopCalmCanvas"
       )} · ${link("/blog", "Gift & style ideas")} · ${link(
         "/shipping-returns",
         "Shipping & returns"
@@ -394,7 +394,7 @@ async function prerender() {
         `<h1>${esc(CHRISTMAS_PAGE.h1)}</h1>` +
         `<p>${esc(CHRISTMAS_PAGE.tagline)}</p>` +
         productListHtml(picks) +
-        `<h2>Christmas gifts from Calm Canvas</h2>` +
+        `<h2>Christmas gifts from ShopCalmCanvas</h2>` +
         CHRISTMAS_PAGE.intro.map((p) => `<p>${esc(p)}</p>`).join("") +
         CHRISTMAS_PAGE.sections
           .map(
@@ -429,7 +429,7 @@ async function prerender() {
       },
       body: () =>
         `<h1>More Than Accessories. Little Moments of Joy.</h1>` +
-        `<p>Calm Canvas is a place where elegance, creativity, and thoughtful design come together to make everyday moments feel special.</p>` +
+        `<p>ShopCalmCanvas is a place where elegance, creativity, and thoughtful design come together to make everyday moments feel special.</p>` +
         ABOUT_SECTIONS.map(
           (s) =>
             `<h2>${esc(s.heading)}</h2>` +

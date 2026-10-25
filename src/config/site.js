@@ -13,22 +13,30 @@
 // already redirects here, so every canonical, sitemap, social and structured-
 // data URL must use this exact form.
 export const SITE_URL = "https://www.shopcalmcanvas.com";
-export const SITE_NAME = "Calm Canvas";
+export const SITE_NAME = "ShopCalmCanvas";
 export const CONTACT_EMAIL = "shopcalmcanvas@gmail.com";
 
 export const DEFAULT_TITLE =
-  "Calm Canvas | Aesthetic Hoodies, Tees, Mugs & Phone Cases";
+  "ShopCalmCanvas | Aesthetic Hoodies, Tees, Mugs & Phone Cases";
 export const DEFAULT_DESCRIPTION =
-  "Shop original-art hoodies, sweatshirts, T-shirts, tote bags, phone cases and mugs. Printed on demand and made for you. Browse Calm Canvas.";
+  "Shop original-art hoodies, sweatshirts, T-shirts, tote bags, phone cases and mugs. Printed on demand and made for you. Browse ShopCalmCanvas.";
 
 // 1200x630 branded banner used for social previews of pages that have no
 // product photo of their own.
 export const DEFAULT_OG_IMAGE = "/og/calm-canvas.png";
 
-// Your public profiles. Add the full URL of each one you have (for example
-// "https://www.instagram.com/yourname") and they are automatically added to
-// the site's structured data so Google can connect them to the brand.
-export const SOCIAL_LINKS = [];
+// Your public profiles. Each full URL listed here is added to the site's
+// structured data (so Google can connect them to the brand) and shown in the
+// footer.
+export const SOCIAL_LINKS = [
+  "https://www.instagram.com/shopcalmcanvas/",
+  "https://www.pinterest.com/shopcalmcanvas/",
+];
+
+// Other ways people write or say the brand. Added to the structured data so
+// Google can recognise "shopcalmcanvas", "shop calm canvas" and the old
+// "calm canvas" as the same site.
+export const BRAND_ALTERNATE_NAMES = ["Shop Calm Canvas", "Calm Canvas"];
 
 // Main markets named in the product structured data (ISO country codes). The
 // store itself ships to most countries worldwide -- the full list customers can
@@ -61,7 +69,7 @@ export const COLLECTIONS = [
     h1: "Aesthetic Graphic Hoodies",
     tagline:
       "Discover premium oversized hoodies designed for comfort, elegance and everyday style.",
-    eyebrow: "CALM CANVAS COLLECTION",
+    eyebrow: "SHOPCALMCANVAS COLLECTION",
     description:
       "Shop cozy graphic hoodies with original artwork: watercolor florals, quiet illustrations and cat designs. Printed on demand and easy to gift.",
     intro: [
@@ -84,7 +92,7 @@ export const COLLECTIONS = [
     h1: "Graphic T-Shirts & Art Tees",
     tagline:
       "Minimal, comfortable, and beautifully designed T-shirts created to bring art and personality into your everyday wardrobe.",
-    eyebrow: "CALM CANVAS COLLECTION",
+    eyebrow: "SHOPCALMCANVAS COLLECTION",
     description:
       "Graphic T-shirts with original illustrations, from floral bouquets to cats, dragons and romantic line art. Printed on demand. Find your next favorite tee.",
     intro: [
@@ -106,8 +114,8 @@ export const COLLECTIONS = [
     title: "Crewneck Sweatshirts with Artistic Designs",
     h1: "Artistic Crewneck Sweatshirts",
     tagline:
-      "Soft, comfortable sweatshirts designed for relaxed everyday style with the Calm Canvas aesthetic.",
-    eyebrow: "CALM CANVAS COLLECTION",
+      "Soft, comfortable sweatshirts designed for relaxed everyday style with the ShopCalmCanvas aesthetic.",
+    eyebrow: "SHOPCALMCANVAS COLLECTION",
     description:
       "Cozy crewneck sweatshirts with original art: Renaissance portraits, butterflies, sunflowers and cats. Printed on demand. Shop the collection.",
     intro: [
@@ -130,7 +138,7 @@ export const COLLECTIONS = [
     h1: "Aesthetic Tote & Weekender Bags",
     tagline:
       "Elegant tote bags designed to make every outing feel lighter, more organized, and effortlessly stylish.",
-    eyebrow: "CALM CANVAS COLLECTION",
+    eyebrow: "SHOPCALMCANVAS COLLECTION",
     description:
       "Floral and watercolor tote bags and large weekender bags with original artwork. Printed on demand. Everyday carry with a calm, artistic look.",
     intro: [
@@ -153,7 +161,7 @@ export const COLLECTIONS = [
     h1: "Aesthetic Phone Cases",
     tagline:
       "Premium phone cases that combine everyday protection with artistic designs you'll enjoy carrying everywhere.",
-    eyebrow: "CALM CANVAS COLLECTION",
+    eyebrow: "SHOPCALMCANVAS COLLECTION",
     description:
       "Protective phone cases with floral, watercolor and illustrated designs. Tough, slim, flexi and magnetic styles, printed on demand. Choose your phone model.",
     intro: [
@@ -172,11 +180,11 @@ export const COLLECTIONS = [
     path: "/mugs",
     nav: "Mugs",
     noun: "mug",
-    title: "Ceramic Coffee Mugs with Floral & Art Prints",
+    title: "Ceramic Coffee Mugs with Floral Art Prints",
     h1: "Floral & Artistic Coffee Mugs",
     tagline:
       "Beautiful mugs made for peaceful mornings, cozy evenings, and every warm drink that brightens your day.",
-    eyebrow: "CALM CANVAS COLLECTION",
+    eyebrow: "SHOPCALMCANVAS COLLECTION",
     description:
       "Ceramic coffee mugs with watercolor poppies, tulips, daisies and more. 11oz and 15oz sizes, printed on demand. A pretty gift for tea and coffee lovers.",
     intro: [
@@ -206,49 +214,49 @@ export const PAGES = {
     path: "/collections",
     title: "Shop Hoodies, Tees, Mugs & Phone Cases",
     description:
-      "Browse every Calm Canvas collection: hoodies, sweatshirts, T-shirts, tote bags, phone cases and mugs with original artwork, printed on demand.",
+      "Browse every ShopCalmCanvas collection: hoodies, sweatshirts, T-shirts, tote bags, phone cases and mugs with original artwork, printed on demand.",
     ogImage: DEFAULT_OG_IMAGE,
   },
   about: {
     path: "/about",
-    title: "About Calm Canvas",
+    title: "About Us",
     description:
-      "Calm Canvas makes artwork-led hoodies, tees, mugs and more, printed on demand after you order. Learn how we work and how to reach us.",
+      "ShopCalmCanvas makes artwork-led hoodies, tees, mugs and more, printed on demand after you order. Learn how we work and how to reach us.",
     ogImage: DEFAULT_OG_IMAGE,
   },
   contact: {
     path: "/contact",
     title: "Contact Us",
     description:
-      "Questions about an order, a design or a collaboration? Contact Calm Canvas by email. We aim to reply within 2 business days.",
+      "Questions about an order, a design or a collaboration? Contact ShopCalmCanvas by email. We aim to reply within 2 business days.",
     ogImage: DEFAULT_OG_IMAGE,
   },
   shipping: {
     path: "/shipping-returns",
     title: "Shipping, Returns & Refunds",
     description:
-      "How long Calm Canvas orders take to print and ship, how cancellations work, and our policy for damaged or incorrect items and refunds.",
+      "How long ShopCalmCanvas orders take to print and ship, how cancellations work, and our policy for damaged or incorrect items and refunds.",
     ogImage: DEFAULT_OG_IMAGE,
   },
   terms: {
     path: "/terms",
     title: "Terms & Conditions",
     description:
-      "The terms and conditions for using the Calm Canvas website and placing orders.",
+      "The terms and conditions for using the ShopCalmCanvas website and placing orders.",
     ogImage: DEFAULT_OG_IMAGE,
   },
   privacy: {
     path: "/privacy-policy",
     title: "Privacy Policy",
     description:
-      "How Calm Canvas collects, uses and protects your personal data when you browse and order.",
+      "How ShopCalmCanvas collects, uses and protects your personal data when you browse and order.",
     ogImage: DEFAULT_OG_IMAGE,
   },
   blog: {
     path: "/blog",
-    title: "The Calm Canvas Journal: Gift & Style Ideas",
+    title: "Gift & Style Journal",
     description:
-      "Gift guides, styling ideas and cozy-aesthetic inspiration from Calm Canvas. Find the right hoodie, mug, tote or phone case for someone you love.",
+      "Gift guides, styling ideas and cozy-aesthetic inspiration from ShopCalmCanvas. Find the right hoodie, mug, tote or phone case for someone you love.",
     ogImage: DEFAULT_OG_IMAGE,
   },
 };
@@ -259,9 +267,9 @@ export const NOINDEX_PATHS = ["/cart", "/checkout", "/order-success"];
 // About-page copy (shared by the React page and the generated HTML).
 export const ABOUT_SECTIONS = [
   {
-    heading: "What Calm Canvas is",
+    heading: "What ShopCalmCanvas is",
     paragraphs: [
-      "Calm Canvas is an online store for artwork-led everyday pieces: hoodies, sweatshirts, T-shirts, tote bags, phone cases and mugs. Our designs lean toward calm and thoughtful: soft watercolor florals, quiet illustrations, cozy seasonal scenes and a few playful surprises.",
+      "ShopCalmCanvas is an online store for artwork-led everyday pieces: hoodies, sweatshirts, T-shirts, tote bags, phone cases and mugs. Our designs lean toward calm and thoughtful: soft watercolor florals, quiet illustrations, cozy seasonal scenes and a few playful surprises.",
     ],
   },
   {
@@ -289,7 +297,7 @@ export const SHIPPING_SECTIONS = [
   {
     heading: "Order Processing & Shipping",
     paragraphs: [
-      "Every Calm Canvas item is made specially for you when you order it — nothing is pre-made or kept in a warehouse. Because of this, please allow around 2–7 business days for your order to be printed and prepared before it ships. Delivery time on top of that varies by your location and the shipping method used, and is handled by our production and courier partners once your order leaves production.",
+      "Every ShopCalmCanvas item is made specially for you when you order it — nothing is pre-made or kept in a warehouse. Because of this, please allow around 2–7 business days for your order to be printed and prepared before it ships. Delivery time on top of that varies by your location and the shipping method used, and is handled by our production and courier partners once your order leaves production.",
     ],
   },
   {

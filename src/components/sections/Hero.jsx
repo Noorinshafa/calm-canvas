@@ -287,7 +287,7 @@ function Hero() {
         className="hero-spine"
         aria-hidden="true"
       >
-        Calm Canvas
+        ShopCalmCanvas
       </span>
 
       <div
