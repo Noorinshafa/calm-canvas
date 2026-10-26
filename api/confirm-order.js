@@ -1,5 +1,6 @@
 import { createSafepayClient, extractValue } from "./_lib/safepay-node-core.js";
 import { createPrintifyOrder } from "./_lib/create-printify-order.js";
+import { openOrderState } from "./_lib/order-cookie.js";
 
 export default async function handler(req, res) {
   const tracker = req.query.tracker;
@@ -68,16 +69,22 @@ export default async function handler(req, res) {
       });
     }
 
-    let savedOrder;
-    try {
-      savedOrder = JSON.parse(
-        Buffer.from(
-          cookieMatch.slice("cc_order=".length),
-          "base64url"
-        ).toString("utf8")
+    // The cookie is signed by create-checkout-session.js. Anything that was
+    // changed, unsigned, or damaged is refused here, so the cart and address
+    // we create the order from are exactly the ones we priced and charged.
+    // (If a real customer ever lands here, the Safepay webhook still creates
+    // their order from the details Safepay holds, and we can confirm manually.)
+    const savedOrder = openOrderState(cookieMatch.slice("cc_order=".length));
+
+    if (!savedOrder) {
+      console.error(
+        "confirm-order: order cookie failed verification for tracker",
+        tracker
       );
-    } catch {
-      return res.status(400).json({ error: "Could not read order details." });
+      return res.status(400).json({
+        error:
+          "We couldn't verify your order details. If you were charged, please contact us and we'll confirm your order.",
+      });
     }
 
     // Make sure this cookie actually belongs to THIS payment, not a leftover

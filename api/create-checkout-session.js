@@ -5,6 +5,7 @@ import {
 } from "./_lib/safepay-node-core.js";
 import { priceAndValidateCart } from "./_lib/printify-shared.js";
 import { quoteShipping } from "./_lib/shipping.js";
+import { sealOrderState } from "./_lib/order-cookie.js";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -294,9 +295,9 @@ export default async function handler(req, res) {
 
     const origin = req.headers.origin || `https://${req.headers.host}`;
 
-    const cookiePayload = Buffer.from(JSON.stringify(orderState)).toString(
-      "base64url"
-    );
+    // Signed with a server-only secret (see _lib/order-cookie.js), so the
+    // customer cannot edit the cart or address inside the cookie.
+    const cookiePayload = sealOrderState(orderState);
 
     res.setHeader(
       "Set-Cookie",
