@@ -101,6 +101,7 @@ async function prerender() {
     productPath,
     productInCollection,
     findCollectionForProduct,
+    relatedProducts,
     buildProductSeo,
     breadcrumbJsonLd,
     faqJsonLd,
@@ -652,6 +653,7 @@ async function prerender() {
     ];
 
     const images = (product.images || []).slice(0, 4);
+    const related = relatedProducts(product, indexableProducts, 4);
 
     const bodyHtml =
       crumbsHtml(crumbs) +
@@ -679,7 +681,16 @@ async function prerender() {
             .map((p) => `<p>${esc(p)}</p>`)
             .join("")}</section>`
         : "") +
-      `<section class="product-extra">${SHIPPING_GLANCE}</section>`;
+      `<section class="product-extra">${SHIPPING_GLANCE}</section>` +
+      // The same "You may also like" links the product page shows once the app
+      // has loaded (chosen by the same helper, see relatedProducts in
+      // src/utils/seoShared.js), so search engines can follow them from the
+      // page source too.
+      (related.length
+        ? `<section class="product-extra"><h2>You may also like</h2>${productListHtml(
+            related
+          )}</section>`
+        : "");
 
     const head = {
       title: name,

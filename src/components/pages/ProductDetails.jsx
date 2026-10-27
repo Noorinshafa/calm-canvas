@@ -12,6 +12,7 @@ import {
   formatPrice,
   productJsonLd,
   productPath,
+  relatedProducts,
 } from "../../utils/seoShared.js";
 import { PRODUCT_COPY } from "../../content/productCopy.js";
 import {
@@ -351,13 +352,9 @@ function ProductDetails() {
   const productName = cleanProductName(product.title);
   const extraCopy = PRODUCT_COPY[product.id];
 
-  const relatedProducts = allProducts
-    .filter(
-      (item) =>
-        item.blueprint_id === product.blueprint_id &&
-        item.id !== product.id
-    )
-    .slice(0, 4);
+  // Same products the pre-built page lists (see relatedProducts in
+  // src/utils/seoShared.js). Empty until the catalog has loaded.
+  const related = relatedProducts(product, allProducts, 4);
 
   function handleOptionChange(groupIndex, value) {
     const next = nextSelection(
@@ -661,6 +658,8 @@ function ProductDetails() {
 
 </section>
 
+{related.length > 0 && (
+
 <section className="related-products">
 
   <div className="related-heading">
@@ -677,7 +676,7 @@ function ProductDetails() {
 
   <div className="related-grid">
 
-    {relatedProducts.map((item) => (
+    {related.map((item) => (
 
       <ProductCard
         key={item.id}
@@ -689,6 +688,8 @@ function ProductDetails() {
   </div>
 
 </section>
+
+)}
 
 </>
 

@@ -94,6 +94,49 @@ export function productPath(product) {
   return product.slug ? `/products/${product.slug}` : `/product/${product.id}`;
 }
 
+// "You may also like" for a product page, used by BOTH the React page and the
+// build script so the links a search engine reads in the page source are the
+// same ones a visitor sees.
+//
+// Products made on the same template (same Printify blueprint, e.g. the same
+// hoodie) come first; if there are fewer than `limit` of those, the rest are
+// filled from the same collection. The list starts just AFTER the current
+// product in each group and wraps around, so links are spread evenly across the
+// whole range instead of every page pointing at the same first few products.
+// Never includes the product itself or products hidden from search engines.
+export function relatedProducts(product, allProducts, limit = 4) {
+  if (!product || !Array.isArray(allProducts)) return [];
+
+  const pool = allProducts.filter((item) => item && item.indexable !== false);
+
+  // Everyone in `group` except `product`, beginning with the one after it.
+  const startAfter = (group) => {
+    const index = group.findIndex((item) => item.id === product.id);
+    const others = group.filter((item) => item.id !== product.id);
+    return index < 0 ? others : [...others.slice(index), ...others.slice(0, index)];
+  };
+
+  const sameTemplate =
+    product.blueprint_id == null
+      ? []
+      : startAfter(
+          pool.filter((item) => item.blueprint_id === product.blueprint_id)
+        );
+
+  if (sameTemplate.length >= limit) return sameTemplate.slice(0, limit);
+
+  const collection = findCollectionForProduct(product);
+  const taken = new Set(sameTemplate.map((item) => item.id));
+
+  const sameCollection = collection
+    ? startAfter(
+        pool.filter((item) => productInCollection(item, collection))
+      ).filter((item) => !taken.has(item.id))
+    : [];
+
+  return [...sameTemplate, ...sameCollection].slice(0, limit);
+}
+
 // Title + meta description for a single product page.
 export function buildProductSeo(product) {
   const name = cleanProductName(product.title);
