@@ -11,10 +11,17 @@ import {
 // (RSS 2.0 with the "g:" fields), available at /feed/google-products.xml.
 //
 // It lists each product once at its lowest price. It deliberately contains
-// no shipping, tax, size or colour values, because those depend on the
-// variant and the buyer's country: set shipping in the Merchant Center or
-// Pinterest settings instead, and use the variant-level data there if an
-// apparel category requires it.
+// no shipping, tax or size values, because those depend on the variant and the
+// buyer's country: set shipping in the Merchant Center or Pinterest settings
+// instead. Clothing (hoodies, sweatshirts, T-shirts) also gets the three
+// details Google requires for apparel: gender, age group and colour. The
+// colour is the colour of the main photo (see mainPhotoColor in
+// _lib/printify-shared.js); all-over-print pieces have no single colour, so
+// they are listed as "Multicolor".
+
+// Google product category 212 = Apparel & Accessories > Clothing > Shirts & Tops.
+const APPAREL_COLLECTIONS = new Set(["hoodies", "tshirts", "sweatshirts"]);
+const APPAREL_CATEGORY_ID = "212";
 
 function xmlEscape(value) {
   return String(value ?? "").replace(/[<>&'"]/g, (char) => {
@@ -61,6 +68,11 @@ export default async function handler(req, res) {
         const description =
           plainText(product.description) || buildProductSeo(product).description;
 
+        const isApparel = Boolean(
+          collection && APPAREL_COLLECTIONS.has(collection.key)
+        );
+        const isWomens = /\bwomen'?s\b/i.test(product.blueprintTitle || "");
+
         const extraImages = (product.images || [])
           .slice(1, 10)
           .map(
@@ -83,6 +95,14 @@ export default async function handler(req, res) {
           "      <g:identifier_exists>no</g:identifier_exists>",
           ...(collection
             ? [`      <g:product_type>${xmlEscape(collection.nav)}</g:product_type>`]
+            : []),
+          ...(isApparel
+            ? [
+                `      <g:google_product_category>${APPAREL_CATEGORY_ID}</g:google_product_category>`,
+                `      <g:gender>${isWomens ? "female" : "unisex"}</g:gender>`,
+                "      <g:age_group>adult</g:age_group>",
+                `      <g:color>${xmlEscape(product.feedColor || "Multicolor")}</g:color>`,
+              ]
             : []),
           "    </item>",
         ].join("\n");

@@ -89,6 +89,52 @@ export async function getBlueprintTitleMap() {
   }
 }
 
+// The garment colour shown in the product's FIRST photo (the one used as the
+// main picture in the product feed), e.g. "Black". Printify records a
+// product's colours in its `options` list (type "color"); each variant's own
+// `options` are value IDs pointing into it, and each photo lists the variants
+// it shows in `variant_ids`.
+//
+// Returns null (the feed then says "Multicolor") whenever a single colour
+// cannot be named with confidence: the product has no colour option (all-over
+// print clothing, mugs, phone cases), the option is not the garment colour
+// (seam, thread, handle colour...), the first photo is shared by several
+// colours, or anything looks unexpected. So a mistake here can only ever leave
+// the specific colour out of the feed, never break it.
+function mainPhotoColor(product) {
+  try {
+    const colorOption = (product.options || []).find(
+      (option) =>
+        option.type === "color" &&
+        !/seam|thread|stitch|handle|trim|lining|strap|zip/i.test(option.name || "")
+    );
+    if (!colorOption) return null;
+
+    const titlesById = new Map(
+      (colorOption.values || []).map((value) => [value.id, value.title])
+    );
+
+    const photoVariantIds = product.images?.[0]?.variant_ids;
+    if (!Array.isArray(photoVariantIds) || photoVariantIds.length === 0) {
+      return null;
+    }
+
+    const colors = new Set();
+    for (const variant of availableVariants(product)) {
+      if (!photoVariantIds.includes(variant.id)) continue;
+
+      for (const valueId of variant.options || []) {
+        const title = titlesById.get(valueId);
+        if (typeof title === "string" && title.trim()) colors.add(title.trim());
+      }
+    }
+
+    return colors.size === 1 ? [...colors][0] : null;
+  } catch {
+    return null;
+  }
+}
+
 // Used for product LISTINGS (collections, homepage, search) -- these only
 // ever show a title, price and thumbnail, never variant details, so we
 // deliberately leave `variants` out. For 144 products, variants alone were
@@ -115,6 +161,8 @@ export function mapProductSummary(product, blueprintTitle = "") {
     // "Tough Phone Cases") -- kept out of the sitemap and set to noindex.
     indexable: !hasGenericTitle(product.title, blueprintTitle),
     updatedAt: product.updated_at || null,
+    // Used only by the product feed (api/feed.js).
+    feedColor: mainPhotoColor(product),
   };
 }
 
@@ -150,6 +198,7 @@ export function mapProductCard(summary) {
 // order actually reaches them.
 export function mapProductFull(product, blueprintTitle = "") {
   const summary = mapProductSummary(product, blueprintTitle);
+  delete summary.feedColor; // feed-only, not needed by the product page
 
   const variants = availableVariants(product).map((variant) => {
     const { cost, ...rest } = variant;
