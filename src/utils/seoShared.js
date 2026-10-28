@@ -22,6 +22,7 @@ import {
   COLLECTIONS,
 } from "../config/site.js";
 import { isInCategory } from "./matchesCategory.js";
+import { crawlableImageUrl } from "./imageUrl.js";
 
 // "Name | extra keywords" -> "Name" (same rule as api/_lib/product-slug.js).
 export function cleanProductName(title = "") {
@@ -274,6 +275,10 @@ export function productJsonLd(product, { inStock = true, plainDescription } = {}
     .slice(0, 6);
 
   if (!images.length && product.image) images.push(product.image);
+
+  // Google cannot fetch Printify's own photo address, so the first (main)
+  // photo is given as a resized copy from this site (see crawlableImageUrl).
+  if (images.length) images[0] = crawlableImageUrl(images[0], SITE_URL);
 
   return {
     "@context": "https://schema.org",

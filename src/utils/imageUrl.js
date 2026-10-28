@@ -40,6 +40,42 @@ export function optimizedImageUrl(src, width) {
   return `/_vercel/image?url=${encodeURIComponent(src)}&w=${width}&q=${IMAGE_QUALITY}`;
 }
 
+// Printify keeps its generated product photos ("mockups") on
+// images-api.printify.com, and that server's robots.txt tells every crawler,
+// Googlebot-Image included, to stay out of /mockup/. Google therefore cannot
+// fetch those photos, and Merchant Center refuses the product ("Unable to do
+// quality & policy checks on product pages"). Resized copies served from our
+// own domain by Vercel (the same service the site's pages already use) are
+// allowed by our robots.txt.
+//
+// Returns the full address (starting with `siteUrl`) of a 1024 pixel wide copy
+// of a blocked Printify photo, for places Google reads: the product feed and
+// the product's structured data. Any other photo is returned unchanged. Only
+// ever call it for the MAIN photo of a product: each resized copy counts
+// towards the monthly image allowance of the Vercel plan.
+const BLOCKED_HOST = "images-api.printify.com";
+export const FEED_IMAGE_WIDTH = 1024;
+
+export function crawlableImageUrl(src, siteUrl) {
+  if (!src || typeof src !== "string" || !siteUrl) return src;
+
+  try {
+    const url = new URL(src);
+    // Same limits as the remotePatterns in vercel.json: https, this host, /mockup/.
+    if (
+      url.protocol !== "https:" ||
+      url.hostname !== BLOCKED_HOST ||
+      !url.pathname.startsWith("/mockup/")
+    ) {
+      return src;
+    }
+  } catch {
+    return src;
+  }
+
+  return `${siteUrl}${optimizedImageUrl(src, FEED_IMAGE_WIDTH)}`;
+}
+
 // "<address> 384w, <address> 768w" for the srcset attribute.
 export function optimizedSrcSet(src, widths) {
   if (!canOptimize(src)) return undefined;

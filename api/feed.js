@@ -1,5 +1,6 @@
 import { getAllProductSummaries } from "./_lib/printify-shared.js";
 import { SITE_URL, SITE_NAME, DEFAULT_DESCRIPTION, CURRENCY } from "../src/config/site.js";
+import { crawlableImageUrl } from "../src/utils/imageUrl.js";
 import {
   productPath,
   cleanProductName,
@@ -86,7 +87,10 @@ export default async function handler(req, res) {
           `      <title>${xmlEscape(name.slice(0, 150))}</title>`,
           `      <description>${xmlEscape(description)}</description>`,
           `      <link>${xmlEscape(`${SITE_URL}${productPath(product)}`)}</link>`,
-          `      <g:image_link>${xmlEscape(product.image)}</g:image_link>`,
+          // Printify's own photo address is blocked for Google (see crawlableImageUrl).
+          `      <g:image_link>${xmlEscape(
+            crawlableImageUrl(product.image, SITE_URL)
+          )}</g:image_link>`,
           ...extraImages,
           "      <g:availability>in_stock</g:availability>",
           `      <g:price>${Number(product.priceValue).toFixed(2)} ${CURRENCY}</g:price>`,
