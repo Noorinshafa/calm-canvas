@@ -35,6 +35,13 @@ const DIST = path.join(ROOT, "dist");
 
 const log = (message) => console.log(`[postbuild] ${message}`);
 
+// One short line for an error. Printify's gateway errors are whole HTML pages,
+// which would otherwise flood the build log.
+const briefError = (error) =>
+  String(error?.message || error)
+    .replace(/\s+/g, " ")
+    .slice(0, 160);
+
 // --------------------------------------------------------------------------
 // Step 1: the app shell
 // --------------------------------------------------------------------------
@@ -120,16 +127,51 @@ async function prerender() {
   let mapProductCard = null;
 
   if (process.env.PRINTIFY_API_TOKEN) {
+    const ATTEMPTS = 3;
+
     try {
       const shared = await load("api/_lib/printify-shared.js");
       mapProductCard = shared.mapProductCard;
-      products = await shared.getAllProductSummaries();
-      log(`loaded ${products.length} products from Printify`);
+
+      // Printify sometimes answers with a gateway time-out ("504"). That is
+      // usually over in a minute or two, so try a few times before giving up.
+      for (let attempt = 1; attempt <= ATTEMPTS && products.length === 0; attempt++) {
+        try {
+          products = await shared.getAllProductSummaries();
+          log(`loaded ${products.length} products from Printify`);
+        } catch (error) {
+          console.warn(
+            `[postbuild] could not load products (attempt ${attempt} of ${ATTEMPTS}): ${briefError(error)}`
+          );
+
+          if (attempt < ATTEMPTS) {
+            await new Promise((resolve) => setTimeout(resolve, attempt * 10000));
+          }
+        }
+      }
     } catch (error) {
       console.warn(
-        "[postbuild] could not load products; product and collection listings will be left to the app:",
-        error.message
+        `[postbuild] could not load products; product and collection listings will be left to the app: ${briefError(error)}`
       );
+    }
+
+    // Safeguard for the live site. Without products, none of the product
+    // pages (or catalog.json) are generated, and a deploy built that way would
+    // replace the working live site with one whose product addresses return
+    // "page not found". So a PRODUCTION build that still has no products
+    // stops here; a failed build leaves the current live site untouched, and
+    // re-running the deploy later (when Printify is back) fixes it. Preview
+    // builds carry on, as before. To deliberately deploy without products,
+    // set ALLOW_BUILD_WITHOUT_PRODUCTS=1 in Vercel for that deploy.
+    if (
+      products.length === 0 &&
+      process.env.VERCEL_ENV === "production" &&
+      process.env.ALLOW_BUILD_WITHOUT_PRODUCTS !== "1"
+    ) {
+      console.error(
+        "[postbuild] ERROR: the product list could not be loaded from Printify, so this production build is being stopped to keep the current live site. Redeploy in a few minutes."
+      );
+      process.exit(1);
     }
   } else {
     log("PRINTIFY_API_TOKEN is not set: skipping product pages");
