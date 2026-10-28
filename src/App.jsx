@@ -35,6 +35,7 @@ const NotFound = lazy(() => import("./components/pages/NotFound"));
 const BlogIndex = lazy(() => import("./components/pages/BlogIndex"));
 const BlogPost = lazy(() => import("./components/pages/BlogPost"));
 const ChristmasGiftsPage = lazy(() => import("./components/pages/ChristmasGiftsPage"));
+const ThemeView = lazy(() => import("./components/common/ThemeView"));
 
 const CollectionPage = lazy(() => import("./components/common/CollectionPage"));
 
@@ -160,6 +161,30 @@ function App() {
         <Route
           path="/christmas-gifts"
           element={<ChristmasGiftsPage />}
+        />
+
+
+        {/* ================= THEME GIFT PAGES ================= */}
+        {/* Text and product matching live in src/content/themes.js */}
+
+        <Route
+          path="/cat-lover-gifts"
+          element={<ThemeView themeKey="cat-lovers" />}
+        />
+
+        <Route
+          path="/dog-lover-gifts"
+          element={<ThemeView themeKey="dog-lovers" />}
+        />
+
+        <Route
+          path="/floral-gifts"
+          element={<ThemeView themeKey="floral" />}
+        />
+
+        <Route
+          path="/halloween"
+          element={<ThemeView themeKey="halloween" />}
         />
 
 

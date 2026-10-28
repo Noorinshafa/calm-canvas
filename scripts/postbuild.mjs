@@ -74,6 +74,7 @@ async function prerender() {
   const { POSTS } = await load("src/content/posts.js");
   const { PRODUCT_COPY } = await load("src/content/productCopy.js");
   const { CHRISTMAS_PAGE, resolvePicks } = await load("src/content/christmas.js");
+  const { THEME_PAGES, themeProducts, themesForProduct } = await load("src/content/themes.js");
   const { optimizedImageUrl } = await load("src/utils/imageUrl.js");
 
   const {
@@ -291,7 +292,9 @@ async function prerender() {
             indexableProducts.slice(0, 12)
           )}</section>`
         : "") +
-      `<p>${link(CHRISTMAS_PAGE.path, "Christmas gifts")} · ${link(
+      `<p>${link(CHRISTMAS_PAGE.path, "Christmas gifts")} · ${THEME_PAGES.map((theme) =>
+        link(theme.path, theme.nav)
+      ).join(" · ")} · ${link(
         "/about",
         "About ShopCalmCanvas"
       )} · ${link("/blog", "Gift & style ideas")} · ${link(
@@ -409,6 +412,63 @@ async function prerender() {
                 : "")
           )
           .join(""),
+    });
+  }
+
+  // ---- Theme gift pages (cat lovers, dog lovers, floral, Halloween) ----
+  // Text and product matching live in src/content/themes.js, the same file
+  // the app reads.
+  for (const theme of THEME_PAGES) {
+    const crumbs = [
+      { name: "Home", path: "/" },
+      { name: theme.nav, path: theme.path },
+    ];
+
+    const items = themeProducts(theme, products);
+
+    // Only pre-generate the page when the catalog loaded; otherwise leave it
+    // to the app rather than publish an empty list.
+    if (haveProducts && items.length === 0) continue;
+
+    pages.push({
+      path: theme.path,
+      head: {
+        title: theme.title,
+        description: theme.description,
+        path: theme.path,
+        image: theme.ogImage,
+        jsonLd: [breadcrumbJsonLd(crumbs), collectionJsonLd(theme, items)],
+      },
+      body: () =>
+        crumbsHtml(crumbs) +
+        `<h1>${esc(theme.h1)}</h1>` +
+        `<p>${esc(theme.tagline)}</p>` +
+        productListHtml(items) +
+        `<div class="collection-intro"><h2>${esc(
+          theme.h1
+        )}: what you will find here</h2>${theme.intro
+          .map((p) => `<p>${esc(p)}</p>`)
+          .join("")}</div>` +
+        theme.sections
+          .map(
+            (s) =>
+              `<div class="collection-intro"><h2>${esc(s.heading)}</h2>` +
+              s.paragraphs.map((p) => `<p>${esc(p)}</p>`).join("") +
+              (s.links
+                ? `<ul>${s.links
+                    .map((l) => `<li>${link(l.to, l.text)}</li>`)
+                    .join("")}</ul>`
+                : "") +
+              `</div>`
+          )
+          .join("") +
+        `<nav class="collection-links" aria-label="More gift ideas"><h2>Keep browsing</h2><ul>` +
+        THEME_PAGES.filter((t) => t.key !== theme.key)
+          .map((t) => `<li>${link(t.path, t.nav)}</li>`)
+          .join("") +
+        `<li>${link(CHRISTMAS_PAGE.path, "Christmas Gifts")}</li>` +
+        COLLECTIONS.map((c) => `<li>${link(c.path, c.nav)}</li>`).join("") +
+        `<li>${link("/blog", "Gift & style ideas")}</li></ul></nav>`,
     });
   }
 
@@ -654,6 +714,7 @@ async function prerender() {
 
     const images = (product.images || []).slice(0, 4);
     const related = relatedProducts(product, indexableProducts, 4);
+    const themes = themesForProduct(product);
 
     const bodyHtml =
       crumbsHtml(crumbs) +
@@ -682,6 +743,13 @@ async function prerender() {
             .join("")}</section>`
         : "") +
       `<section class="product-extra">${SHIPPING_GLANCE}</section>` +
+      // Links to the theme gift pages this design belongs to (the same ones
+      // the product page shows after it loads, see themesForProduct).
+      (themes.length
+        ? `<section class="product-extra"><h2>More designs like this</h2><ul>${themes
+            .map((theme) => `<li>${link(theme.path, theme.nav)}</li>`)
+            .join("")}</ul></section>`
+        : "") +
       // The same "You may also like" links the product page shows once the app
       // has loaded (chosen by the same helper, see relatedProducts in
       // src/utils/seoShared.js), so search engines can follow them from the

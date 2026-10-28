@@ -1,6 +1,7 @@
 import { getAllProductSummaries } from "./_lib/printify-shared.js";
 import { SITE_URL, COLLECTIONS } from "../src/config/site.js";
 import { POSTS } from "../src/content/posts.js";
+import { THEME_PAGES } from "../src/content/themes.js";
 import { productPath, productInCollection } from "../src/utils/seoShared.js";
 
 // Sitemaps for Google and Bing, split into four files that a small index
@@ -26,6 +27,7 @@ const STATIC_PAGES = [
   "/",
   "/collections",
   "/christmas-gifts",
+  ...THEME_PAGES.map((theme) => theme.path),
   "/about",
   "/contact",
   "/shipping-returns",

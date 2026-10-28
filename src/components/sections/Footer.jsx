@@ -49,6 +49,14 @@ function Footer() {
 
           <Link to="/christmas-gifts">Christmas Gifts</Link>
 
+          <Link to="/cat-lover-gifts">Cat Lover Gifts</Link>
+
+          <Link to="/dog-lover-gifts">Dog Lover Gifts</Link>
+
+          <Link to="/floral-gifts">Floral Gifts</Link>
+
+          <Link to="/halloween">Halloween &amp; Spooky</Link>
+
         </div>
 
 

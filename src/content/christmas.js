@@ -79,6 +79,38 @@ export const CHRISTMAS_PICKS = [
     alt: "Burgundy weekender bag with a gold glitter wave",
   },
 
+  // The shop's other Christmas designs (Christmas page only).
+  {
+    slug: "cozy-christmas-cat-sweatshirt-burgundy-holiday-graphic-pullover",
+    tags: ["xmas", "cozy", "pet"],
+    badge: "Christmas",
+    line: "Christmas sweatshirt for cat lovers",
+  },
+  {
+    slug: "christmas-penguin-and-tree-merry-christmas-sweatshirt",
+    tags: ["xmas", "cozy"],
+    badge: "Christmas",
+    line: "Penguin and tree Christmas sweatshirt",
+  },
+  {
+    slug: "red-and-green-snowflake-christmas-hoodie",
+    tags: ["xmas", "cozy"],
+    badge: "Christmas",
+    line: "Red and green snowflake hoodie",
+  },
+  {
+    slug: "christmas-gnome-trio-hoodie-merry-christmas-design",
+    tags: ["xmas", "cozy"],
+    badge: "Christmas",
+    line: "Gnome trio Christmas hoodie",
+  },
+  {
+    slug: "funny-christmas-sweatshirt-santa-crewneck-dear-santa-i-can-explain-santa-knows-i",
+    tags: ["xmas", "cozy"],
+    badge: "Christmas",
+    line: "Funny Santa sweatshirt for a laugh",
+  },
+
   // More picks for the Christmas page only.
   {
     slug: "vintage-cat-with-glasses-sweatshirt",
@@ -148,15 +180,15 @@ export const CHRISTMAS_HOME = {
 // The /christmas-gifts page.
 export const CHRISTMAS_PAGE = {
   path: "/christmas-gifts",
-  title: "Christmas Gifts for Her, Mugs & Cozy Hoodies",
+  title: "Christmas Gifts for Her: Sweatshirts, Hoodies & Mugs",
   h1: "Christmas Gifts with Original Art",
   tagline:
     "Christmas mugs, cozy hoodies and sweatshirts, phone cases and totes, printed to order from original ShopCalmCanvas artwork.",
   description:
-    "Original-art Christmas mugs, cozy hoodies, phone cases and totes, printed to order. Find a gift for her, for dog lovers and for cat lovers.",
+    "Original-art Christmas sweatshirts, hoodies, mugs, phone cases and totes, printed to order. Find a gift for her, for dog lovers and for cat lovers.",
   ogImage: "/og/christmas-gifts.png",
   intro: [
-    "Christmas gifts feel best when they say something about the person who opens them. Everything here is printed to order from original ShopCalmCanvas artwork: sparkly red Christmas mugs, a holiday phone case, cozy hoodies and sweatshirts for winter nights, and totes and weekender bags for the person who is always on the move.",
+    "Christmas gifts feel best when they say something about the person who opens them. Everything here is printed to order from original ShopCalmCanvas artwork: sparkly red Christmas mugs, a holiday phone case, cozy hoodies and sweatshirts for winter nights, and totes and weekender bags for the person who is always on the move. The Christmas sweatshirts and hoodies include a cozy Christmas cat, a penguin and tree, a gnome trio, a snowflake pattern and a funny Santa design.",
     "Use the buttons above to narrow the list. Christmas picks are the pieces made for the season. Cozy winter wear gathers the hoodies and sweatshirts. Dog and cat lovers shows designs for people who adore their pets, and Under $25 shows the easiest stocking stuffers.",
   ],
   sections: [
@@ -177,6 +209,8 @@ export const CHRISTMAS_PAGE = {
         "If someone on your list talks about their pet all year, a design that celebrates it is a safe bet. There are dog portrait totes and mugs, plus cat hoodies and sweatshirts, and the mugs are an easy stocking stuffer.",
       ],
       links: [
+        { to: "/cat-lover-gifts", text: "Cat lover gifts" },
+        { to: "/dog-lover-gifts", text: "Dog lover gifts" },
         { to: "/totebags", text: "Browse tote bags" },
         { to: "/phonecases", text: "Browse phone cases" },
       ],

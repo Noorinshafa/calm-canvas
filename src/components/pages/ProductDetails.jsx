@@ -15,6 +15,7 @@ import {
   relatedProducts,
 } from "../../utils/seoShared.js";
 import { PRODUCT_COPY } from "../../content/productCopy.js";
+import { themesForProduct } from "../../content/themes.js";
 import {
   buildOptionModel,
   findVariant,
@@ -356,6 +357,10 @@ function ProductDetails() {
   // src/utils/seoShared.js). Empty until the catalog has loaded.
   const related = relatedProducts(product, allProducts, 4);
 
+  // Theme gift pages this design belongs to (cat lovers, floral, ...), the
+  // same links the pre-built page contains.
+  const themes = themesForProduct(product);
+
   function handleOptionChange(groupIndex, value) {
     const next = nextSelection(
       optionModel,
@@ -657,6 +662,24 @@ function ProductDetails() {
   </ul>
 
 </section>
+
+{themes.length > 0 && (
+
+<section className="product-extra">
+
+  <h2>More designs like this</h2>
+
+  <ul>
+    {themes.map((theme) => (
+      <li key={theme.key}>
+        <Link to={theme.path}>{theme.nav}</Link>
+      </li>
+    ))}
+  </ul>
+
+</section>
+
+)}
 
 {related.length > 0 && (
 

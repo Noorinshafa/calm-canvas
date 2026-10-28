@@ -86,6 +86,22 @@
       "destination": "/app.html"
     },
     {
+      "source": "/cat-lover-gifts",
+      "destination": "/app.html"
+    },
+    {
+      "source": "/dog-lover-gifts",
+      "destination": "/app.html"
+    },
+    {
+      "source": "/floral-gifts",
+      "destination": "/app.html"
+    },
+    {
+      "source": "/halloween",
+      "destination": "/app.html"
+    },
+    {
       "source": "/products/:slug",
       "destination": "/app.html"
     },
