@@ -447,4 +447,94 @@ export const POSTS = [
       "6a7f5d8a260f7215af0c812a",
     ],
   },
+  {
+    slug: "thanksgiving-gift-ideas",
+    title: "Thanksgiving Gift Ideas: Host Gifts, Cozy Fall Wear and Small Presents",
+    seoTitle: "Thanksgiving Gift Ideas: Host Gifts & Cozy Fall Wear",
+    description:
+      "Thanksgiving gift ideas for the host, family and friends: mugs, totes, a weekender bag and cozy fall sweatshirts, plus when to order made-to-order gifts.",
+    date: "2026-10-29",
+    category: "Gift guide",
+    readingMinutes: 5,
+    excerpt:
+      "Thanksgiving gifts are smaller and warmer than Christmas ones. Here are ideas for the host, for family and friends, and for something cozy to wear, with honest notes on ordering in time.",
+    keywords: [
+      "thanksgiving gift ideas",
+      "thanksgiving host gift",
+      "thanksgiving gifts for her",
+      "fall gifts",
+      "thanksgiving mug",
+      "thanksgiving sweatshirt",
+    ],
+    blocks: [
+      {
+        type: "p",
+        text: "Thanksgiving gifts are different from Christmas gifts. They are usually smaller, warmer and given in person at a table: something for the person who is hosting, a little thank-you for family who traveled, or a cozy layer for the long weekend. This guide covers three situations, thanking the host, giving something to family and friends, and choosing something wearable, with notes on who each idea suits and what to know before you order.",
+      },
+      { type: "h2", text: "First, the timing" },
+      {
+        type: "p",
+        text: "Thanksgiving falls on the fourth Thursday of November, which is November 26 in 2026. Everything at [ShopCalmCanvas](/about) is printed after you order it, so allow 2-7 business days for printing and then delivery time on top. For a gift that has to be in your hands before the day, order about three weeks ahead. If you are past that point, you can still order a fall design and give it afterwards as a seasonal gift. We cannot promise a delivery date, and the [shipping and returns page](/shipping-returns) has the current delivery details.",
+      },
+      { type: "h2", text: "Thanksgiving gifts for the host" },
+      {
+        type: "p",
+        text: "A host already has a full table, so the best gift is something small that gets used later. A mug is the easiest answer because there is no size to get wrong. The Grateful Fall Harvest Mug is an 11oz ceramic mug with a Thanksgiving pumpkin design and starts at about $15. If the host likes a softer, floral look, the Autumn Pumpkin Floral Mug and the Autumn Pumpkins and Sunflowers Mug are both in the [mug collection](/mugs).",
+      },
+      {
+        type: "p",
+        text: "A tote bag works for the host who is always carrying something. The Thanksgiving Harvest Pumpkin Tote Bag is a canvas tote that starts at about $29, and it can double as a way to carry the dish you are bringing. The [tote bag collection](/totebags) also has several autumn designs, including pumpkin wreath, orange leaf and rustic fall prints.",
+      },
+      { type: "h2", text: "Gifts for family and friends who travel" },
+      {
+        type: "p",
+        text: "Thanksgiving is one of the busiest travel weekends of the year, and a weekender bag is a practical present for someone heading to family. The Thanksgiving Weekender Bag is an autumn harvest travel bag that starts at about $44, which makes it one of the more generous gifts on this list. Pair it with a mug for a gift that looks planned without being expensive.",
+      },
+      {
+        type: "p",
+        text: "For a small present that is easy to post or hand over, a phone case is a good choice, as long as you know the exact phone model. Confirm the model before you order, because returns are not accepted for a wrong choice or a change of mind. If you cannot check without spoiling the surprise, a mug or tote is safer.",
+      },
+      { type: "h2", text: "Something cozy to wear" },
+      {
+        type: "p",
+        text: "The Count Your Blessings Pumpkin Harvest Sweatshirt is a unisex sweatshirt that starts at about $44 and suits someone who likes a warm, grateful message. The Give Thanks Grateful Heart Gnome and Pumpkins tee is a lighter option for the family gathering itself and is listed in men's sizing, so check its size chart. If neither feels right, the [Thanksgiving and fall gifts page](/thanksgiving-gifts) also lists fall hoodies and sweatshirts with pumpkin, leaf and lettering designs.",
+      },
+      {
+        type: "p",
+        text: "Clothing is trickier as a gift because of fit. Sizes are unisex, so size up if the person likes a relaxed look, and compare the size chart on the product page to a favorite garment they already own. Returns are not accepted for the wrong size or a change of mind, which is another reason to lean on mugs and totes when you are unsure.",
+      },
+      { type: "h2", text: "Matching the gift to the person" },
+      {
+        type: "ul",
+        items: [
+          "The host: a Thanksgiving or autumn mug, or a pumpkin tote.",
+          "The traveler: the weekender bag, with a mug on top.",
+          "The cozy homebody: the Count Your Blessings sweatshirt or a fall hoodie.",
+          "The hard-to-shop-for relative: a mug. It really is that simple.",
+          "Someone who loves pets: see our [cat lover gifts](/cat-lover-gifts) and [dog lover gifts](/dog-lover-gifts).",
+        ],
+      },
+      { type: "h2", text: "A quick checklist before you check out" },
+      {
+        type: "ul",
+        items: [
+          "Is the gift for Thanksgiving Day? Order about three weeks ahead, because each item is printed to order.",
+          "Does it need a size? Check the size chart rather than guessing.",
+          "Is it a phone case? Double-check the phone model.",
+          "Not sure at all? Choose a mug.",
+        ],
+      },
+      {
+        type: "p",
+        text: "You can see every Thanksgiving and autumn design in one place on the [Thanksgiving gifts page](/thanksgiving-gifts). Looking further ahead, our [Christmas gifts page](/christmas-gifts) has holiday mugs, hoodies and sweatshirts, and the guide to [cozy gift ideas under $35](/blog/cozy-gift-ideas-under-35) covers smaller budgets.",
+      },
+    ],
+    productPicks: [
+      "6ae3215462f6bb9ab60250d7",
+      "6ae32c3562f6bb9ab6025b16",
+      "6ae328af39077b3e7d02d21f",
+      "6ae32654c48b99096d015298",
+      "6ae33022423d10aee904c571",
+    ],
+  },
 ];

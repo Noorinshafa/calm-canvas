@@ -57,6 +57,8 @@ function Footer() {
 
           <Link to="/halloween">Halloween &amp; Spooky</Link>
 
+          <Link to="/thanksgiving-gifts">Thanksgiving Gifts</Link>
+
         </div>
 
 

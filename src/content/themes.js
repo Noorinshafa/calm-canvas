@@ -1,4 +1,5 @@
-// Theme gift pages: cat lovers, dog lovers, floral & watercolor, Halloween.
+// Theme gift pages: cat lovers, dog lovers, floral & watercolor, Halloween,
+// Thanksgiving & fall.
 //
 // Each theme is a landing page for something people search for by name
 // ("gifts for cat lovers", "schnauzer bag", "floral hoodie"). The page text
@@ -254,6 +255,113 @@ export const THEME_PAGES = [
       SIZING_AND_ORDERING,
     ],
   },
+
+  {
+    key: "thanksgiving",
+    path: "/thanksgiving-gifts",
+    nav: "Thanksgiving Gifts",
+    eyebrow: "THANKSGIVING & FALL",
+    title: "Thanksgiving Gifts: Fall Sweatshirts, Mugs & Tote Bags",
+    h1: "Thanksgiving & Fall Gifts",
+    tagline:
+      "Thanksgiving and autumn designs on sweatshirts, hoodies, tees, mugs, tote and weekender bags and phone cases, printed to order from original ShopCalmCanvas art.",
+    description:
+      "Thanksgiving gifts and fall designs printed to order: grateful and harvest sweatshirts, a pumpkin tote, a weekender bag, mugs, hoodies and phone cases.",
+    // Thanksgiving designs come first, then the rest of the autumn designs.
+    featuredWords: ["thanksgiving", "thanks", "grateful", "blessings"],
+    // The home page section shows the featured designs plus these (in this
+    // order), so it has a mix of products. A slug that no longer exists is
+    // skipped and the next design takes its place.
+    homeSlugs: [
+      "fall-patch-letters-hoodie",
+      "autumn-pumpkin-patch-phone-case",
+      "vintage-pumpkin-truck-t-shirt",
+    ],
+    words: [
+      "thanksgiving",
+      "thanks",
+      "thankful",
+      "grateful",
+      "gratitude",
+      "blessed",
+      "blessings",
+      "turkey",
+      "turkeys",
+      "pumpkin",
+      "pumpkins",
+      "autumn",
+      "fall",
+      "harvest",
+      "maple",
+      "leaf",
+      "leaves",
+    ],
+    // Halloween designs have their own page.
+    excludeWords: [
+      "halloween",
+      "spooky",
+      "ghost",
+      "ghosts",
+      "boo",
+      "witch",
+      "skull",
+      "skulls",
+      "skeleton",
+      "spider",
+      "bat",
+      "bats",
+      "vampire",
+      "haunted",
+    ],
+    intro: [
+      "Thanksgiving is about gratitude, family and a full table, and the gifts people give around it are usually small and warm: a mug for the host, a tote for whoever carries the pie, a sweatshirt for the long weekend. This page gathers the shop's Thanksgiving designs, including the Count Your Blessings Pumpkin Harvest Sweatshirt, the Grateful Fall Harvest Mug, the Thanksgiving Harvest Pumpkin Tote Bag, the Thanksgiving Weekender Bag and the Give Thanks Grateful Heart Gnome and Pumpkins tee. Everything is printed to order from original ShopCalmCanvas artwork.",
+      "Only some of the designs here are made for Thanksgiving itself. The rest are autumn designs, with pumpkins, maple leaves, fall lettering and rustic harvest scenes, that suit Thanksgiving week and the whole season. The Thanksgiving designs are listed first. Open any product to see its photos, sizes and colors before you order.",
+    ],
+    sections: [
+      {
+        heading: "Thanksgiving gifts for the host, family and friends",
+        paragraphs: [
+          "A mug or a tote bag is a thoughtful thank-you for a Thanksgiving host, and there is no size to guess. A phone case is a small gift that is easy to post or hand over, and a weekender bag suits anyone traveling to family for the holiday. For someone who likes to dress for the season, a harvest sweatshirt or an autumn hoodie is a cozy choice.",
+        ],
+        links: [
+          { to: "/mugs", text: "Browse all mugs" },
+          { to: "/totebags", text: "Browse tote and weekender bags" },
+          { to: "/phonecases", text: "Browse all phone cases" },
+          { to: "/blog/thanksgiving-gift-ideas", text: "Read: Thanksgiving gift ideas" },
+        ],
+      },
+      {
+        heading: "Cozy fall sweatshirts, hoodies and tees",
+        paragraphs: [
+          "Sweatshirts and hoodies are the most useful gifts you can give once the weather turns. Sizes are unisex, so check the size guide on each product page, and size up if you want a relaxed fit. Tees are lighter and work for the family gathering as well as the weekend afterwards.",
+        ],
+        links: [
+          { to: "/sweatshirts", text: "Browse all sweatshirts" },
+          { to: "/hoodies", text: "Browse all hoodies" },
+          { to: "/tshirts", text: "Browse all T-shirts" },
+        ],
+      },
+      {
+        heading: "Ordering a gift for Thanksgiving",
+        paragraphs: [
+          "Thanksgiving is always the fourth Thursday of November, and every ShopCalmCanvas item is printed after you order it. For a gift that has to be there by the day, order about three weeks ahead and check the delivery times on our Shipping, Returns & Refunds page before you pay. We cannot promise a delivery date, so if you are ordering later, treat it as a fall gift rather than a Thanksgiving Day gift.",
+        ],
+      },
+      SIZING_AND_ORDERING,
+      {
+        heading: "More gift ideas for the season",
+        paragraphs: [
+          "Thanksgiving is the start of the holiday shopping season. When you are ready to look ahead, see the Christmas gifts page, or browse designs for pet lovers and flower lovers.",
+        ],
+        links: [
+          { to: "/christmas-gifts", text: "Christmas gifts" },
+          { to: "/cat-lover-gifts", text: "Cat lover gifts" },
+          { to: "/dog-lover-gifts", text: "Dog lover gifts" },
+          { to: "/floral-gifts", text: "Floral gifts" },
+        ],
+      },
+    ],
+  },
 ];
 
 export function getTheme(key) {
@@ -281,15 +389,56 @@ export function productInTheme(product, theme) {
   return theme.words.some((word) => hasWholeWord(name, word));
 }
 
-// Every product that belongs on the theme's page, in catalog order. Products
-// hidden from search engines are left out.
+// Rank used to put a theme's featured designs (if it has any) first. 0 =
+// featured, 1 = everything else. The sort is stable, so within each group the
+// products stay in catalog order.
+function featuredRank(product, theme) {
+  const name = productName(product);
+  return (theme.featuredWords || []).some((word) => hasWholeWord(name, word))
+    ? 0
+    : 1;
+}
+
+// The products for a theme's page: the featured designs first (when the theme
+// has `featuredWords`), then the rest in catalog order. Products hidden from
+// search engines are left out.
 export function themeProducts(theme, products) {
   if (!Array.isArray(products)) return [];
 
-  return products.filter(
+  const items = products.filter(
     (product) =>
       product && product.indexable !== false && productInTheme(product, theme)
   );
+
+  if (!theme.featuredWords) return items;
+
+  return items
+    .map((product, index) => ({ product, index, rank: featuredRank(product, theme) }))
+    .sort((a, b) => a.rank - b.rank || a.index - b.index)
+    .map((entry) => entry.product);
+}
+
+// The few products shown in a theme's home page section: the featured
+// designs, then the theme's `homeSlugs`, then anything else on the page, up to
+// `limit`. Only products with a photo are used.
+export function themeHomeProducts(theme, products, limit = 8) {
+  const items = themeProducts(theme, products).filter((product) => product.image);
+  const order = theme.homeSlugs || [];
+
+  return items
+    .map((product, index) => {
+      const rank = featuredRank(product, theme);
+      const slot = order.indexOf(product.slug);
+      return { product, index, group: rank === 0 ? 0 : slot >= 0 ? 1 : 2, slot };
+    })
+    .sort(
+      (a, b) =>
+        a.group - b.group ||
+        (a.group === 1 ? a.slot - b.slot : 0) ||
+        a.index - b.index
+    )
+    .slice(0, limit)
+    .map((entry) => entry.product);
 }
 
 // The theme pages a product belongs to (used for the "More designs like

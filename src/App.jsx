@@ -14,6 +14,7 @@ import WhyCalmCanvas from "./components/sections/WhyCalmCanvas";
 import ParallaxBanner from "./components/sections/ParallaxBanner";
 import ShopCategories from "./components/sections/ShopCategories";
 import ChristmasGifts from "./components/sections/ChristmasGifts";
+import ThanksgivingGifts from "./components/sections/ThanksgivingGifts";
 import Footer from "./components/sections/Footer";
 
 // Every one of these used to be imported eagerly, which meant a first-time
@@ -62,6 +63,7 @@ function Home() {
     <>
       <Hero />
       <Marquee />
+      <ThanksgivingGifts />
       <ChristmasGifts />
       <BestSellers />
       <FeaturedCollection />
@@ -185,6 +187,11 @@ function App() {
         <Route
           path="/halloween"
           element={<ThemeView themeKey="halloween" />}
+        />
+
+        <Route
+          path="/thanksgiving-gifts"
+          element={<ThemeView themeKey="thanksgiving" />}
         />
 
 

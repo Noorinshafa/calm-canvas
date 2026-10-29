@@ -102,6 +102,10 @@
       "destination": "/app.html"
     },
     {
+      "source": "/thanksgiving-gifts",
+      "destination": "/app.html"
+    },
+    {
       "source": "/products/:slug",
       "destination": "/app.html"
     },
