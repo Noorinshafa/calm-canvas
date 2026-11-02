@@ -77,6 +77,11 @@ function setJsonLd(data) {
  * @param {string} [opts.image] - absolute or site-relative image URL for social previews.
  * @param {"website"|"product"} [opts.type] - og:type.
  * @param {object|object[]} [opts.jsonLd] - structured data to inject as JSON-LD.
+ * @param {boolean} [opts.enabled] - default true. When false the hook leaves
+ *   the page's <head> exactly as it is (the pre-built title, description,
+ *   canonical and robots tags), so a page that is still waiting for its data
+ *   -- or whose data failed to load for a moment -- never replaces good,
+ *   pre-built tags with generic ones or marks itself noindex by mistake.
  * @param {boolean} [opts.noindex] - true for pages that should never appear
  *   in search results (cart, checkout, order confirmation, 404) -- sets
  *   <meta name="robots" content="noindex, follow"> instead of the default
@@ -93,8 +98,11 @@ export default function useSEO({
   type = "website",
   jsonLd,
   noindex = false,
+  enabled = true,
 } = {}) {
   useEffect(() => {
+    if (!enabled) return;
+
     const fullTitle = buildTitle(title);
     const desc = description ? buildDescription(description) : DEFAULT_DESCRIPTION;
     const url = absoluteUrl(path);
@@ -117,7 +125,7 @@ export default function useSEO({
 
     setCanonical(url);
     setJsonLd(jsonLd);
-  }, [title, description, path, image, type, jsonLd, noindex]);
+  }, [title, description, path, image, type, jsonLd, noindex, enabled]);
 }
 
 // Strips tags from a Printify description (already sanitized separately for

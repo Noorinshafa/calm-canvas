@@ -76,25 +76,56 @@ function ProductDetails() {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  // True only when the server says this product does not exist (404). Any
+  // other failure (a timeout, a busy moment at Printify, a dropped
+  // connection) is temporary and must never make a real product page look
+  // missing to search engines.
+  const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
     if (!productId) return undefined;
 
     let cancelled = false;
 
+    const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
     async function fetchProduct() {
       try {
         setLoading(true);
         setError("");
+        setNotFound(false);
         setProduct(null);
 
-        const data = await getProduct(productId);
+        // Try up to 3 times before giving up, so one slow or failed request
+        // doesn't leave the visitor (or Googlebot's renderer) with an error
+        // page. A 404 is final and is not retried.
+        let data = null;
+        let lastError = null;
 
-        if (!cancelled) {
-          setProduct(data);
+        for (let attempt = 0; attempt < 3; attempt++) {
+          if (attempt > 0) {
+            await wait(attempt * 700);
+            if (cancelled) return;
+          }
+
+          try {
+            data = await getProduct(productId);
+            lastError = null;
+            break;
+          } catch (err) {
+            lastError = err;
+            if (err?.status === 404) break;
+          }
         }
+
+        if (cancelled) return;
+
+        if (lastError) throw lastError;
+
+        setProduct(data);
       } catch (err) {
         if (!cancelled) {
+          setNotFound(err?.status === 404);
           setError(err?.message || "Unable to load this product.");
         }
       } finally {
@@ -218,14 +249,23 @@ function ProductDetails() {
   // undefined/loading product.
   const lookupFailed = !productId && !catalogLoading;
 
+  // The page's pre-built title, canonical and "index, follow" tags are
+  // already correct in the HTML Google reads first. They are only replaced
+  // once there is something definite to say: the product has loaded, or the
+  // product is confirmed missing. While loading -- or after a temporary
+  // failure -- they are left alone. (Before this, a single failed request
+  // flipped the page to "noindex" in Googlebot's renderer.)
+  const confirmedMissing = lookupFailed || notFound;
+
   useSEO({
-    title: seo?.name || (lookupFailed || error ? "Product not found" : undefined),
+    title: seo?.name || (confirmedMissing ? "Product not found" : undefined),
     description: seo?.description,
     path: canonicalPath,
     image: product?.image,
     type: "product",
     jsonLd,
-    noindex: lookupFailed || Boolean(error) || product?.indexable === false,
+    noindex: confirmedMissing || product?.indexable === false,
+    enabled: Boolean(product) || confirmedMissing,
   });
 
   useEffect(() => {
@@ -329,9 +369,11 @@ function ProductDetails() {
   if (error) {
     return (
       <div style={{ textAlign: "center", padding: "180px 8% 120px" }}>
-        <h1>We couldn't load this product</h1>
+        <h1>{notFound ? "Product not found" : "We couldn't load this product"}</h1>
         <p style={{ margin: "16px 0" }}>
-          Something went wrong while loading this product. Please try again in a moment.
+          {notFound
+            ? "This product may have been removed or the link may be incorrect."
+            : "Something went wrong while loading this product. Please try again in a moment."}
         </p>
         <Link to="/collections">Browse all products</Link>
       </div>

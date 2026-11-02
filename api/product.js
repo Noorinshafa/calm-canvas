@@ -11,6 +11,35 @@ import {
 // downloading and parsing every product's full variant list (measured at
 // 5.47MB for 144 products) just to find the one being viewed. This fetches
 // that one product directly from Printify instead.
+// Printify occasionally answers 429 (too many requests) or 5xx for a moment,
+// especially when several pages are being opened at once (for example when
+// Googlebot crawls many product pages together). Retrying once or twice,
+// shortly after, turns most of those into a normal answer instead of an error
+// page. A 404 (product really doesn't exist) or any other answer is returned
+// straight away.
+async function fetchPrintifyProduct(url, headers) {
+  let response;
+
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      response = await fetch(url, { headers });
+    } catch (error) {
+      if (attempt === 2) throw error;
+      response = null;
+    }
+
+    if (response && response.status !== 429 && response.status < 500) {
+      return response;
+    }
+
+    if (attempt < 2) {
+      await new Promise((resolve) => setTimeout(resolve, 400 * (attempt + 1)));
+    }
+  }
+
+  return response;
+}
+
 export default async function handler(req, res) {
   const { id } = req.query;
 
@@ -22,9 +51,9 @@ export default async function handler(req, res) {
     const headers = printifyHeaders();
 
     const [response, blueprintTitles] = await Promise.all([
-      fetch(
+      fetchPrintifyProduct(
         `https://api.printify.com/v1/shops/${PRINTIFY_SHOP_ID}/products/${id}.json`,
-        { headers }
+        headers
       ),
       getBlueprintTitleMap(),
     ]);

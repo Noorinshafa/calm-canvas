@@ -54,7 +54,12 @@ export async function getProduct(id) {
   if (!response.ok) {
     const errorText = await response.text();
 
-    throw new Error(errorText || "Failed to fetch product");
+    // The status travels with the error so the product page can tell a
+    // product that genuinely doesn't exist (404) from a temporary hiccup.
+    const error = new Error(errorText || "Failed to fetch product");
+    error.status = response.status;
+
+    throw error;
   }
 
   return response.json();
