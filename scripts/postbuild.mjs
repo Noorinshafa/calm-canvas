@@ -319,20 +319,51 @@ async function prerender() {
   // ------------------------------------------------------------------
   const pages = []; // { path, head, body, rootData?, indexable }
 
-  // The product page's code is its own file, named with a fingerprint that
-  // changes on every build. Find it so product pages can start downloading it
-  // straight away. If it can't be found the pages simply go without the hint.
-  let productChunkLink = null;
+  // The product page's code is split into its own files (the page, the
+  // product card, breadcrumbs... and their stylesheets), named with a
+  // fingerprint that changes on every build. The app only starts downloading
+  // them once its main file has run. The main file records which ones the
+  // product page needs, so read that list and let product pages start
+  // downloading them straight away, alongside the main file. If anything
+  // can't be found or understood the pages simply go without these hints.
+  const productPreloadLinks = [];
 
   try {
-    const assetFiles = await readdir(path.join(DIST, "assets"));
-    const chunk = assetFiles.find((file) => /^ProductDetails-[\w-]+\.js$/.test(file));
+    const assetFiles = new Set(await readdir(path.join(DIST, "assets")));
+    const entry = template.match(
+      /<script[^>]*type="module"[^>]*src="\/(assets\/index-[\w-]+\.js)"/
+    )?.[1];
 
-    if (chunk) {
-      productChunkLink = `<link rel="modulepreload" crossorigin href="/assets/${esc(chunk)}" />`;
+    if (entry) {
+      const code = await readFile(path.join(DIST, entry), "utf8");
+
+      const fileList = code.match(/\.f\s*=\s*\[([^\]]*)\]/)?.[1];
+      const files = fileList
+        ? [...fileList.matchAll(/["'`]([^"'`]+)["'`]/g)].map((match) => match[1])
+        : [];
+
+      const call = code.match(
+        /import\(\s*[`"']\.\/ProductDetails-[\w-]+\.js[`"']\s*\)\s*,\s*__vite__mapDeps\(\s*\[([\d,\s]+)\]\s*\)/
+      );
+
+      const wanted = call
+        ? call[1].split(",").map((index) => files[Number(index)])
+        : [];
+
+      for (const file of wanted) {
+        if (!file || !/^assets\/[\w.-]+\.(js|css)$/.test(file)) continue;
+        if (!assetFiles.has(file.slice("assets/".length))) continue;
+        if (template.includes(`/${file}`)) continue; // already in every page
+
+        productPreloadLinks.push(
+          file.endsWith(".css")
+            ? `<link rel="preload" as="style" crossorigin href="/${esc(file)}" />`
+            : `<link rel="modulepreload" crossorigin href="/${esc(file)}" />`
+        );
+      }
     }
   } catch {
-    // No assets folder (for example when testing the page generator alone).
+    // No built files (for example when testing the page generator alone).
   }
 
   const collectionsCrumb = { name: "Collections", path: "/collections" };
@@ -850,7 +881,7 @@ async function prerender() {
         `<link rel="preload" as="fetch" href="/api/product?id=${esc(
           encodeURIComponent(product.id)
         )}" crossorigin />`,
-        ...(productChunkLink ? [productChunkLink] : []),
+        ...productPreloadLinks,
       ],
       jsonLd: [
         breadcrumbJsonLd(crumbs),
