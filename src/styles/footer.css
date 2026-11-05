@@ -213,6 +213,41 @@
 
 }
 
+/* "Cookie settings" -- shown only to visitors in Europe (see CookieBanner) */
+.footer-cookie-link{
+
+    margin-top:10px;
+
+    padding:6px 4px;
+
+    background:none;
+
+    border:0;
+
+    color:rgba(255,255,255,.7);
+
+    font:inherit;
+
+    text-decoration:underline;
+
+    cursor:pointer;
+
+}
+
+.footer-cookie-link:hover{
+
+    color:#fff;
+
+}
+
+.footer-cookie-link:focus-visible{
+
+    outline:2px solid #fff;
+
+    outline-offset:2px;
+
+}
+
 
 /*=====================================================
                 RESPONSIVE

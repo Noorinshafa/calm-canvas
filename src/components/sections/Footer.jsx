@@ -1,6 +1,10 @@
 import "../../styles/footer.css";
 import { Link } from "react-router-dom";
 import { SOCIAL_LINKS, CONTACT_EMAIL } from "../../config/site";
+import {
+  OPEN_CONSENT_EVENT,
+  visitorNeedsConsentChoice,
+} from "../../utils/analytics";
 
 // "https://www.instagram.com/shopcalmcanvas/" -> "Instagram"
 function socialLabel(url) {
@@ -138,6 +142,16 @@ function Footer() {
           © 2026 ShopCalmCanvas. All rights reserved.
 
         </p>
+
+        {visitorNeedsConsentChoice() && (
+          <button
+            type="button"
+            className="footer-cookie-link"
+            onClick={() => window.dispatchEvent(new Event(OPEN_CONSENT_EVENT))}
+          >
+            Cookie settings
+          </button>
+        )}
 
       </div>
 

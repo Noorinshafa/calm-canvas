@@ -21,6 +21,94 @@
   top: 12px;
 }
 
+/* Cookie notice for visitors in Europe (see CookieBanner.jsx). A fixed bar at
+   the bottom of the screen: it sits above the page, so it can never push
+   content around. Accept and Decline are deliberately the same size. */
+.cookie-banner {
+  position: fixed;
+  left: 16px;
+  right: 16px;
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  z-index: 3000;
+  max-width: 760px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 16px 20px;
+  border-radius: 14px;
+  background: #fff;
+  color: #1f2d2c;
+  border: 1px solid rgba(21, 62, 59, 0.18);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.16);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.cookie-banner h2 {
+  margin: 0 0 4px;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.cookie-banner h2:focus {
+  outline: none;
+}
+
+.cookie-banner p {
+  margin: 0;
+}
+
+.cookie-banner a {
+  color: #153e3b;
+  text-decoration: underline;
+}
+
+.cookie-banner-actions {
+  display: flex;
+  flex-shrink: 0;
+  gap: 10px;
+}
+
+.cookie-banner-actions button {
+  min-width: 96px;
+  min-height: 44px;
+  padding: 0 18px;
+  border-radius: 8px;
+  border: 2px solid #153e3b;
+  background: #fff;
+  color: #153e3b;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.cookie-banner-actions button:last-child {
+  background: #153e3b;
+  color: #fff;
+}
+
+.cookie-banner-actions button:focus-visible,
+.cookie-banner a:focus-visible {
+  outline: 3px solid #1b6f69;
+  outline-offset: 2px;
+}
+
+@media (max-width: 600px) {
+  .cookie-banner {
+    left: 10px;
+    right: 10px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding: 14px 16px;
+  }
+
+  .cookie-banner-actions button {
+    flex: 1;
+  }
+}
+
 /* The page area receives focus only from the skip link; no ring around the
    whole page. */
 main[tabindex]:focus,

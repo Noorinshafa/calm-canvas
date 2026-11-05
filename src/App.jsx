@@ -3,6 +3,7 @@ import { Routes, Route, useLocation } from "react-router-dom";
 
 import Navbar from "./components/layout/Navbar";
 import ScrollToTop from "./components/common/ScrollToTop";
+import CookieBanner from "./components/common/CookieBanner";
 import useSEO from "./hooks/useSEO";
 import { trackPageView } from "./utils/analytics";
 
@@ -107,6 +108,11 @@ function App() {
       <a className="skip-link" href="#main-content">
         Skip to main content
       </a>
+
+      {/* Accept/decline notice, shown only to visitors in Europe (including
+          the UK) until they choose. Placed early so keyboard users reach it
+          without tabbing through the whole page. */}
+      <CookieBanner />
 
       <ScrollToTop />
 

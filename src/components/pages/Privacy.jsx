@@ -139,9 +139,12 @@ function Privacy() {
           Analytics may set cookies in your browser (their names begin with
           &ldquo;_ga&rdquo;) and receives information about your visit, such
           as the pages you view and your approximate location. We keep
-          Google&apos;s advertising features switched off. For visitors in the
-          European Economic Area, the United Kingdom and Switzerland, Google
-          Analytics cookies are switched off by default. We also use Ahrefs
+          Google&apos;s advertising features switched off. If you visit from
+          Europe (including the European Economic Area, the United Kingdom and
+          Switzerland), Google Analytics is switched off and no analytics
+          cookies are set unless you choose Accept on our cookie notice. You
+          can change your choice at any time with &ldquo;Cookie
+          settings&rdquo; at the bottom of any page. We also use Ahrefs
           Web Analytics, a privacy-focused service that counts visits and
           popular pages without setting cookies.
         </p>
