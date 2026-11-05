@@ -135,6 +135,8 @@ function Privacy() {
         <p>
           This website does not use advertising or tracking cookies, and we
           do not run analytics software that profiles individual visitors.
+          We use Ahrefs Web Analytics, a privacy-focused service that counts
+          visits and popular pages without setting cookies.
           The only information we store in your browser is your shopping
           cart contents (the items you've added, saved locally on your own
           device using your browser's storage) so that it's still there if
