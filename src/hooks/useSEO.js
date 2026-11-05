@@ -22,6 +22,7 @@ import {
   DEFAULT_OG_IMAGE,
 } from "../config/site.js";
 import { absoluteUrl, buildTitle, buildDescription } from "../utils/seoShared.js";
+import { crawlableImageUrl } from "../utils/imageUrl.js";
 
 export { SITE_URL, SITE_NAME, absoluteUrl };
 
@@ -106,7 +107,9 @@ export default function useSEO({
     const fullTitle = buildTitle(title);
     const desc = description ? buildDescription(description) : DEFAULT_DESCRIPTION;
     const url = absoluteUrl(path);
-    const img = absoluteUrl(image || DEFAULT_OG_IMAGE);
+    // Same address the pre-built page uses (see scripts/postbuild.mjs), so
+    // the tags never change after the app loads.
+    const img = absoluteUrl(crawlableImageUrl(image || DEFAULT_OG_IMAGE, SITE_URL));
 
     document.title = fullTitle;
 

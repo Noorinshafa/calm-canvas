@@ -102,6 +102,12 @@ function App() {
   return (
     <div className="app">
 
+      {/* First stop for keyboard users: jumps past the menu straight to the
+          page content. Invisible until it receives keyboard focus. */}
+      <a className="skip-link" href="#main-content">
+        Skip to main content
+      </a>
+
       <ScrollToTop />
 
       <PageViewTracker />
@@ -109,6 +115,8 @@ function App() {
       <Navbar />
 
       <Suspense fallback={<RouteFallback />}>
+
+      <main id="main-content" tabIndex={-1}>
 
       <Routes>
 
@@ -282,6 +290,8 @@ function App() {
         />
 
       </Routes>
+
+      </main>
 
       {/* One footer for every page, so the shipping, returns, terms,
           privacy and contact links are always one tap away. It sits inside

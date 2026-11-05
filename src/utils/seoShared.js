@@ -322,7 +322,9 @@ export function articleJsonLd(post) {
     mainEntityOfPage: url,
     datePublished: post.date,
     dateModified: post.updated || post.date,
-    image: absoluteUrl(post.image || DEFAULT_OG_IMAGE),
+    // Same rule as the product photos: Google cannot fetch Printify's own
+    // photo address, so a blocked one is given as a copy served from this site.
+    image: absoluteUrl(crawlableImageUrl(post.image || DEFAULT_OG_IMAGE, SITE_URL)),
     author: { "@type": "Organization", name: SITE_NAME },
     publisher: { "@id": `${SITE_URL}/#organization` },
   };

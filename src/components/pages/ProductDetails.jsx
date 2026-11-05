@@ -114,7 +114,7 @@ function ProductDetails() {
             break;
           } catch (err) {
             lastError = err;
-            if (err?.status === 404) break;
+            if (err?.status === 404 || err?.status === 400) break;
           }
         }
 
@@ -125,7 +125,7 @@ function ProductDetails() {
         setProduct(data);
       } catch (err) {
         if (!cancelled) {
-          setNotFound(err?.status === 404);
+          setNotFound(err?.status === 404 || err?.status === 400);
           setError(err?.message || "Unable to load this product.");
         }
       } finally {

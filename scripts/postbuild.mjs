@@ -82,7 +82,7 @@ async function prerender() {
   const { PRODUCT_COPY } = await load("src/content/productCopy.js");
   const { CHRISTMAS_PAGE, resolvePicks } = await load("src/content/christmas.js");
   const { THEME_PAGES, themeProducts, themesForProduct } = await load("src/content/themes.js");
-  const { optimizedImageUrl } = await load("src/utils/imageUrl.js");
+  const { optimizedImageUrl, crawlableImageUrl } = await load("src/utils/imageUrl.js");
 
   const {
     SITE_URL,
@@ -273,7 +273,11 @@ async function prerender() {
     const fullTitle = title ? buildTitle(title) : DEFAULT_TITLE;
     const desc = description ? buildDescription(description) : DEFAULT_DESCRIPTION;
     const url = absoluteUrl(canonicalPath || pagePath);
-    const img = absoluteUrl(image || DEFAULT_OG_IMAGE);
+    // Printify's own photo address is closed to crawlers (its robots.txt), so
+    // those photos are given as a resized copy served from this site -- the
+    // same address the product's structured data uses. Other images are
+    // left exactly as they are. (Mirrored in src/hooks/useSEO.js.)
+    const img = absoluteUrl(crawlableImageUrl(image || DEFAULT_OG_IMAGE, SITE_URL));
     const isDefaultImage = img === absoluteUrl(DEFAULT_OG_IMAGE) || img.startsWith(`${SITE_URL}/og/`);
 
     return [
@@ -837,6 +841,33 @@ async function prerender() {
   }
 
   // ------------------------------------------------------------------
+  // The footer links (kept in step with src/components/sections/Footer.jsx)
+  // ------------------------------------------------------------------
+  const footerHtml = () => {
+    const shop = [
+      ...COLLECTIONS.map((c) => [c.path, c.nav]),
+      [CHRISTMAS_PAGE.path, "Christmas Gifts"],
+      ...THEME_PAGES.map((theme) => [theme.path, theme.nav]),
+    ];
+    const company = [
+      ["/about", "About Us"],
+      ["/blog", "Gift & Style Journal"],
+      ["/contact", "Contact Us"],
+      ["/shipping-returns", "Shipping & Returns"],
+      ["/terms", "Terms & Conditions"],
+      ["/privacy-policy", "Privacy Policy"],
+    ];
+    const list = (items) =>
+      `<ul>${items.map(([href, text]) => `<li>${link(href, text)}</li>`).join("")}</ul>`;
+
+    return (
+      `<footer class="prerender-footer"><nav aria-label="Footer">` +
+      `<h2>Shop</h2>${list(shop)}<h2>Company</h2>${list(company)}` +
+      `</nav></footer>`
+    );
+  };
+
+  // ------------------------------------------------------------------
   // Write the files
   // ------------------------------------------------------------------
   let written = 0;
@@ -854,11 +885,17 @@ async function prerender() {
       throw new Error('index.html has no empty <div id="root"></div>');
     }
 
+    // The page content is the <main> landmark, followed by a footer with the
+    // site-wide links (the same ones the app's footer shows), so every page
+    // links to the policy and contact pages. Pages with no body (cart,
+    // checkout...) stay an empty shell.
     html = html.replace(
       rootPattern,
       () =>
         `<div id="root"${rootAttrs}>${
-          page.body() ? `<div class="prerendered">${page.body()}</div>` : ""
+          page.body()
+            ? `<main class="prerendered" id="main-content">${page.body()}</main>${footerHtml()}`
+            : ""
         }</div>`
     );
 

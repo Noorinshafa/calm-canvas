@@ -54,7 +54,7 @@ function ChristmasGiftsPage() {
   const count = daysLabel(daysLeft);
 
   return (
-    <main className="xmas-page">
+    <div className="xmas-page">
       <Breadcrumbs items={CRUMBS} />
 
       <div className="xmas-head">
@@ -113,7 +113,7 @@ function ChristmasGiftsPage() {
           </div>
         ))}
       </div>
-    </main>
+    </div>
   );
 }
 

@@ -101,7 +101,7 @@ export const COLLECTIONS = [
     ],
     ogImage: "/og/tshirts.png",
     match: {
-      keywords: ["t-shirt", "tee shirt", "tshirt"],
+      keywords: ["t-shirt", "tee shirt", "tshirt", "tee"],
       ids: [6, 145, 281, 466, 706, 800, 1476],
       exclude: [],
     },
@@ -242,14 +242,14 @@ export const PAGES = {
     path: "/terms",
     title: "Terms & Conditions",
     description:
-      "The terms and conditions for using the ShopCalmCanvas website and placing orders.",
+      "The ShopCalmCanvas terms and conditions: using the website and placing orders, intellectual property, liability, termination and governing law.",
     ogImage: DEFAULT_OG_IMAGE,
   },
   privacy: {
     path: "/privacy-policy",
     title: "Privacy Policy",
     description:
-      "How ShopCalmCanvas collects, uses and protects your personal data when you browse and order.",
+      "How ShopCalmCanvas collects, uses, shares and protects your personal data when you browse and order, how long we keep it, and how to contact us.",
     ogImage: DEFAULT_OG_IMAGE,
   },
   blog: {

@@ -40,11 +40,20 @@ async function fetchPrintifyProduct(url, headers) {
   return response;
 }
 
+// Printify product ids are always 24 hexadecimal characters. The id is placed
+// inside the Printify address below, so anything that is not exactly that
+// shape is turned away here instead of being passed on to Printify.
+const PRODUCT_ID_PATTERN = /^[a-f0-9]{24}$/i;
+
 export default async function handler(req, res) {
   const { id } = req.query;
 
   if (!id) {
     return res.status(400).json({ error: "Missing product id." });
+  }
+
+  if (typeof id !== "string" || !PRODUCT_ID_PATTERN.test(id)) {
+    return res.status(400).json({ error: "Invalid product id." });
   }
 
   try {
@@ -59,8 +68,17 @@ export default async function handler(req, res) {
     ]);
 
     if (!response.ok) {
-      const error = await response.text();
-      return res.status(response.status).json({ error });
+      // What Printify said stays in the server log. Visitors only get a short,
+      // generic message, never Printify's own error text.
+      console.error(`Printify product lookup failed with status ${response.status}`);
+
+      if (response.status === 404) {
+        return res.status(404).json({ error: "Product not found." });
+      }
+
+      return res
+        .status(502)
+        .json({ error: "We couldn't load this product right now." });
     }
 
     const product = await response.json();
@@ -79,6 +97,10 @@ export default async function handler(req, res) {
         )
       );
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    console.error("Product lookup failed:", error);
+
+    return res
+      .status(500)
+      .json({ error: "We couldn't load this product right now." });
   }
 }

@@ -133,15 +133,26 @@ function Privacy() {
         <h2>7. Cookies and Local Storage</h2>
 
         <p>
-          This website does not use advertising or tracking cookies, and we
-          do not run analytics software that profiles individual visitors.
-          We use Ahrefs Web Analytics, a privacy-focused service that counts
-          visits and popular pages without setting cookies.
-          The only information we store in your browser is your shopping
-          cart contents (the items you've added, saved locally on your own
-          device using your browser's storage) so that it's still there if
-          you refresh the page or come back later. This stays on your device
-          and is never sent to us until you choose to check out.
+          This website does not use advertising cookies. We use two
+          analytics services to understand how the website is used, such as
+          which pages are viewed and which items are added to the cart. Google
+          Analytics may set cookies in your browser (their names begin with
+          &ldquo;_ga&rdquo;) and receives information about your visit, such
+          as the pages you view and your approximate location. We keep
+          Google&apos;s advertising features switched off. For visitors in the
+          European Economic Area, the United Kingdom and Switzerland, Google
+          Analytics cookies are switched off by default. We also use Ahrefs
+          Web Analytics, a privacy-focused service that counts visits and
+          popular pages without setting cookies.
+        </p>
+
+        <p>
+          Apart from those analytics cookies, the only information we store in
+          your browser is your shopping cart contents (the items you&apos;ve
+          added, saved locally on your own device using your browser&apos;s
+          storage) so that it&apos;s still there if you refresh the page or
+          come back later. This stays on your device and is never sent to us
+          until you choose to check out.
         </p>
 
         <h2>8. Contact Us</h2>
