@@ -50,7 +50,7 @@ function CookieBanner() {
   }
 
   return (
-    <section
+    <div
       className="cookie-banner"
       role="region"
       aria-labelledby="cookie-banner-title"
@@ -77,7 +77,7 @@ function CookieBanner() {
           Accept
         </button>
       </div>
-    </section>
+    </div>
   );
 }
 
