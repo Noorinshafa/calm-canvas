@@ -48,7 +48,7 @@ function Terms() {
           If you have any problems placing your order on our website, or
           require support after placing an order through our website, please
           send us an email at{" "}
-          <a href="mailto:shopcalmcanvas@gmail.com">shopcalmcanvas@gmail.com</a>.
+          <a href="mailto:info@shopcalmcanvas.com">info@shopcalmcanvas.com</a>.
         </p>
 
         <h2>2. Applicability and Updates</h2>

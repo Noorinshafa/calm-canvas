@@ -14,7 +14,7 @@
 // data URL must use this exact form.
 export const SITE_URL = "https://www.shopcalmcanvas.com";
 export const SITE_NAME = "ShopCalmCanvas";
-export const CONTACT_EMAIL = "shopcalmcanvas@gmail.com";
+export const CONTACT_EMAIL = "info@shopcalmcanvas.com";
 
 export const DEFAULT_TITLE =
   "ShopCalmCanvas | Aesthetic Hoodies, Tees, Mugs & Phone Cases";

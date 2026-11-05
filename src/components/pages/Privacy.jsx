@@ -160,7 +160,7 @@ function Privacy() {
         <p>
           If you have any questions about this Privacy Policy or how we
           handle your Personal Data, please contact us at{" "}
-          <a href="mailto:shopcalmcanvas@gmail.com">shopcalmcanvas@gmail.com</a>.
+          <a href="mailto:info@shopcalmcanvas.com">info@shopcalmcanvas.com</a>.
         </p>
 
       </div>

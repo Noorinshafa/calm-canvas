@@ -30,8 +30,8 @@ function Contact() {
 
           <p>
             Have an issue with an order or our service? Email us at{" "}
-            <a href="mailto:shopcalmcanvas@gmail.com">
-              shopcalmcanvas@gmail.com
+            <a href="mailto:info@shopcalmcanvas.com">
+              info@shopcalmcanvas.com
             </a>{" "}
             with your order number and a short description of the problem.
             We aim to respond within 2 business days and to resolve most
