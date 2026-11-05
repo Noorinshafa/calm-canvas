@@ -48,6 +48,46 @@ function readPrerenderHint(slug) {
     : "";
 }
 
+// The pre-built page also records what it shows first -- the main photo, the
+// product name and the breadcrumb trail -- so the app can put exactly that on
+// screen while the product's full details (sizes, colours, price options) are
+// still being fetched. Only used when it belongs to the address being shown,
+// and ignored if anything about it looks wrong.
+function readPrerenderSeed(slug) {
+  if (!slug || typeof document === "undefined") return null;
+
+  const root = document.getElementById("root");
+
+  if (root?.dataset?.productSlug !== slug) return null;
+
+  try {
+    const seed = JSON.parse(root.dataset.productSeed || "");
+
+    const crumbsOk =
+      Array.isArray(seed?.crumbs) &&
+      seed.crumbs.length > 0 &&
+      seed.crumbs.every(
+        (crumb) =>
+          typeof crumb?.name === "string" &&
+          typeof crumb?.path === "string" &&
+          crumb.path.startsWith("/")
+      );
+
+    if (
+      !crumbsOk ||
+      typeof seed.name !== "string" ||
+      typeof seed.image !== "string" ||
+      !seed.image.startsWith("https://")
+    ) {
+      return null;
+    }
+
+    return seed;
+  } catch {
+    return null;
+  }
+}
+
 function ProductDetails() {
   const { id: idParam, slug } = useParams();
 
@@ -61,6 +101,7 @@ function ProductDetails() {
   // form /product/<id> still work. Either way we need the product's id to
   // ask Printify for the full details.
   const hintedId = useMemo(() => readPrerenderHint(slug), [slug]);
+  const seed = useMemo(() => readPrerenderSeed(slug), [slug]);
 
   const productId = useMemo(() => {
     if (idParam) return idParam;
@@ -214,7 +255,7 @@ function ProductDetails() {
   );
 
   const crumbs = useMemo(() => {
-    if (!product || !seo) return [];
+    if (!product || !seo) return seed?.crumbs || [];
 
     const list = [{ name: "Home", path: "/" }];
 
@@ -228,7 +269,7 @@ function ProductDetails() {
     list.push({ name: seo.name, path: canonicalPath });
 
     return list;
-  }, [product, seo, canonicalPath]);
+  }, [product, seo, canonicalPath, seed]);
 
   const jsonLd = useMemo(() => {
     if (!product) return undefined;
@@ -362,7 +403,13 @@ function ProductDetails() {
     );
   }
 
-  if (loading) {
+  // While the product's details are still loading, a page that has its
+  // pre-built copy shows that copy's photo and breadcrumb trail straight away
+  // (instead of an empty placeholder), so the photo is on screen as soon as the
+  // page's code has run rather than after the product request finishes.
+  const pending = loading && !product && !error && Boolean(seed);
+
+  if (loading && !pending) {
     return <ProductPageSkeleton />;
   }
 
@@ -380,7 +427,7 @@ function ProductDetails() {
     );
   }
 
-  if (!product) {
+  if (!product && !pending) {
     return (
       <div style={{ textAlign: "center", padding: "180px 8% 120px" }}>
         <h1>Product not found</h1>
@@ -392,16 +439,22 @@ function ProductDetails() {
     );
   }
 
-  const productName = cleanProductName(product.title);
-  const extraCopy = PRODUCT_COPY[product.id];
+  const productName = product ? cleanProductName(product.title) : seed.name;
+  const extraCopy = product ? PRODUCT_COPY[product.id] : undefined;
+
+  // The photo on show: the pre-built page's photo until the details arrive.
+  // Once they have, the chosen photo (falling back to the product's first
+  // photo for the moment before it is chosen) -- the same address, so the photo
+  // already on screen stays put instead of being loaded again.
+  const mainImage = product ? selectedImage || product.image : seed.image;
 
   // Same products the pre-built page lists (see relatedProducts in
   // src/utils/seoShared.js). Empty until the catalog has loaded.
-  const related = relatedProducts(product, allProducts, 4);
+  const related = product ? relatedProducts(product, allProducts, 4) : [];
 
   // Theme gift pages this design belongs to (cat lovers, floral, ...), the
   // same links the pre-built page contains.
-  const themes = themesForProduct(product);
+  const themes = product ? themesForProduct(product) : [];
 
   function handleOptionChange(groupIndex, value) {
     const next = nextSelection(
@@ -484,11 +537,11 @@ function ProductDetails() {
 
   <div className="main-image">
 
-    {selectedImage && (
+    {mainImage && (
 
   <OptimizedImage
     className="details-image-img"
-    src={selectedImage}
+    src={mainImage}
     alt={productName}
     widths={[768, 1024]}
     sizes="(max-width: 900px) 100vw, 50vw"
@@ -523,6 +576,8 @@ function ProductDetails() {
   </div>
 
 </div>
+
+{product && (
 
 <div className="product-info">
 
@@ -659,6 +714,8 @@ function ProductDetails() {
 </div>
 
 </div>
+
+)}
 
 </div>
 

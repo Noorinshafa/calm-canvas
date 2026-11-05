@@ -26,7 +26,7 @@
 // PRINTIFY_API_TOKEN environment variable at build time (Vercel provides it
 // during builds). Without it, only the non-product pages are generated.
 
-import { readFile, writeFile, mkdir } from "node:fs/promises";
+import { readFile, writeFile, mkdir, readdir } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
@@ -82,7 +82,9 @@ async function prerender() {
   const { PRODUCT_COPY } = await load("src/content/productCopy.js");
   const { CHRISTMAS_PAGE, resolvePicks } = await load("src/content/christmas.js");
   const { THEME_PAGES, themeProducts, themesForProduct } = await load("src/content/themes.js");
-  const { optimizedImageUrl, crawlableImageUrl } = await load("src/utils/imageUrl.js");
+  const { optimizedImageUrl, crawlableImageUrl, optimizedSrcSet } = await load(
+    "src/utils/imageUrl.js"
+  );
 
   const {
     SITE_URL,
@@ -269,6 +271,7 @@ async function prerender() {
     type = "website",
     noindex = false,
     jsonLd,
+    preloads = [],
   }) {
     const fullTitle = title ? buildTitle(title) : DEFAULT_TITLE;
     const desc = description ? buildDescription(description) : DEFAULT_DESCRIPTION;
@@ -301,6 +304,8 @@ async function prerender() {
       `<meta name="twitter:title" content="${esc(fullTitle)}" />`,
       `<meta name="twitter:description" content="${esc(desc)}" />`,
       `<meta name="twitter:image" content="${esc(img)}" />`,
+      // Early-fetch hints for the page's own resources (product pages only).
+      ...preloads,
       // id="seo-jsonld" is the script the app's useSEO hook updates when a
       // visitor navigates, so it must be the only one with this id.
       `<script type="application/ld+json" id="seo-jsonld">${
@@ -313,6 +318,22 @@ async function prerender() {
   // The pages
   // ------------------------------------------------------------------
   const pages = []; // { path, head, body, rootData?, indexable }
+
+  // The product page's code is its own file, named with a fingerprint that
+  // changes on every build. Find it so product pages can start downloading it
+  // straight away. If it can't be found the pages simply go without the hint.
+  let productChunkLink = null;
+
+  try {
+    const assetFiles = await readdir(path.join(DIST, "assets"));
+    const chunk = assetFiles.find((file) => /^ProductDetails-[\w-]+\.js$/.test(file));
+
+    if (chunk) {
+      productChunkLink = `<link rel="modulepreload" crossorigin href="/assets/${esc(chunk)}" />`;
+    }
+  } catch {
+    // No assets folder (for example when testing the page generator alone).
+  }
 
   const collectionsCrumb = { name: "Collections", path: "/collections" };
 
@@ -759,6 +780,11 @@ async function prerender() {
     ];
 
     const images = (product.images || []).slice(0, 4);
+
+    // The first photo is described exactly the way the app describes it
+    // (src/components/ui/OptimizedImage.jsx with widths 768 and 1024), so the
+    // browser picks the same file for both and downloads it only once.
+    const firstPhotoSrcSet = images[0] ? optimizedSrcSet(images[0].src, [768, 1024]) : undefined;
     const related = relatedProducts(product, indexableProducts, 4);
     const themes = themesForProduct(product);
 
@@ -771,7 +797,11 @@ async function prerender() {
           (img, index) =>
             `<img src="${esc(
               optimizedImageUrl(img.src, index === 0 ? 768 : 384)
-            )}" alt="${esc(name)}${
+            )}"${
+              index === 0 && firstPhotoSrcSet
+                ? ` srcset="${esc(firstPhotoSrcSet)}" sizes="(max-width: 900px) 100vw, 50vw"`
+                : ""
+            } alt="${esc(name)}${
               index ? ` - view ${index + 1}` : ""
             }" width="800" height="800"${
               index === 0 ? ' fetchpriority="high"' : ' loading="lazy"'
@@ -813,6 +843,15 @@ async function prerender() {
       image: product.image,
       type: "product",
       noindex,
+      // Start fetching the product's details, and the code of the product
+      // page, while the browser is still downloading the rest of the page,
+      // instead of waiting until that code has loaded and run.
+      preloads: [
+        `<link rel="preload" as="fetch" href="/api/product?id=${esc(
+          encodeURIComponent(product.id)
+        )}" crossorigin />`,
+        ...(productChunkLink ? [productChunkLink] : []),
+      ],
       jsonLd: [
         breadcrumbJsonLd(crumbs),
         productJsonLd(product, {
@@ -824,6 +863,17 @@ async function prerender() {
     const rootData = {
       "data-product-id": product.id,
       "data-product-slug": product.slug,
+      // What the app shows first while it fetches the details (see
+      // readPrerenderSeed in ProductDetails.jsx).
+      ...(product.image
+        ? {
+            "data-product-seed": JSON.stringify({
+              name,
+              image: product.image,
+              crumbs: crumbs.map((crumb) => ({ name: crumb.name, path: crumb.path })),
+            }),
+          }
+        : {}),
     };
 
     pages.push({ path: canonicalPath, head, body: () => bodyHtml, rootData, noindex });
