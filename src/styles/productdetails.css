@@ -765,6 +765,12 @@
 
     height:56px;
 
+    /* The buttons are stacked in a column here. The shared rule above gives
+       them flex:1, and in a column that decides the HEIGHT, which made them
+       collapse to about 20px and ignore height:56px. flex:none lets the
+       56px height apply on phones and tablets. */
+    flex:none;
+
 }
 
 .feature-item{
