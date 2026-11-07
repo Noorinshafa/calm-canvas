@@ -22,7 +22,7 @@
 
     letter-spacing:3px;
 
-    color:#d89caf;
+    color:#C14560;
 
     font-size:.9rem;
 
@@ -112,7 +112,7 @@
 
 .cart-price{
 
-    color:#d69a57;
+    color:#9C6426;
 
     font-size:1.2rem;
 
@@ -227,7 +227,7 @@
 
 .cart-summary h3{
 
-    color:#d69a57;
+    color:#9C6426;
 
     font-size:2rem;
 
@@ -284,7 +284,7 @@
 
 .empty-cart p{
 
-    color:#777;
+    color:#707070;
 }
 
 /* ===========================

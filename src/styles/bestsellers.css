@@ -21,7 +21,7 @@
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.75);
   backdrop-filter: blur(14px);
-  color: #d68496;
+  color: #C14560;
   font-size: 0.82rem;
   letter-spacing: 3px;
   font-weight: 700;
@@ -120,7 +120,7 @@
 .bestseller-info span {
   display: block;
   font-weight: 700;
-  color: #d69a57;
+  color: #9C6426;
   font-size: 1.05rem;
 }
 
@@ -145,7 +145,7 @@
 }
 
 .bestsellers-btn:hover {
-  background: #d68496;
+  background: #C34C66;
   transform: translateY(-4px);
 }
 

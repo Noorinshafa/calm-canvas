@@ -29,7 +29,7 @@
 
     display:inline-block;
 
-    color:#D68496;
+    color:#C14560;
 
     font-size:.9rem;
 
@@ -219,7 +219,7 @@
 
 .collection-card:hover button{
 
-    background:#D68496;
+    background:#C34C66;
 
     transform:translateX(10px);
 

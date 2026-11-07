@@ -33,7 +33,7 @@
 }
 
 .breadcrumbs a{
-    color:#95627F;
+    color:#94617E;
     text-decoration:none;
 }
 
@@ -157,7 +157,7 @@
 /* Product page extras */
 .product-info .product-price{
     font-size:2.2rem;
-    color:#d69a57;
+    color:#9C6426;
     margin:0 0 28px;
     font-weight:700;
     line-height:1.2;
@@ -242,7 +242,7 @@
 
 .blog-head span{
     display:inline-block;
-    color:#D68496;
+    color:#C14560;
     font-size:.9rem;
     font-weight:700;
     letter-spacing:4px;

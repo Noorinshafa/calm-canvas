@@ -41,7 +41,7 @@
 
     backdrop-filter:blur(14px);
 
-    color:#d68496;
+    color:#C14560;
 
     font-size:.82rem;
 
@@ -69,7 +69,7 @@
 
 .featured-heading h2 span{
 
-    color:#d68496;
+    color:#C14560;
 
 }
 
@@ -362,7 +362,7 @@
 
 .orbit-overlay a:hover{
 
-    background:#d68496;
+    background:#C34C66;
 
     color:white;
 

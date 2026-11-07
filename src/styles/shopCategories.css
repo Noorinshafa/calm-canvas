@@ -26,7 +26,7 @@
 
     display:inline-block;
 
-    color:#D68496;
+    color:#C14560;
 
     letter-spacing:4px;
 
@@ -54,7 +54,7 @@
 
 .shop-heading h2 span{
 
-    color:#D68496;
+    color:#C14560;
 
 }
 
@@ -260,7 +260,7 @@
 
 .collection-card:hover .collection-overlay button{
 
-    background:#D68496;
+    background:#C34C66;
 
     transform:translateX(10px);
 

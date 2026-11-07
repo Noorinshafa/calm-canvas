@@ -26,7 +26,7 @@
 
     letter-spacing:3px;
 
-    color:#d89caf;
+    color:#C14560;
 
     font-size:.9rem;
 
@@ -212,7 +212,7 @@
 
     font-size:.9rem;
 
-    color:#777;
+    color:#707070;
 }
 
 /* ===========================
@@ -342,7 +342,7 @@
 
 .summary-item p{
 
-    color:#777;
+    color:#707070;
 
     margin:4px 0;
 }
@@ -364,7 +364,7 @@
 
     font-weight:700;
 
-     color:#d69a57;
+     color:#9C6426;
 
     margin-top:20px;
 
@@ -408,5 +408,5 @@
 
     font-size:2.5rem;
 
-    color:#d69a57;
+    color:#9C6426;
 }

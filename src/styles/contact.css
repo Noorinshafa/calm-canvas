@@ -34,7 +34,7 @@
 
     font-weight:700;
 
-    color:#d89caf;
+    color:#C14560;
 
     margin-bottom:20px;
 
@@ -58,7 +58,7 @@
 
     font-family:"Manrope",sans-serif;
 
-    color:#8a7378;
+    color:#816B70;
 
     line-height:2;
 
@@ -104,7 +104,7 @@
 
     font-weight:600;
 
-    color:#d88da2;
+    color:#C14560;
 
     transition:.35s;
 
@@ -112,7 +112,7 @@
 
 .email-card a:hover{
 
-    color:#b56d82;
+    color:#A33650;
 
 }
 
@@ -130,7 +130,7 @@
 
     line-height:1.85;
 
-    color:#8a7378;
+    color:#816B70;
 
     margin-bottom:0;
 
