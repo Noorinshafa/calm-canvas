@@ -232,10 +232,11 @@ export const POSTS = [
     title: "How to Style an Oversized Hoodie: 6 Easy Outfit Ideas",
     seoTitle: "How to Style an Oversized Hoodie: 6 Ideas",
     description:
-      "Six easy ways to wear an oversized hoodie, from jeans and sneakers to skirts and tailored trousers, plus how to size it so it looks relaxed, not sloppy.",
+      "How to style an oversized hoodie: six outfit ideas, what to wear with one, and how to size it so it looks relaxed, not sloppy.",
     date: "2026-10-09",
+    updated: "2026-11-08",
     category: "Style guide",
-    readingMinutes: 5,
+    readingMinutes: 7,
     excerpt:
       "An oversized hoodie looks effortless when the proportions are right. Six outfit ideas, plus a simple way to choose your size.",
     keywords: [
@@ -294,6 +295,45 @@ export const POSTS = [
       {
         type: "p",
         text: "For long drives, trains or flights, comfort wins. Wear the hoodie over a tee so you can adjust to the temperature, with soft trousers and sneakers. A roomy bag from the [tote and weekender collection](/totebags) finishes the outfit. The layer underneath can come from the [T-shirt collection](/tshirts) if you want the pieces to match in mood.",
+      },
+      { type: "h2", text: "What to wear with an oversized hoodie" },
+      {
+        type: "p",
+        text: "If you are building an outfit from scratch, think in three parts: what goes on the bottom, what goes on your feet and what goes over the top. The hoodie is the relaxed piece, so the other parts should give it some shape.",
+      },
+      {
+        type: "ul",
+        items: [
+          "Bottoms: straight-leg or wide-leg jeans, leggings, a pleated midi skirt, tailored trousers or soft joggers. In warm weather, biker shorts or denim shorts keep the proportions balanced.",
+          "Shoes: clean white sneakers for a casual look, ankle boots with jeans or a skirt, and loafers when you want to dress it up.",
+          "Layers: a denim jacket over the hoodie in autumn, a long coat in winter, or a plain tee underneath on days when the temperature keeps changing.",
+          "Extras: a tote bag for errands, a simple necklace or small hoops to frame the hood, and a beanie or cap if you prefer to leave the hood down.",
+        ],
+      },
+      {
+        type: "p",
+        text: "The season changes the recipe more than the hoodie does. In autumn, pair it with jeans and boots and add a jacket for the evening. In winter, wear it under a coat so the hood and hem show. In spring, switch to lighter bottoms and let the sleeves push up. In summer, a lightweight tee underneath lets you take the hoodie off when the day warms up.",
+      },
+      { type: "h2", text: "Quick answers" },
+      { type: "h3", text: "How do you wear an oversized hoodie without looking sloppy?" },
+      {
+        type: "p",
+        text: "Keep one other part of the outfit fitted or structured, such as a straight leg, a sleek skirt or a neat shoe. Half-tuck the front hem and push the sleeves up to the forearm so the shape looks chosen rather than accidental.",
+      },
+      { type: "h3", text: "Can you wear an oversized hoodie with a skirt?" },
+      {
+        type: "p",
+        text: "Yes. A pleated or slip-style midi skirt is one of the most flattering pairings. Tuck the front of the hoodie into the waistband and add boots or neat flats.",
+      },
+      { type: "h3", text: "What size should you order for an oversized fit?" },
+      {
+        type: "p",
+        text: "Measure a hoodie you already own and love, compare it with the size chart on the product page, and go up one size if you want it roomier than your favorite. Every item is made to order, and returns are not accepted for the wrong size or a change of mind, so check the chart before you order. You can browse the [hoodie collection](/hoodies) to compare designs.",
+      },
+      { type: "h3", text: "Can an oversized hoodie be dressed up?" },
+      {
+        type: "p",
+        text: "Yes, if the design is quiet. A script or line-art graphic looks deliberate with tailored trousers, loafers and a structured bag. A busier illustration works better with jeans and sneakers.",
       },
       { type: "h2", text: "Choosing a design that suits your style" },
       {
