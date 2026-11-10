@@ -21,6 +21,8 @@
 //           like before (client-rendered), and a warning is printed.
 //   Step 3 (best effort):  refresh sitemap.xml and tell IndexNow-supporting
 //           search engines about the pages (production deploys only).
+//   Also (best effort):    write llms.txt, a short plain-text guide to the
+//           site for AI assistants, built from the same page list.
 //
 // Product pages need the product list from Printify, which needs the
 // PRINTIFY_API_TOKEN environment variable at build time (Vercel provides it
@@ -80,6 +82,7 @@ async function prerender() {
   const blocks = await load("src/utils/blocks.js");
   const { POSTS } = await load("src/content/posts.js");
   const { PRODUCT_COPY } = await load("src/content/productCopy.js");
+  const { TERMS, PRIVACY, parseLegalInline } = await load("src/content/legal.js");
   const { CHRISTMAS_PAGE, resolvePicks } = await load("src/content/christmas.js");
   const { THEME_PAGES, themeProducts, themesForProduct } = await load("src/content/themes.js");
   const { optimizedImageUrl, crawlableImageUrl, optimizedSrcSet } = await load(
@@ -99,6 +102,8 @@ async function prerender() {
     SHIPPING_SECTIONS,
     SHIPPING_FAQ,
     INDEXNOW_KEY,
+    HANDLING_DAYS,
+    CURRENCY,
   } = config;
 
   const {
@@ -616,7 +621,7 @@ async function prerender() {
       `<h2>Complaints &amp; Support</h2>` +
       `<p>Have an issue with an order or our service? Email us at <a href="mailto:${esc(
         CONTACT_EMAIL
-      )}">${esc(CONTACT_EMAIL)}</a> with your order number and a short description of the problem. We aim to respond within 2 business days and to resolve most complaints within 7 days.</p>`,
+      )}">${esc(CONTACT_EMAIL)}</a> with your order number and a short description of the problem. We aim to respond within 2 business days and to resolve most complaints within 7 days. If you're not satisfied with how a complaint has been handled, you're welcome to reply and ask for it to be reviewed again.</p>`,
   });
 
   // ---- Shipping & returns ----
@@ -650,7 +655,32 @@ async function prerender() {
     });
   }
 
-  // ---- Terms and privacy (full text is shown by the app) ----
+  // ---- Terms and privacy ----
+  // The full text, from src/content/legal.js: the same wording the app shows,
+  // so crawlers that do not run JavaScript can read the policies too.
+  const legalInline = (text) =>
+    parseLegalInline(text)
+      .map((part) => {
+        if (part.href) return `<a href="${esc(part.href)}">${esc(part.text)}</a>`;
+        if (part.strong) return `<strong>${esc(part.text)}</strong>`;
+        return esc(part.text);
+      })
+      .join("");
+
+  const legalBody = (doc) =>
+    `<h1>${esc(doc.h1)}</h1><p>${esc(doc.intro)}</p>` +
+    doc.blocks
+      .map((block) => {
+        if (block.type === "h2") return `<h2>${esc(block.text)}</h2>`;
+        if (block.type === "ul") {
+          return `<ul>${block.items
+            .map((item) => `<li>${legalInline(item)}</li>`)
+            .join("")}</ul>`;
+        }
+        return `<p>${legalInline(block.text)}</p>`;
+      })
+      .join("");
+
   pages.push({
     path: "/terms",
     head: {
@@ -659,8 +689,7 @@ async function prerender() {
       path: "/terms",
       image: PAGES.terms.ogImage,
     },
-    body: () =>
-      `<h1>Terms &amp; Conditions</h1><p>${esc(PAGES.terms.description)}</p>`,
+    body: () => legalBody(TERMS),
   });
 
   pages.push({
@@ -671,8 +700,7 @@ async function prerender() {
       path: "/privacy-policy",
       image: PAGES.privacy.ogImage,
     },
-    body: () =>
-      `<h1>Privacy Policy</h1><p>${esc(PAGES.privacy.description)}</p>`,
+    body: () => legalBody(PRIVACY),
   });
 
   // ---- Pages that must never be indexed (shell only) ----
@@ -992,6 +1020,62 @@ async function prerender() {
   }
 
   log(`wrote ${written} pre-generated pages`);
+
+  // ------------------------------------------------------------------
+  // llms.txt: a short plain-text guide to the site for AI assistants and
+  // their crawlers (the format described at llmstxt.org). It is optional and
+  // is not something Google uses for ranking. Everything in it comes from the
+  // same settings the pages above are built from, so it cannot drift from
+  // what the site really says. It never fails the build.
+  // ------------------------------------------------------------------
+  try {
+    const item = (pagePath, name, note) =>
+      `- [${name}](${absoluteUrl(pagePath)})${note ? `: ${note}` : ""}`;
+
+    const llms = [
+      `# ${SITE_NAME}`,
+      "",
+      `> ${SITE_NAME} is an online store for original-art hoodies, sweatshirts, T-shirts, tote bags, phone cases and mugs. Every item is printed on demand after it is ordered.`,
+      "",
+      `- Official website: ${SITE_URL}/`,
+      `- Customer support: ${CONTACT_EMAIL}`,
+      `- Prices are shown in ${CURRENCY}. Shipping is worked out at checkout from the items and the destination country.`,
+      `- Items are made to order: allow around ${HANDLING_DAYS.min}-${HANDLING_DAYS.max} business days for printing and preparation, plus delivery.`,
+      "- Returns are not accepted for the wrong size or a change of mind. Damaged, defective or incorrect items are reprinted free or refunded when reported within 14 days of delivery.",
+      "",
+      "## Collections",
+      "",
+      ...COLLECTIONS.map((c) => item(c.path, c.nav, c.description)),
+      item(PAGES.collections.path, "All collections", PAGES.collections.description),
+      "",
+      "## Gift ideas and themes",
+      "",
+      item(CHRISTMAS_PAGE.path, "Christmas Gifts", CHRISTMAS_PAGE.description),
+      ...THEME_PAGES.map((t) => item(t.path, t.nav, t.description)),
+      "",
+      "## Gift and style journal",
+      "",
+      ...POSTS.map((post) => item(`/blog/${post.slug}`, post.title, post.description)),
+      "",
+      "## Policies and company",
+      "",
+      item(PAGES.shipping.path, PAGES.shipping.title, PAGES.shipping.description),
+      item(PAGES.about.path, PAGES.about.title, PAGES.about.description),
+      item(PAGES.contact.path, PAGES.contact.title, PAGES.contact.description),
+      item(PAGES.terms.path, PAGES.terms.title, PAGES.terms.description),
+      item(PAGES.privacy.path, PAGES.privacy.title, PAGES.privacy.description),
+      "",
+      "## Optional",
+      "",
+      item("/sitemap-products.xml", "Product sitemap", "every product page, with photos"),
+      "",
+    ].join("\n");
+
+    await writeFile(path.join(DIST, "llms.txt"), llms);
+    log("wrote llms.txt");
+  } catch (error) {
+    console.warn("[postbuild] could not write llms.txt (harmless):", briefError(error));
+  }
 
   // A small list of every product (name, price, one photo), served as a
   // plain static file. The website reads this first, so product lists appear

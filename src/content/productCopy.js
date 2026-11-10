@@ -201,5 +201,11 @@ export const PRODUCT_COPY = {
     "Soft pink roses, a pale blue bloom and a few soft green leaves gather in the lower corner of this white case, painted in watercolor. A blush marble wash with fine gold flecks drifts across the top corner, so the design feels light and airy rather than busy.",
     "It is a quiet choice for people who like pretty things that do not shout, and it works as a birthday gift for a sister, a friend or a bridesmaid. The Tough Phone Case has a polycarbonate shell, a TPU lining and an interior rubber liner for impact resistance, with a glossy finish. It supports wireless charging but not MagSafe, and you choose your exact iPhone or Samsung model on this page.",
     "The case is printed on demand after you order, so allow production time and order ahead for gifts."
+  ],
+  // Angel Heart devil Soul Split Graphic Tee
+  "68b582fd9106a156650111e4": [
+    "This tee is split straight down the middle: one half black, the other white. The words Angel Heart, Devil Soul run vertically along the dividing line in dripping block letters, printed in white on the black half and in black on the white half. The sleeves pick up both colors, so each side carries a little of the other.",
+    "It is a design about having two sides, and it suits anyone who likes a bold monochrome graphic more than a small chest print. Wear it with black jeans or cargo trousers and let the shirt do the talking, or layer it under an open jacket so the vertical lettering shows through the middle. The fabric is 100% polyester in a textured microfiber knit that feels soft, light and breathable, with a regular fit, a tagless neck and sizing that runs true to size.",
+    "The shirt is printed after you order it, so allow production time before it ships and order ahead for gifts. Choose your size on this page."
   ]
 };
