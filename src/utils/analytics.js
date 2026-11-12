@@ -147,8 +147,11 @@ function startMetaPixel() {
 
     // Page views are sent manually on every route change (see trackPageView),
     // so Meta's own "the address changed" detection is switched off to avoid
-    // counting each page twice.
+    // counting each page twice. Meta's script ignores a second PageView on
+    // the same page load unless it is told that repeats are intended, which
+    // they are here: one per page the visitor opens.
     fbq.disablePushState = true;
+    fbq.allowDuplicatePageViews = true;
 
     const script = document.createElement("script");
     script.async = true;
