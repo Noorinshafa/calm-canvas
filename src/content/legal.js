@@ -240,11 +240,19 @@ export const PRIVACY = {
     { type: "h2", text: "7. Cookies and Local Storage" },
     {
       type: "p",
-      text: "This website does not use advertising cookies. We use two analytics services to understand how the website is used, such as which pages are viewed and which items are added to the cart. Google Analytics may set cookies in your browser (their names begin with “_ga”) and receives information about your visit, such as the pages you view and your approximate location. We keep Google's advertising features switched off. If you visit from Europe (including the European Economic Area, the United Kingdom and Switzerland), Google Analytics is switched off and no analytics cookies are set unless you choose Accept on our cookie notice. You can change your choice at any time with “Cookie settings” at the bottom of any page. We also use Ahrefs Web Analytics, a privacy-focused service that counts visits and popular pages without setting cookies.",
+      text: "We use two analytics services to understand how the website is used, such as which pages are viewed and which items are added to the cart. Google Analytics may set cookies in your browser (their names begin with “_ga”) and receives information about your visit, such as the pages you view and your approximate location. We keep Google's advertising features switched off. We also use Ahrefs Web Analytics, a privacy-focused service that counts visits and popular pages without setting cookies.",
     },
     {
       type: "p",
-      text: "Apart from those analytics cookies, the only information we store in your browser is your shopping cart contents (the items you've added, saved locally on your own device using your browser's storage) so that it's still there if you refresh the page or come back later. This stays on your device and is never sent to us until you choose to check out.",
+      text: "We also use the Meta Pixel, an advertising tool from Meta (the company behind Facebook and Instagram), to measure how our adverts perform and to show our adverts to people who may be interested in our products. The Meta Pixel may set cookies in your browser (their names begin with “_fb”) and sends Meta information about your visit, such as the pages and products you view, items you add to the cart and purchases you complete. We do not send Meta your name, email address, postal address or payment details. Meta handles this information under its own privacy policy.",
+    },
+    {
+      type: "p",
+      text: "If you visit from Europe (including the European Economic Area, the United Kingdom and Switzerland), Google Analytics and the Meta Pixel are switched off and none of these cookies are set unless you choose Accept on our cookie notice. You can change your choice at any time with “Cookie settings” at the bottom of any page.",
+    },
+    {
+      type: "p",
+      text: "Apart from those analytics and advertising cookies, the only information we store in your browser is your shopping cart contents (the items you've added, saved locally on your own device using your browser's storage) so that it's still there if you refresh the page or come back later. This stays on your device and is never sent to us until you choose to check out.",
     },
     { type: "h2", text: "8. Contact Us" },
     {

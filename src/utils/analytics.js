@@ -1,23 +1,36 @@
-// Google Analytics 4 (GA4) with e-commerce events -- completely OFF until you
-// set VITE_GA_MEASUREMENT_ID (looks like "G-XXXXXXXXXX") in Vercel's
-// Environment Variables and redeploy. With no ID set, every function here
-// does nothing, no Google script is downloaded and no data is collected.
+// Visitor measurement for the shop. Two optional services, each completely OFF
+// until its ID is set:
+//
+// - Google Analytics 4 (GA4): set VITE_GA_MEASUREMENT_ID (looks like
+//   "G-XXXXXXXXXX") in Vercel's Environment Variables and redeploy.
+// - Meta (Facebook / Instagram) Pixel, used to measure Meta adverts: set
+//   META_PIXEL_ID in src/config/site.js.
+//
+// With no ID set, every function here does nothing, no outside script is
+// downloaded and no data is collected.
 //
 // Privacy:
 // - Visitors whose device is set to a European time zone (this includes the
 //   UK, Switzerland and the EU) see a small accept/decline notice
-//   (src/components/common/CookieBanner.jsx). For them Google's script is NOT
-//   even downloaded, and no analytics cookie is set, unless they press
+//   (src/components/common/CookieBanner.jsx). For them neither Google's nor
+//   Meta's script is even downloaded, and no cookie is set, unless they press
 //   Accept. Their choice is remembered on their own device and can be changed
 //   at any time with "Cookie settings" in the footer.
-// - Everyone else is measured as before (analytics only; advertising storage
-//   is always denied) and sees no notice.
+// - Everyone else is measured without a notice. Google's own advertising
+//   storage is always denied.
 // - As a safety net, Google's Consent Mode also starts as "denied" for
 //   visitors Google locates in the EU/EEA, UK or Switzerland, so a European
 //   visitor with a non-European time zone setting is never tracked by
-//   default either.
+//   Google Analytics by default either.
+// - The Meta Pixel only ever receives what this file sends it: page views and
+//   the shopping steps below (product ids, quantities, values). Its automatic
+//   reading of buttons and page details is switched off, and no name, email,
+//   address or payment detail is passed to it.
+
+import { META_PIXEL_ID } from "../config/site.js";
 
 const GA_ID = import.meta.env.VITE_GA_MEASUREMENT_ID;
+const PIXEL_ID = META_PIXEL_ID || "";
 
 const CONSENT_DENIED_REGIONS = [
   "AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR",
@@ -25,12 +38,16 @@ const CONSENT_DENIED_REGIONS = [
   "SI", "ES", "SE", "IS", "LI", "NO", "GB", "CH",
 ];
 
-const CONSENT_KEY = "scc-analytics-consent";
+// "v2": the choice now covers the Meta Pixel as well as Google Analytics, so
+// a visitor who accepted analytics only (the old "scc-analytics-consent" key)
+// is asked again instead of being signed up for something they never saw.
+const CONSENT_KEY = "scc-consent-v2";
 
 // Asks the banner to open again (used by the footer's "Cookie settings").
 export const OPEN_CONSENT_EVENT = "scc:open-cookie-settings";
 
-let started = false;
+let started = false; // Google Analytics
+let pixelStarted = false; // Meta Pixel
 
 function gtag() {
   window.dataLayer.push(arguments);
@@ -47,13 +64,13 @@ export function getStoredConsent() {
   }
 }
 
-// True when this visitor should be asked before any analytics runs. The
+// True when this visitor should be asked before any measurement runs. The
 // device's time zone is used because it is available instantly, with no extra
 // request: Europe/* covers the UK, Switzerland and the EU; Atlantic/* covers
 // the Azores, Madeira and the Canary Islands; Arctic/* covers Svalbard. A few
 // non-EU time zones match too (for example Turkey); they just see the notice.
 export function visitorNeedsConsentChoice() {
-  if (!GA_ID || typeof window === "undefined") return false;
+  if ((!GA_ID && !PIXEL_ID) || typeof window === "undefined") return false;
 
   try {
     const zone = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
@@ -105,19 +122,61 @@ function startAnalytics() {
   document.head.appendChild(script);
 }
 
-export function initAnalytics() {
-  if (!GA_ID || typeof window === "undefined") return;
+// Meta's standard loader, written as ordinary code instead of the inline
+// <script> Meta hands out, because the site's security policy (vercel.json)
+// does not allow inline scripts.
+function startMetaPixel() {
+  if (!PIXEL_ID || pixelStarted || typeof window === "undefined") return;
+  pixelStarted = true;
 
-  // Visitors who must be asked first: do nothing at all (Google's script is
-  // not downloaded) until they have pressed Accept.
+  if (!window.fbq) {
+    const fbq = function () {
+      if (fbq.callMethod) {
+        fbq.callMethod.apply(fbq, arguments);
+      } else {
+        fbq.queue.push(arguments);
+      }
+    };
+
+    window.fbq = fbq;
+    if (!window._fbq) window._fbq = fbq;
+    fbq.push = fbq;
+    fbq.loaded = true;
+    fbq.version = "2.0";
+    fbq.queue = [];
+
+    // Page views are sent manually on every route change (see trackPageView),
+    // so Meta's own "the address changed" detection is switched off to avoid
+    // counting each page twice.
+    fbq.disablePushState = true;
+
+    const script = document.createElement("script");
+    script.async = true;
+    script.src = "https://connect.facebook.net/en_US/fbevents.js";
+    document.head.appendChild(script);
+  }
+
+  // No automatic reading of button clicks or page details: the Pixel only
+  // receives the events this file sends.
+  window.fbq("set", "autoConfig", false, PIXEL_ID);
+  window.fbq("init", PIXEL_ID);
+}
+
+export function initAnalytics() {
+  if ((!GA_ID && !PIXEL_ID) || typeof window === "undefined") return;
+
+  // Visitors who must be asked first: do nothing at all (no outside script is
+  // downloaded) until they have pressed Accept.
   if (visitorNeedsConsentChoice() && getStoredConsent() !== "granted") return;
 
   startAnalytics();
+  startMetaPixel();
 }
 
-// Removes Google Analytics' own cookies (_ga and _ga_XXXX) when a visitor
-// withdraws consent. Tries the host name and each parent domain, because
-// Google sets them on the parent domain (for example .shopcalmcanvas.com).
+// Removes the measurement cookies when a visitor withdraws consent: Google
+// Analytics' _ga and _ga_XXXX, and the Meta Pixel's _fbp and _fbc. Tries the
+// host name and each parent domain, because they are set on the parent domain
+// (for example .shopcalmcanvas.com).
 function clearAnalyticsCookies() {
   try {
     const labels = window.location.hostname.split(".");
@@ -130,7 +189,12 @@ function clearAnalyticsCookies() {
     document.cookie.split(";").forEach((entry) => {
       const name = entry.split("=")[0].trim();
 
-      if (name === "_ga" || name.startsWith("_ga_")) {
+      if (
+        name === "_ga" ||
+        name.startsWith("_ga_") ||
+        name === "_fbp" ||
+        name === "_fbc"
+      ) {
         domains.forEach((domain) => {
           document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/${domain}`;
         });
@@ -149,16 +213,34 @@ export function setAnalyticsConsent(granted) {
     // Storage blocked: the choice simply lasts until the page is closed.
   }
 
-  if (!GA_ID || typeof window === "undefined") return;
+  if ((!GA_ID && !PIXEL_ID) || typeof window === "undefined") return;
 
   if (granted) {
-    if (started) {
+    const gaWasRunning = started;
+    const pixelWasRunning = pixelStarted;
+
+    if (gaWasRunning) {
       gtag("consent", "update", { analytics_storage: "granted" });
     } else {
-      // First time analytics starts on this visit. It reads the choice saved
-      // just above, then the page the visitor is looking at is counted.
+      // First time Google Analytics starts on this visit. It reads the
+      // choice saved just above.
       startAnalytics();
-      trackPageView(window.location.pathname, document.title);
+    }
+
+    if (pixelWasRunning) {
+      sendPixel("consent", "grant");
+    } else {
+      startMetaPixel();
+    }
+
+    // Count the page the visitor is looking at for whichever service has
+    // only just started.
+    if (!gaWasRunning) {
+      sendGooglePageView(window.location.pathname, document.title);
+    }
+
+    if (!pixelWasRunning) {
+      sendPixel("track", "PageView");
     }
 
     return;
@@ -166,6 +248,10 @@ export function setAnalyticsConsent(granted) {
 
   if (started) {
     gtag("consent", "update", { analytics_storage: "denied" });
+  }
+
+  if (pixelStarted) {
+    sendPixel("consent", "revoke");
   }
 
   clearAnalyticsCookies();
@@ -180,12 +266,27 @@ function send(eventName, params) {
   }
 }
 
-export function trackPageView(path, title) {
+// One call to the Meta Pixel, for example sendPixel("track", "AddToCart", {...}).
+function sendPixel(...args) {
+  if (!PIXEL_ID || !pixelStarted || typeof window.fbq !== "function") return;
+  try {
+    window.fbq(...args);
+  } catch {
+    // Analytics must never break the shop.
+  }
+}
+
+function sendGooglePageView(path, title) {
   send("page_view", {
     page_path: path,
     page_title: title,
     page_location: window.location.href,
   });
+}
+
+export function trackPageView(path, title) {
+  sendGooglePageView(path, title);
+  sendPixel("track", "PageView");
 }
 
 function toItem(item) {
@@ -199,35 +300,89 @@ function toItem(item) {
   };
 }
 
+// The same items in the shape Meta expects.
+function pixelContents(items) {
+  return {
+    content_type: "product",
+    content_ids: items.map((item) => String(item.id)),
+    contents: items.map((item) => ({
+      id: String(item.id),
+      quantity: item.quantity || 1,
+      item_price: Number(item.price) || 0,
+    })),
+    num_items: items.reduce((sum, item) => sum + (item.quantity || 1), 0),
+  };
+}
+
 export function trackViewItem(item) {
+  const value = Number(item.price) || 0;
+
   send("view_item", {
     currency: "USD",
-    value: Number(item.price) || 0,
+    value,
     items: [toItem(item)],
+  });
+
+  sendPixel("track", "ViewContent", {
+    ...pixelContents([item]),
+    content_name: item.name,
+    content_category: item.category,
+    currency: "USD",
+    value,
   });
 }
 
 export function trackAddToCart(item) {
+  const value = (Number(item.price) || 0) * (item.quantity || 1);
+
   send("add_to_cart", {
     currency: "USD",
-    value: (Number(item.price) || 0) * (item.quantity || 1),
+    value,
     items: [toItem(item)],
+  });
+
+  sendPixel("track", "AddToCart", {
+    ...pixelContents([item]),
+    content_name: item.name,
+    content_category: item.category,
+    currency: "USD",
+    value,
   });
 }
 
 export function trackBeginCheckout(items, value) {
+  const total = Number(value) || 0;
+
   send("begin_checkout", {
     currency: "USD",
-    value: Number(value) || 0,
+    value: total,
     items: items.map(toItem),
+  });
+
+  sendPixel("track", "InitiateCheckout", {
+    ...pixelContents(items),
+    currency: "USD",
+    value: total,
   });
 }
 
 export function trackPurchase({ transactionId, value, items }) {
+  const list = items || [];
+  const total = Number(value) || 0;
+
   send("purchase", {
     transaction_id: transactionId,
     currency: "USD",
-    value: Number(value) || 0,
-    items: (items || []).map(toItem),
+    value: total,
+    items: list.map(toItem),
   });
+
+  // The order reference is passed as the event's id, so Meta counts a
+  // purchase once even if it is ever reported a second time.
+  sendPixel(
+    "track",
+    "Purchase",
+    { ...pixelContents(list), currency: "USD", value: total },
+    transactionId ? { eventID: String(transactionId) } : undefined
+  );
 }

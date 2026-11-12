@@ -10,8 +10,9 @@ import {
 
 // A small accept/decline notice for visitors in Europe (including the UK and
 // Switzerland). It appears only for them, only until they choose, and can be
-// opened again from "Cookie settings" in the footer. Analytics does not run
-// for these visitors unless they press Accept -- see src/utils/analytics.js.
+// opened again from "Cookie settings" in the footer. Neither Google Analytics
+// nor the Meta Pixel runs for these visitors unless they press Accept -- see
+// src/utils/analytics.js.
 // Both buttons have the same size and weight on purpose.
 function CookieBanner() {
   // The page is only ever built in the browser (never pre-rendered by React),
@@ -62,8 +63,9 @@ function CookieBanner() {
 
         <p>
           We&apos;d like to use Google Analytics cookies to see which pages are
-          visited. No advertising cookies. You can change this any time via
-          &ldquo;Cookie settings&rdquo; in the footer.{" "}
+          visited, and Meta (Facebook and Instagram) advertising cookies to
+          measure our adverts. You can change this any time via &ldquo;Cookie
+          settings&rdquo; in the footer.{" "}
           <Link to="/privacy-policy">Privacy Policy</Link>
         </p>
       </div>
