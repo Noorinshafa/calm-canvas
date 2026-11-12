@@ -33,6 +33,14 @@ import ShippingEstimate from "../ui/ShippingEstimate";
 import { ProductPageSkeleton } from "../ui/Skeletons";
 import Breadcrumbs from "../common/Breadcrumbs";
 
+// "You may also like" shows its cards larger than the shop grids do (see
+// .related-grid in productdetails.css): one per row up to 768px wide, two per
+// row up to 1100px, four per row above that. These tell the browser the real
+// size, so it downloads a photo that is sharp at that size.
+const RELATED_SIZES =
+  "(max-width: 768px) calc(100vw - 50px), (max-width: 1100px) 43vw, 22vw";
+const RELATED_WIDTHS = [384, 768, 1024];
+
 // The pre-built HTML for a product page (see scripts/postbuild.mjs) records
 // which product it is on the #root element. Reading it lets a page opened
 // directly at /products/<name> load its product immediately, without first
@@ -803,6 +811,8 @@ function ProductDetails() {
       <ProductCard
         key={item.id}
         {...item}
+        sizes={RELATED_SIZES}
+        widths={RELATED_WIDTHS}
       />
 
     ))}

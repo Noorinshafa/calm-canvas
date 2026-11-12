@@ -7,7 +7,23 @@ import OptimizedImage from "./OptimizedImage";
 const CARD_SIZES =
   "(max-width: 640px) 50vw, (max-width: 1100px) 33vw, (max-width: 1600px) 25vw, 20vw";
 
-function ProductCard({ id, slug, image, title, price, priority = false }) {
+// The resized copies the browser may choose from (see src/utils/imageUrl.js).
+const CARD_WIDTHS = [384, 768];
+
+// A grid that lays its cards out differently from the shop grids (for example
+// "You may also like" on a product page) passes its own `sizes` and `widths`.
+// If `sizes` says the photo is smaller than it really is, the browser
+// downloads a copy that is too small and the photo looks blurry.
+function ProductCard({
+  id,
+  slug,
+  image,
+  title,
+  price,
+  priority = false,
+  sizes = CARD_SIZES,
+  widths = CARD_WIDTHS,
+}) {
   const href = productPath({ id, slug });
 
   return (
@@ -23,8 +39,8 @@ function ProductCard({ id, slug, image, title, price, priority = false }) {
             <OptimizedImage
               src={image}
               alt={cleanProductName(title)}
-              widths={[384, 768]}
-              sizes={CARD_SIZES}
+              widths={widths}
+              sizes={sizes}
               priority={priority}
               width="600"
               height="600"
