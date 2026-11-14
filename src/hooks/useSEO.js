@@ -55,8 +55,10 @@ function setCanonical(href) {
 function setJsonLd(data) {
   let script = document.getElementById("seo-jsonld");
 
+  // No page-specific data: remove the block rather than leave it empty (an
+  // empty JSON-LD script can be reported as unparsable structured data).
   if (!data) {
-    if (script) script.textContent = "";
+    if (script) script.remove();
     return;
   }
 

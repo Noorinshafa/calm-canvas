@@ -312,10 +312,12 @@ async function prerender() {
       // Early-fetch hints for the page's own resources (product pages only).
       ...preloads,
       // id="seo-jsonld" is the script the app's useSEO hook updates when a
-      // visitor navigates, so it must be the only one with this id.
-      `<script type="application/ld+json" id="seo-jsonld">${
-        jsonLd ? jsonForHtml(jsonLd) : ""
-      }</script>`,
+      // visitor navigates, so it must be the only one with this id. Pages
+      // without page-specific structured data get no script at all: an empty
+      // JSON-LD block can be reported as unparsable by search engines.
+      ...(jsonLd
+        ? [`<script type="application/ld+json" id="seo-jsonld">${jsonForHtml(jsonLd)}</script>`]
+        : []),
     ].join("\n    ");
   }
 
