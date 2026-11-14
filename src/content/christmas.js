@@ -254,6 +254,21 @@ export function christmasSeason(now = new Date()) {
   return { visible, daysLeft };
 }
 
+// The home page wears its Christmas look (colours, snow in the hero, the
+// Christmas section first) from 1 November to 26 December, then goes back to
+// the normal look by itself. Only the home page changes; every other page,
+// the cart and the checkout look exactly the same all year.
+export const CHRISTMAS_THEME = {
+  start: { month: 10, day: 1 }, // 1 November (months count from 0)
+  end: { month: 11, day: 26 }, // 26 December
+};
+
+export function christmasThemeActive(now = new Date()) {
+  const md = now.getMonth() * 100 + now.getDate();
+  const { start, end } = CHRISTMAS_THEME;
+  return md >= start.month * 100 + start.day && md <= end.month * 100 + end.day;
+}
+
 export function daysLabel(daysLeft) {
   if (daysLeft === null) return "";
   if (daysLeft === 0) return "Merry Christmas";

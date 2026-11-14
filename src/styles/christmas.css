@@ -92,17 +92,17 @@
 
 .xmas-section h2,
 .xmas-page h1{
-    font-family:"Bodoni Moda", "Cormorant Garamond", Georgia, serif;
+    font-family:"Cormorant Garamond", Georgia, serif;
     font-weight:600;
     line-height:1.08;
-    letter-spacing:-.015em;
+    letter-spacing:-.01em;
     text-wrap:balance;
     color:var(--xmas-forest);
     margin:0;
 }
 
-.xmas-section h2{ font-size:clamp(1.9rem, 6.4cqw, 3.3rem); }
-.xmas-page h1{ font-size:clamp(2.1rem, 6.6cqw, 3.8rem); }
+.xmas-section h2{ font-size:clamp(2.1rem, 7cqw, 3.7rem); }
+.xmas-page h1{ font-size:clamp(2.3rem, 7.2cqw, 4.2rem); }
 
 .xmas-section h2 em,
 .xmas-page h1 em{
@@ -285,9 +285,9 @@
 
 .xmas-tx h3{
     margin:0;
-    font-family:"Bodoni Moda", "Cormorant Garamond", Georgia, serif;
+    font-family:"Cormorant Garamond", Georgia, serif;
     font-weight:600;
-    font-size:1.02rem;
+    font-size:1.2rem;
     line-height:1.25;
     color:var(--xmas-text);
     text-wrap:balance;
@@ -406,9 +406,9 @@
 
 .xmas-page .xmas-guide h2{
     margin:0 0 12px;
-    font-family:"Bodoni Moda", "Cormorant Garamond", Georgia, serif;
+    font-family:"Cormorant Garamond", Georgia, serif;
     font-weight:600;
-    font-size:clamp(1.5rem, 3.6vw, 2.1rem);
+    font-size:clamp(1.65rem, 4vw, 2.35rem);
     color:var(--xmas-forest);
     text-wrap:balance;
 }

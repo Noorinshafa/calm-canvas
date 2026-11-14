@@ -371,6 +371,36 @@ async function prerender() {
     // No built files (for example when testing the page generator alone).
   }
 
+  // The home page's main photo (the three models at the top) is only found by
+  // the browser once the app has started. Tell it about the photo in the home
+  // page's HTML instead, so it downloads at the same time as the app's code.
+  // Only the AVIF copies are named: browsers that cannot show AVIF ignore the
+  // hint and load the WebP fallback as usual. The sizes must match
+  // MODELS_SIZES in src/components/sections/Hero.jsx.
+  const homePreloadLinks = [];
+
+  try {
+    const assetFiles = await readdir(path.join(DIST, "assets"));
+    const avif = [560, 820, 1129]
+      .map((width) => {
+        const file = assetFiles.find((name) =>
+          new RegExp(`^models-${width}-[\\w-]+\\.avif$`).test(name)
+        );
+        return file ? `/assets/${file} ${width}w` : null;
+      })
+      .filter(Boolean);
+
+    if (avif.length === 3) {
+      homePreloadLinks.push(
+        `<link rel="preload" as="image" type="image/avif" fetchpriority="high" imagesrcset="${esc(
+          avif.join(", ")
+        )}" imagesizes="${esc("(max-width: 1023px) min(92vw, 440px), 660px")}" />`
+      );
+    }
+  } catch {
+    // No built files (for example when testing the page generator alone).
+  }
+
   const collectionsCrumb = { name: "Collections", path: "/collections" };
 
   // ---- Home ----
@@ -381,9 +411,11 @@ async function prerender() {
       description: PAGES.home.description,
       path: "/",
       image: PAGES.home.ogImage,
+      preloads: homePreloadLinks,
     },
     body: () =>
-      `<h1>Wear Stories. Live Beautifully.</h1>` +
+      `<h1>Aesthetic Hoodies &amp; Gifts Made From Original Art</h1>` +
+      `<h2>Cozy sweatshirts, graphic tees, mugs, tote bags and phone cases, printed to order just for you.</h2>` +
       `<p>${esc(DEFAULT_DESCRIPTION)}</p>` +
       `<nav aria-label="Shop by collection"><h2>Shop by collection</h2><ul>` +
       COLLECTIONS.map(
@@ -391,7 +423,7 @@ async function prerender() {
       ).join("") +
       `</ul></nav>` +
       (indexableProducts.length
-        ? `<section><h2>Popular designs</h2>${productListHtml(
+        ? `<section><h2>Studio picks</h2>${productListHtml(
             indexableProducts.slice(0, 12)
           )}</section>`
         : "") +
@@ -421,8 +453,8 @@ async function prerender() {
       },
       body: () =>
         crumbsHtml(crumbs) +
-        `<h1>Explore Our Collections</h1>` +
-        `<p>Discover beautifully designed products made to bring creativity into your everyday life.</p>` +
+        `<h1>Our Products</h1>` +
+        `<p>Discover original-art hoodies, sweatshirts, tees, mugs, tote bags and phone cases that match your vibe.</p>` +
         `<ul>` +
         COLLECTIONS.map(
           (c) => `<li>${link(c.path, c.nav)}: ${esc(c.description)}</li>`

@@ -81,6 +81,38 @@ export function visitorNeedsConsentChoice() {
   }
 }
 
+// Speed: the Google Analytics and Meta Pixel scripts (about 180 KB each) are
+// only downloaded after the page has finished loading and the browser has a
+// quiet moment (at most about 3 seconds later), so they never slow down what
+// the visitor sees. Page views and events recorded before then wait in the
+// queue (window.dataLayer / fbq.queue) and are sent as soon as the scripts
+// arrive. On the checkout and order-confirmation pages they load straight
+// away, so a purchase is never missed.
+function loadWhenIdle(script) {
+  const add = () => {
+    if (!script.isConnected) document.head.appendChild(script);
+  };
+
+  if (/^\/(checkout|order-success)/.test(window.location.pathname)) {
+    add();
+    return;
+  }
+
+  const whenIdle = () => {
+    if ("requestIdleCallback" in window) {
+      window.requestIdleCallback(add, { timeout: 3000 });
+    } else {
+      window.setTimeout(add, 1500);
+    }
+  };
+
+  if (document.readyState === "complete") {
+    whenIdle();
+  } else {
+    window.addEventListener("load", whenIdle, { once: true });
+  }
+}
+
 function startAnalytics() {
   if (!GA_ID || started || typeof window === "undefined") return;
   started = true;
@@ -119,7 +151,7 @@ function startAnalytics() {
   script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(
     GA_ID
   )}`;
-  document.head.appendChild(script);
+  loadWhenIdle(script);
 }
 
 // Meta's standard loader, written as ordinary code instead of the inline
@@ -156,7 +188,7 @@ function startMetaPixel() {
     const script = document.createElement("script");
     script.async = true;
     script.src = "https://connect.facebook.net/en_US/fbevents.js";
-    document.head.appendChild(script);
+    loadWhenIdle(script);
   }
 
   // No automatic reading of button clicks or page details: the Pixel only

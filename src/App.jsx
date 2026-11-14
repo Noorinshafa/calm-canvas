@@ -8,14 +8,13 @@ import useSEO from "./hooks/useSEO";
 import { trackPageView } from "./utils/analytics";
 
 import Hero from "./components/sections/Hero";
-import Marquee from "./components/sections/Marquee";
-import BestSellers from "./components/sections/BestSellers";
-import FeaturedCollection from "./components/sections/FeaturedCollection";
-import WhyCalmCanvas from "./components/sections/WhyCalmCanvas";
-import ParallaxBanner from "./components/sections/ParallaxBanner";
-import ShopCategories from "./components/sections/ShopCategories";
-import ChristmasGifts from "./components/sections/ChristmasGifts";
-import ThanksgivingGifts from "./components/sections/ThanksgivingGifts";
+import HomeTrust from "./components/sections/HomeTrust";
+import HomeCollections from "./components/sections/HomeCollections";
+import HomePicks, { HomeAlsoLike } from "./components/sections/HomePicks";
+import HomeStory from "./components/sections/HomeStory";
+import HomeChristmas from "./components/sections/HomeChristmas";
+import HomeCommunity from "./components/sections/HomeCommunity";
+import { christmasThemeActive } from "./content/christmas.js";
 import Footer from "./components/sections/Footer";
 
 // Every one of these used to be imported eagerly, which meant a first-time
@@ -51,8 +50,9 @@ const Mugs = lazy(() => import("./components/pages/collections/Mugs"));
 import "./styles/global.css";
 import "./styles/navbar.css";
 import "./styles/hero.css";
-import "./styles/featuredcollection.css";
 import "./App.css";
+import "./styles/home.css";
+import "./styles/christmas-home.css";
 
 function Home() {
   // No overrides -- resets title/description/canonical/OG back to the site
@@ -60,18 +60,22 @@ function Home() {
   // after visiting a product or category page.
   useSEO({ path: "/" });
 
+  // From 1 November to 26 December the home page shows the Christmas banner
+  // and Christmas picks in place of the brand banner, and the top bar (in
+  // Navbar) shows the Christmas message. Outside those dates it is the normal
+  // home page.
+  const festive = christmasThemeActive();
+
   return (
-    <>
-      <Hero />
-      <Marquee />
-      <ThanksgivingGifts />
-      <ChristmasGifts />
-      <BestSellers />
-      <FeaturedCollection />
-      <ShopCategories />
-      <WhyCalmCanvas />
-      <ParallaxBanner />
-    </>
+    <div className={festive ? "home home--xmas" : "home"}>
+      <Hero festive={festive} />
+      <HomeTrust />
+      <HomeCollections />
+      <HomePicks festive={festive} />
+      {festive ? <HomeChristmas /> : <HomeStory />}
+      <HomeAlsoLike festive={festive} />
+      <HomeCommunity />
+    </div>
   );
 }
 

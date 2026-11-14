@@ -1,397 +1,143 @@
-import "../../styles/hero.css";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useEffect, useRef } from "react";
+import "../../styles/hero.css";
 
-import model1 from "../../assets/hero/model1.webp";
-import model2 from "../../assets/hero/model2.webp";
-import model3 from "../../assets/hero/model3.webp";
-import model4 from "../../assets/hero/model4.webp";
-import model5 from "../../assets/hero/model5.webp";
+// Soft, blurred room photo behind the hero (tiny files: 10 KB and 21 KB).
+import bg960 from "../../assets/home/hero-bg-960.webp";
+import bg1672 from "../../assets/home/hero-bg-1672.webp";
 
-function Hero() {
-  const stageRef = useRef(null);
-  const copyRef = useRef(null);
-  const animationRef = useRef(null);
+// Three models (transparent background) in graphic tees, hoodies and a
+// tote bag. Their heads rise a little into the header and their shoes step
+// into the section below (see .hero-models in hero.css).
+import models560 from "../../assets/home/models-560.webp";
+import models820 from "../../assets/home/models-820.webp";
+import models1129 from "../../assets/home/models-1129.webp";
+// The same photo as AVIF (about 25% smaller); browsers that cannot show AVIF
+// use the WebP files above.
+import models560avif from "../../assets/home/models-560.avif";
+import models820avif from "../../assets/home/models-820.avif";
+import models1129avif from "../../assets/home/models-1129.avif";
 
-  const pointerRef = useRef({
-    x: 0,
-    y: 0,
-    tx: 0,
-    ty: 0,
-  });
+// Shared with scripts/postbuild.mjs, which tells the browser to start loading
+// this photo from the home page HTML (before the app has even started).
+export const MODELS_SIZES = "(max-width: 1023px) min(92vw, 440px), 660px";
 
-  const stills = [
-    {
-      image: model1,
-      title: "Graphic Tee",
-      top: "10%",
-      left: "60%",
-      size: 220,
-      rotate: -6,
-      depth: 1.3,
-      z: 30,
-      blur: 0,
-      brightness: 1,
-      priority: true,
-    },
+// The handwritten lines on the home page use the "Allura" script font. Only
+// the letters in these lines are downloaded (Google Fonts "text=" option, a
+// file of a few KB), and it is loaded after the page has appeared, so it can
+// never slow down the first view. Until it arrives a normal serif is shown.
+export const SCRIPT_LINES = [
+  "Welcome to ShopCalmCanvas",
+  "The Christmas Gift Shop",
+  "More Than Just a Brand",
+];
 
-    {
-      image: model2,
-      title: "Premium Hoodie",
-      top: "15%",
-      left: "6%",
-      size: 170,
-      rotate: 5,
-      depth: 0.4,
-      z: 5,
-      blur: 2,
-      brightness: 0.72,
-      priority: true,
-    },
-
-    {
-      image: model3,
-      title: "Canvas Tote",
-      top: "64%",
-      left: "70%",
-      size: 200,
-      rotate: 8,
-      depth: 1.15,
-      z: 30,
-      blur: 0,
-      brightness: 1,
-      priority: false,
-    },
-
-    {
-      image: model4,
-      title: "Coffee Mug",
-      top: "5%",
-      left: "85%",
-      size: 140,
-      rotate: -10,
-      depth: 0.3,
-      z: 4,
-      blur: 3,
-      brightness: 0.65,
-      priority: false,
-    },
-
-    {
-      image: model5,
-      title: "Phone Case",
-      top: "70%",
-      left: "16%",
-      size: 180,
-      rotate: -4,
-      depth: 0.8,
-      z: 15,
-      blur: 0.5,
-      brightness: 0.88,
-      priority: false,
-    },
-  ];
-
+function useScriptFont() {
   useEffect(() => {
-    const stage = stageRef.current;
-    const copyEl = copyRef.current;
-
-    if (!stage) return;
-
-    const stillEls = stage.querySelectorAll(".film-still");
-
-    const reduceMotion =
-      window.matchMedia &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    let isVisible = true;
-
-    function loop() {
-      if (!isVisible) {
-        animationRef.current = null;
-        return;
-      }
-
-      const pointer = pointerRef.current;
-
-      pointer.x += (pointer.tx - pointer.x) * 0.06;
-      pointer.y += (pointer.ty - pointer.y) * 0.06;
-
-      const t = performance.now() * 0.001;
-
-      stillEls.forEach((el, i) => {
-        const depth =
-          parseFloat(el.dataset.depth) || 1;
-
-        const rotate =
-          parseFloat(el.dataset.rotate) || 0;
-
-        const bobAmp = reduceMotion ? 0 : 5;
-
-        const bob =
-          Math.sin(t * 0.6 + i * 1.4) *
-          bobAmp *
-          depth;
-
-        const mx =
-          pointer.x * depth * 55;
-
-        const my =
-          pointer.y * depth * 38 + bob;
-
-        el.style.transform = `
-          translate(-50%, -50%)
-          translate(${mx}px, ${my}px)
-          rotate(${rotate}deg)
-        `;
-      });
-
-      if (copyEl) {
-        copyEl.style.transform = `
-          translate(
-            ${pointer.x * -14}px,
-            ${pointer.y * -8}px
-          )
-        `;
-      }
-
-      animationRef.current =
-        requestAnimationFrame(loop);
-    }
-
-    function startAnimation() {
-      if (
-        isVisible &&
-        !animationRef.current &&
-        !reduceMotion
-      ) {
-        animationRef.current =
-          requestAnimationFrame(loop);
-      }
-    }
-
-    function stopAnimation() {
-      if (animationRef.current) {
-        cancelAnimationFrame(
-          animationRef.current
-        );
-
-        animationRef.current = null;
-      }
-    }
-
-    /*
-      Pause the animation when the hero is
-      outside the viewport.
-    */
-
-    const observer =
-      new IntersectionObserver(
-        ([entry]) => {
-          isVisible = entry.isIntersecting;
-
-          if (isVisible) {
-            startAnimation();
-          } else {
-            stopAnimation();
-          }
-        },
-        {
-          threshold: 0,
-        }
-      );
-
-    observer.observe(stage);
-
-    /*
-      Mouse movement
-    */
-
-    function mouseMove(e) {
-      if (reduceMotion) return;
-
-      const rect =
-        stage.getBoundingClientRect();
-
-      pointerRef.current.tx =
-        (e.clientX - rect.left) /
-          rect.width -
-        0.5;
-
-      pointerRef.current.ty =
-        (e.clientY - rect.top) /
-          rect.height -
-        0.5;
-    }
-
-    function mouseLeave() {
-      pointerRef.current.tx = 0;
-      pointerRef.current.ty = 0;
-    }
-
-    stage.addEventListener(
-      "mousemove",
-      mouseMove
-    );
-
-    stage.addEventListener(
-      "mouseleave",
-      mouseLeave
-    );
-
-    if (!reduceMotion) {
-      startAnimation();
-    }
-
-    return () => {
-      stopAnimation();
-
-      observer.disconnect();
-
-      stage.removeEventListener(
-        "mousemove",
-        mouseMove
-      );
-
-      stage.removeEventListener(
-        "mouseleave",
-        mouseLeave
-      );
-    };
+    const id = "scc-script-font";
+    if (document.getElementById(id)) return;
+    const letters = [...new Set(SCRIPT_LINES.join(""))].join("");
+    const link = document.createElement("link");
+    link.id = id;
+    link.rel = "stylesheet";
+    link.href = `https://fonts.googleapis.com/css2?family=Allura&display=swap&text=${encodeURIComponent(letters)}`;
+    document.head.appendChild(link);
   }, []);
+}
+
+function Hero({ festive = false }) {
+  useScriptFont();
 
   return (
-    <section className="hero">
-
-      <div
-        className="hero-backdrop"
-        aria-hidden="true"
+    <section className="hero" aria-labelledby="hero-title">
+      <img
+        className="hero-bg-img"
+        src={bg1672}
+        srcSet={`${bg960} 960w, ${bg1672} 1672w`}
+        sizes="100vw"
+        width="1672"
+        height="941"
+        alt=""
+        decoding="async"
+        fetchPriority="low"
       />
 
-      <div
-        className="hero-sweep"
-        aria-hidden="true"
-      />
-
-      <div
-        className="hero-grain"
-        aria-hidden="true"
-      />
-
-      <div
-        className="hero-vignette"
-        aria-hidden="true"
-      />
-
-      <span
-        className="hero-spine"
-        aria-hidden="true"
-      >
-        ShopCalmCanvas
-      </span>
-
-      <div
-        className="hero-stage"
-        ref={stageRef}
-      >
-
-        <div className="hero-gallery">
-
-          {stills.map((s, i) => (
-            <div
-              className="film-still"
-              key={s.title}
-              data-depth={s.depth}
-              data-rotate={s.rotate}
-              style={{
-                "--top": s.top,
-                "--left": s.left,
-                "--size": `${s.size}px`,
-                "--rotate": `${s.rotate}deg`,
-                zIndex: s.z,
-                filter: `
-                  blur(${s.blur}px)
-                  brightness(${s.brightness})
-                `,
-              }}
+      <div className="hero-inner">
+        <div className="hero-copy">
+          <p className="hero-script">
+            Welcome to ShopCalmCanvas
+            <svg
+              viewBox="0 0 24 24"
+              width="22"
+              height="22"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
             >
-
-              <div className="still-frame">
-
-                <img
-                  src={s.image}
-                  alt={s.title}
-                  width="220"
-                  height="293"
-                  loading={
-                    s.priority
-                      ? "eager"
-                      : "lazy"
-                  }
-                  fetchPriority={
-                    s.priority
-                      ? "high"
-                      : "auto"
-                  }
-                  decoding="async"
-                />
-
-                <div className="still-caption">
-                  {String(i + 1).padStart(
-                    2,
-                    "0"
-                  )}{" "}
-                  — {s.title}
-                </div>
-
-              </div>
-
-            </div>
-          ))}
-
-        </div>
-
-        <div
-          className="hero-copy"
-          ref={copyRef}
-        >
-
-          <h1 className="hero-title">
-            Wear Stories.
-            <br />
-            <span className="title-accent">
-              Live Beautifully.
-            </span>
-          </h1>
-
-          <p className="hero-description">
-            Premium print-on-demand apparel and
-            lifestyle products designed for people
-            who appreciate creativity and timeless
-            aesthetics.
+              <path d="M12 20.5s-7.5-4.6-9.3-9.2C1.4 7.9 3.6 4.5 7 4.5c2.1 0 3.6 1.2 5 3 1.4-1.8 2.9-3 5-3 3.4 0 5.6 3.4 4.3 6.8-1.8 4.6-9.3 9.2-9.3 9.2z" />
+            </svg>
           </p>
 
-          <div className="hero-buttons">
+          <h1 id="hero-title" className="hero-title">
+            Aesthetic Hoodies &amp; Gifts{" "}
+            <span className="hero-title-accent">Made From Original Art</span>
+          </h1>
 
-            <Link
-              to="/collections"
-              className="hero-btn primary-btn"
-            >
-              Shop Collection
+          <h2 className="hero-subtitle">
+            Cozy sweatshirts, graphic tees, mugs, tote bags and phone cases,
+            printed to order just for you.
+          </h2>
+
+          <div className="hero-actions">
+            <Link to="/collections" className="hero-btn hero-btn--primary">
+              Shop the Collection
+              <svg
+                viewBox="0 0 24 24"
+                width="18"
+                height="18"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M5 12h14M13 6l6 6-6 6" />
+              </svg>
             </Link>
-
-            <Link
-              to="/about"
-              className="hero-btn secondary-btn"
-            >
-              Discover More
-            </Link>
-
+            {festive ? (
+              <Link to="/christmas-gifts" className="hero-btn hero-btn--ghost">
+                Christmas Gifts
+              </Link>
+            ) : (
+              <a href="#collections" className="hero-btn hero-btn--ghost">
+                Explore Collections
+              </a>
+            )}
           </div>
-
         </div>
-
       </div>
+
+      <picture className="hero-models">
+        <source
+          type="image/avif"
+          srcSet={`${models560avif} 560w, ${models820avif} 820w, ${models1129avif} 1129w`}
+          sizes={MODELS_SIZES}
+        />
+        <img
+          src={models820}
+          srcSet={`${models560} 560w, ${models820} 820w, ${models1129} 1129w`}
+          sizes={MODELS_SIZES}
+          width="1129"
+          height="1297"
+          alt="Three friends wearing a dragon graphic tee, a burgundy fall LOVE hoodie and a sage green faith hoodie with a floral tote bag"
+          loading="eager"
+          fetchPriority="high"
+        />
+      </picture>
     </section>
   );
 }

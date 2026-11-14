@@ -1,122 +1,64 @@
-import "../../styles/collectionpage.css";
 import { Link } from "react-router-dom";
+import useProducts from "../../hooks/useProducts";
 import useSEO from "../../hooks/useSEO";
-import { PAGES } from "../../config/site.js";
+import ShopPage, { bannerPhotos } from "./ShopPage";
+import { COLLECTIONS, PAGES } from "../../config/site.js";
 import { breadcrumbJsonLd } from "../../utils/seoShared.js";
+import "../../styles/seo-extras.css";
 
-import hoodies from "../../assets/categories/hoodies.webp";
-import tshirts from "../../assets/categories/tshirts.webp";
-import sweatshirts from "../../assets/categories/sweatshirts.webp";
-import phonecases from "../../assets/categories/phonecases.webp";
-import mugs from "../../assets/categories/mugs.webp";
-import totebags from "../../assets/categories/totebags.webp";
+const CRUMBS = [
+  { name: "Home", path: "/" },
+  { name: "Collections", path: "/collections" },
+];
 
+// One photo each from three collections for the banner.
+const PHOTOS = [
+  ...bannerPhotos("hoodies", [2]),
+  ...bannerPhotos("mugs", [1]),
+  ...bannerPhotos("totebags", [2]),
+];
+
+// /collections: every product in the shop, with the category filter in the
+// sidebar (ShopPage). Links to each collection page stay at the bottom.
 function CollectionPage() {
-
   useSEO({
     title: PAGES.collections.title,
     description: PAGES.collections.description,
     path: PAGES.collections.path,
-    jsonLd: breadcrumbJsonLd([
-      { name: "Home", path: "/" },
-      { name: "Collections", path: "/collections" },
-    ]),
+    jsonLd: breadcrumbJsonLd(CRUMBS),
   });
 
-  const collections = [
-
-    {
-      title: "Hoodies",
-      image: hoodies,
-      link: "/hoodies",
-    },
-
-    {
-      title: "T-Shirts",
-      image: tshirts,
-      link: "/tshirts",
-    },
-
-    {
-      title: "Sweatshirts",
-      image: sweatshirts,
-      link: "/sweatshirts",
-    },
-
-    {
-      title: "Phone Cases",
-      image: phonecases,
-      link: "/phonecases",
-    },
-
-    {
-      title: "Mugs",
-      image: mugs,
-      link: "/mugs",
-    },
-
-    {
-      title: "Tote Bags",
-      image: totebags,
-      link: "/totebags",
-    },
-
-  ];
+  const { products, loading, error } = useProducts();
 
   return (
-
-    <section className="collection-page">
-
-      <div className="collection-header">
-
-        <span>SHOPCALMCANVAS</span>
-
-        <h1>Explore Our Collections</h1>
-
-        <p>
-          Discover beautifully designed products made
-          to bring creativity into your everyday life.
-        </p>
-
-      </div>
-
-      <div className="collection-grid">
-
-        {collections.map((item) => (
-
-          <Link
-            key={item.title}
-            to={item.link}
-            className="collection-card"
-          >
-
-            <img
-              src={item.image}
-              alt={`${item.title} by ShopCalmCanvas`}
-            />
-
-            <div className="collection-content">
-
-              <h2>{item.title}</h2>
-
-              <button>
-
-                Explore
-
-              </button>
-
-            </div>
-
-          </Link>
-
-        ))}
-
-      </div>
-
-    </section>
-
+    <ShopPage
+      crumbs={CRUMBS}
+      title="Our Products"
+      subtitle="Discover original-art hoodies, sweatshirts, tees, mugs, tote bags and phone cases that match your vibe."
+      photos={PHOTOS}
+      products={products}
+      loading={loading}
+      error={error}
+      emptyNote="New designs are on the way. Please check back soon."
+    >
+      <nav className="collection-links" aria-label="Collections">
+        <h2>Shop by collection</h2>
+        <ul>
+          {COLLECTIONS.map((item) => (
+            <li key={item.key}>
+              <Link to={item.path}>{item.nav}</Link>
+            </li>
+          ))}
+          <li>
+            <Link to="/christmas-gifts">Christmas Gifts</Link>
+          </li>
+          <li>
+            <Link to="/blog">Gift &amp; style ideas</Link>
+          </li>
+        </ul>
+      </nav>
+    </ShopPage>
   );
-
 }
 
 export default CollectionPage;

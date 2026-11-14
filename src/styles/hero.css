@@ -1,560 +1,269 @@
 /*=====================================================
-                FONTS
+   HOME HERO
+   Blurred blush room photo behind, heading on the left,
+   cut-out models on the right. Their heads rise a little
+   into the header and their shoes step into the section
+   below, so they seem to stand in front of the page.
+   Plain CSS: no animation script, nothing moves.
 =====================================================*/
 
-/*=====================================================
-                HERO SECTION
-=====================================================*/
-.hero {
-    --void:#150A0D;
-    --panel:#1D1013;
-    --paper:#F3ECE2;
-    --ink:#F6EEE7;
-    --ink-dim:#C9B5B8;
-    --rose:#D68496;
-    --amber:#D68496;
-
-    position: relative;
-
-    min-height: 100vh;
-
-    overflow: hidden;
-
-    background: var(--void);
-
-    display: flex;
-
-    flex-direction: column;
-
-    color: var(--ink);
-
-    font-family: 'Manrope', sans-serif;
-
-    padding-top: 200px;
-
-    box-sizing: border-box;
-}
-
-
-/*=====================================================
-                ATMOSPHERE
-=====================================================*/
-
-.hero-backdrop{
-
-    position:absolute;
-
-    inset:0;
-
-    z-index:0;
-
-    background:
-
-    radial-gradient(circle at 76% 18%,
-    rgba(242,200,121,.10),
-    transparent 40%),
-
-    radial-gradient(circle at 18% 82%,
-    rgba(224,143,160,.14),
-    transparent 46%),
-
-    linear-gradient(180deg,
-   
-    #053229 80%,
-    #01140a 100%);
-
-}
-
-
-.hero-sweep{
-
-    position:absolute;
-
-    top:-20%;
-
-    left:-30%;
-
-    width:60%;
-
-    height:140%;
-
-    background:linear-gradient(100deg,
-    transparent,
-    rgba(242,200,121,.10),
-    transparent);
-
-    mix-blend-mode:screen;
-
-    pointer-events:none;
-
-    z-index:1;
-
-    animation:sweepMove 9s ease-in-out infinite;
-
-}
-
-
-@keyframes sweepMove{
-
-    0%{ transform:translateX(-20%) rotate(12deg); }
-
-    50%{ transform:translateX(220%) rotate(12deg); }
-
-    100%{ transform:translateX(-20%) rotate(12deg); }
-
-}
-
-
-.hero-vignette{
-
-    position:absolute;
-
-    inset:0;
-
-    background:radial-gradient(ellipse at center,
-    transparent 40%,
-    rgba(0,0,0,.62) 100%);
-
-    pointer-events:none;
-
-    z-index:6;
-
-}
-
-
-.hero-grain{
-
-    position:absolute;
-
-    inset:0;
-
-    pointer-events:none;
-
-    z-index:7;
-
-    opacity:.05;
-
-    mix-blend-mode:overlay;
-
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-
-}
-
-
-/*=====================================================
-                SPINE LABEL
-=====================================================*/
-
-.hero-spine{
-
-    position:absolute;
-
-    left:22px;
-
-    top:50%;
-
-    transform:translateY(-50%) rotate(-90deg);
-
-    transform-origin:left center;
-
-    font-size:.78rem;
-
-    letter-spacing:6px;
-
-    text-transform:uppercase;
-
-    color:var(--ink-dim);
-
-    z-index:25;
-
-    white-space:nowrap;
-
-}
-
-
-/*=====================================================
-                STAGE
-=====================================================*/
-
-.hero-stage{
-
+.hero{
+    --hero-h:600px;
     position:relative;
-
-    flex:1;
-
-    display:flex;
-
-    align-items:center;
-
-    padding:0 6% 0 9%;
-
-    z-index:10;
-
-    min-height:78vh;
-
+    height:var(--hero-h);
+    padding:0;
+    color:#143C35;
+    /* Anything poking past the screen edge sideways is cut; the model can
+       still rise above and below the hero. */
+    overflow-x:clip;
+    background:#F6E4DF;
 }
 
-
-/*=====================================================
-                GALLERY — FILM STILLS
-=====================================================*/
-
-.hero-gallery{
-
+.hero-bg-img{
     position:absolute;
-
     inset:0;
-
-    pointer-events:none;
-
-}
-
-
-.film-still{
-
-    position:absolute;
-
-    top:var(--top);
-
-    left:var(--left);
-
-    width:var(--size);
-
-    transform:translate(-50%, -50%) rotate(var(--rotate));
-
-    will-change:transform;
-
-}
-
-
-.still-frame{
-
-    position:relative;
-
-    background:var(--paper);
-
-    padding:10px 10px 34px;
-
-    border-radius:3px;
-
-    box-shadow:
-
-    0 30px 60px rgba(0,0,0,.55),
-
-    0 10px 24px rgba(0,0,0,.35);
-
-}
-
-
-.still-frame img{
-
-    display:block;
-
     width:100%;
-
-    aspect-ratio:3/4;
-
+    height:100%;
     object-fit:cover;
-
+    object-position:50% 50%;
 }
 
-
-.still-caption{
-
+/* Light veil on the left so the text always reads clearly. */
+.hero::before{
+    content:"";
     position:absolute;
-
-    left:0;
-
-    right:0;
-
-    bottom:10px;
-
-    text-align:center;
-
-    font-family:'Courier New', monospace;
-
-    font-size:.62rem;
-
-    letter-spacing:1.5px;
-
-    text-transform:uppercase;
-
-    color:#2A1F22;
-
+    inset:0;
+    z-index:1;
+    background:linear-gradient(90deg,
+        rgba(253,245,242,.94) 0%,
+        rgba(253,245,242,.82) 38%,
+        rgba(253,245,242,.2) 62%,
+        rgba(253,245,242,0) 75%);
+    pointer-events:none;
 }
 
-
-/*=====================================================
-                COPY BLOCK
-=====================================================*/
+.hero-inner{
+    position:relative;
+    z-index:2;
+    width:min(1240px, 92%);
+    height:100%;
+    margin:0 auto;
+    display:flex;
+    align-items:center;
+}
 
 .hero-copy{
-
-    position:relative;
-
-    z-index:20;
-
     max-width:560px;
-
-    will-change:transform;
-
 }
 
+/*-------------------- text --------------------*/
+
+.hero-script{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    margin:0 0 12px;
+    padding-bottom:6px;
+    font-family:"Allura", "Cormorant Garamond", Georgia, serif;
+    font-size:clamp(1.9rem, 2.8vw, 2.5rem);
+    line-height:1.1;
+    color:#2E2A2A;
+    background:linear-gradient(90deg, #D67A9B, rgba(214,122,155,0)) no-repeat 0 100% / 80% 2px;
+}
+
+.hero-script svg{
+    flex:none;
+    color:#C45E80;
+}
 
 .hero-title{
-
-    font-family:'Bodoni Moda', serif;
-
-    font-size:clamp(2.8rem, 7.5vw, 7rem);
-
-    line-height:.95;
-
+    margin:0 0 18px;
+    font-family:"Cormorant Garamond", Georgia, serif;
     font-weight:600;
-
-    letter-spacing:-2px;
-
-    color:var(--ink);
-
+    font-size:clamp(2.6rem, 4.4vw, 4.3rem);
+    line-height:1.02;
+    letter-spacing:-.015em;
+    color:#143C35;
+    text-wrap:balance;
 }
 
-
-.title-accent{
-
+.hero-title-accent{
+    display:block;
+    margin-top:6px;
     font-style:italic;
-
-    font-weight:600;
-
-    background:linear-gradient(120deg, var(--amber), var(--rose));
-
-    -webkit-background-clip:text;
-
-    background-clip:text;
-
-    color:transparent;
-
+    font-weight:500;
+    color:#A8445F;
 }
 
-
-.hero-description{
-
-    margin-top:28px;
-
-    max-width:460px;
-
-    color:var(--ink-dim);
-
-    line-height:1.85;
-
-    font-size:1.02rem;
-
+/* The supporting line under the main heading. */
+.hero-subtitle{
+    margin:0 0 30px;
+    max-width:30em;
+    font-family:"Manrope", sans-serif;
+    font-weight:500;
+    font-size:clamp(1.02rem, 1.3vw, 1.18rem);
+    line-height:1.65;
+    color:#4A4242;
 }
 
-
-/*=====================================================
-                BUTTONS
-=====================================================*/
-
-.hero-buttons{
-
+.hero-actions{
     display:flex;
-
-    gap:18px;
-
-    margin-top:40px;
-
+    flex-wrap:wrap;
+    gap:14px;
 }
-
 
 .hero-btn{
-
-    text-decoration:none;
-
-    padding:17px 34px;
-
-    border-radius:100px;
-
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    min-height:54px;
+    padding:0 28px;
+    border-radius:14px;
     font-weight:700;
-
-    letter-spacing:.3px;
-
-    transition:transform .4s cubic-bezier(.2,.8,.2,1), box-shadow .4s, background .4s, color .4s, border-color .4s;
-
-    display:inline-block;
-
+    font-size:1rem;
+    text-decoration:none;
+    transition:background-color .25s ease, color .25s ease, transform .25s ease;
 }
 
-
-.primary-btn{
-
-    background:linear-gradient(135deg, var(--rose), #A85C6E);
-
+.hero-btn--primary{
+    background:#143C35;
     color:#fff;
-
-    box-shadow:
-
-    0 18px 40px rgba(224,143,160,.30),
-
-    inset 0 0 0 1px rgba(255,255,255,.06);
-
+    box-shadow:0 14px 30px rgba(20,60,53,.25);
 }
 
-
-.primary-btn:hover{
-
-    transform:translateY(-5px);
-
-    box-shadow:
-
-    0 24px 50px rgba(224,143,160,.4),
-
-    inset 0 0 0 1px rgba(255,255,255,.1);
-
+.hero-btn--primary:hover{
+    background:#0D2B26;
+    transform:translateY(-2px);
 }
 
-
-.secondary-btn{
-
-    color:var(--ink);
-
-    border:1px solid rgba(246,238,231,.2);
-
-    background:rgba(255,255,255,.03);
-
-    backdrop-filter:blur(14px);
-
+.hero-btn--ghost{
+    border:1.5px solid rgba(20,60,53,.6);
+    color:#143C35;
+    background:rgba(255,255,255,.6);
 }
 
-
-.secondary-btn:hover{
-
-    background:rgba(242,200,121,.1);
-
-    border-color:var(--amber);
-
-    color:var(--amber);
-
-    transform:translateY(-5px);
-
+.hero-btn--ghost:hover{
+    background:#fff;
+    border-color:#143C35;
+    transform:translateY(-2px);
 }
-
 
 .hero-btn:focus-visible{
-
-    outline:2px solid var(--amber);
-
+    outline:3px solid #D67A9B;
     outline-offset:3px;
+}
+
+/*-------------------- the models --------------------*/
+
+/* 28px taller at the top (their heads rise just into the header, below the
+   menu text) and 80px longer at the bottom (their shoes step into the next
+   section). While the page is at the very top, the header sits one layer
+   below them (.navbar--top in navbar.css); as soon as the page scrolls, the
+   header is on top again. */
+.hero-models{
+    display:block;
+    position:absolute;
+    z-index:1600;
+    top:-28px;
+    right:max(2%, calc((100vw - 1240px) / 2));
+    height:calc(100% + 108px);
+    aspect-ratio:1129 / 1297;
+    pointer-events:none;
+}
+
+.hero-models img{
+    display:block;
+    width:100%;
+    height:100%;
+    filter:drop-shadow(0 22px 24px rgba(70,35,40,.22));
+}
+
+/* Soft shadow on the floor under their shoes, for depth. */
+.hero-models::after{
+    content:"";
+    position:absolute;
+    left:6%;
+    right:2%;
+    bottom:-12px;
+    height:38px;
+    border-radius:50%;
+    background:radial-gradient(ellipse at center, rgba(70,35,40,.26), transparent 70%);
+    z-index:-1;
+}
+
+/*-------------------- smaller computers --------------------*/
+
+@media (max-width:1279px){
+    .hero{ --hero-h:560px; }
+    .hero-copy{ max-width:46%; }
+}
+
+/*-------------------- tablet and phone --------------------*/
+
+/* Text first, models underneath. Their shoes still step into the section
+   below; the header is not overlapped on small screens. */
+@media (max-width:1023px){
+
+    .hero{
+        height:auto;
+        padding:34px 0 0;
+    }
+
+    .hero::before{
+        background:linear-gradient(180deg,
+            rgba(253,245,242,.9) 0%,
+            rgba(253,245,242,.7) 45%,
+            rgba(253,245,242,.15) 100%);
+    }
+
+    .hero-inner{
+        height:auto;
+        display:block;
+        text-align:center;
+    }
+
+    .hero-copy{
+        max-width:none;
+    }
+
+    .hero-script{
+        justify-content:center;
+        font-size:1.7rem;
+        background-position:50% 100%;
+    }
+
+    .hero-subtitle{
+        margin:0 auto 24px;
+    }
+
+    .hero-actions{
+        justify-content:center;
+    }
+
+    .hero-models{
+        position:relative;
+        z-index:2;
+        top:auto;
+        right:auto;
+        height:auto;
+        width:min(440px, 92%);
+        margin:22px auto -60px;
+    }
+
+    .hero-models img{
+        height:auto;
+    }
 
 }
 
-
-/*=====================================================
-                REDUCED MOTION
-=====================================================*/
+@media (max-width:420px){
+    .hero-btn{
+        flex:1 1 100%;
+    }
+}
 
 @media (prefers-reduced-motion: reduce){
-
-    .hero-sweep{ animation:none; opacity:.6; }
-
-    .marquee-track{ animation:none; }
-
-}
-
-
-/*=====================================================
-                RESPONSIVE
-=====================================================*/
-
-@media(max-width:980px){
-
-.hero-spine{
-
-display:none;
-
-}
-
-.hero-stage{
-
-display:block;
-
-padding:110px 6% 40px;
-
-min-height:auto;
-
-}
-
-.hero-gallery{
-
-position:relative;
-
-inset:auto;
-
-display:flex;
-
-gap:16px;
-
-overflow-x:auto;
-
-padding-bottom:28px;
-
-margin-bottom:8px;
-
-pointer-events:auto;
-
-}
-
-.film-still{
-
-position:relative !important;
-
-top:auto !important;
-
-left:auto !important;
-
-transform:none !important;
-
-flex:0 0 auto;
-
-width:clamp(120px, 34vw, 160px) !important;
-
-filter:none !important;
-
-}
-
-.hero-copy{
-
-max-width:100%;
-
-}
-
-.hero-title{
-
-letter-spacing:-1px;
-
-}
-
-.hero-description{
-
-max-width:100%;
-
-}
-
-.hero-buttons{
-
-flex-wrap:wrap;
-
-}
-
-}
-
-
-@media(max-width:520px){
-
-.marquee-track span{
-
-font-size:.72rem;
-
-letter-spacing:2px;
-
-}
-
+    .hero-btn{ transition:none; }
+    .hero-btn:hover{ transform:none; }
 }

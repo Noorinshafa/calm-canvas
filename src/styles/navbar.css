@@ -104,7 +104,7 @@
 
   color: #67746B;
 
-  font-family: "Montserrat", sans-serif;
+  font-family: "Manrope", sans-serif;
 
   font-size: 0.68rem;
 
@@ -139,7 +139,7 @@
 
   text-decoration: none;
 
-  font-family: "Montserrat", sans-serif;
+  font-family: "Manrope", sans-serif;
 
   font-size: 1rem;
 
@@ -309,7 +309,7 @@
 
   outline: none;
 
-  font-family: "Montserrat", sans-serif;
+  font-family: "Manrope", sans-serif;
 
   font-size: 0.95rem;
 
@@ -391,7 +391,7 @@
 
   color: #294c38;
 
-  font-family: "Montserrat", sans-serif;
+  font-family: "Manrope", sans-serif;
 
   font-size: 0.9rem;
 
@@ -403,7 +403,7 @@
 
   color: #b27b42;
 
-  font-family: "Montserrat", sans-serif;
+  font-family: "Manrope", sans-serif;
 
   font-size: 0.82rem;
 }
@@ -417,7 +417,7 @@
 
   color: #707070;
 
-  font-family: "Montserrat", sans-serif;
+  font-family: "Manrope", sans-serif;
 }
 
 
@@ -509,7 +509,7 @@
 
   text-decoration: none;
 
-  font-family: "Montserrat", sans-serif;
+  font-family: "Manrope", sans-serif;
 
   font-size: 1.05rem;
 
@@ -637,3 +637,179 @@
 
 }
 
+/* ========================================
+   NEW MENU (Home, Shop, Collections, About,
+   Contact), cart count and home top bar
+======================================== */
+
+/* Five items fit from 1024px, so the menu button is only used below that. */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .navbar-links {
+    display: flex;
+    gap: 22px;
+  }
+  .navbar-menu-button {
+    display: none;
+  }
+}
+
+.navbar-links a,
+.nav-dd-toggle {
+  color: #2f3a36;
+  font-family: "Manrope", sans-serif;
+  font-size: 0.98rem;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+
+.navbar-links a.active {
+  color: #c45e80;
+}
+
+.navbar-links > a.active::after {
+  width: 100%;
+  background: #d67a9b;
+}
+
+.nav-dd {
+  position: relative;
+}
+
+.nav-dd-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 2px;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.nav-dd-toggle svg {
+  font-size: 0.95rem;
+  transition: transform 0.2s ease;
+}
+
+.nav-dd.is-open .nav-dd-toggle {
+  color: #c45e80;
+}
+
+.nav-dd.is-open .nav-dd-toggle svg {
+  transform: rotate(180deg);
+}
+
+/* The panel starts right under the button (padding-top bridges the gap so
+   the mouse can move into it without the menu closing). */
+.nav-dd-panel {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding-top: 10px;
+  z-index: 10;
+}
+
+.nav-dd-panel[hidden] {
+  display: none;
+}
+
+.nav-dd-panel ul {
+  list-style: none;
+  margin: 0;
+  padding: 10px;
+  min-width: 220px;
+  background: #ffffff;
+  border: 1px solid #f0e2de;
+  border-radius: 16px;
+  box-shadow: 0 22px 50px rgba(60, 30, 40, 0.14);
+}
+
+.nav-dd-panel a {
+  display: block;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.nav-dd-panel a::after {
+  display: none;
+}
+
+.nav-dd-panel a:hover,
+.nav-dd-panel a:focus-visible {
+  background: #fbefec;
+  color: #143c35;
+  transform: none;
+}
+
+/* Cart with item count. */
+.navbar-cart {
+  position: relative;
+}
+
+.navbar-cart-count {
+  position: absolute;
+  top: 4px;
+  right: 2px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: #d16e91;
+  color: #ffffff;
+  font-family: "Manrope", sans-serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  line-height: 18px;
+  text-align: center;
+}
+
+/* Home page: the thin top bar sits above the menu row, so the search panel
+   opens 40px lower. */
+.navbar--with-bar .navbar-search {
+  top: 132px;
+}
+
+@media (max-width: 1279px) {
+  .navbar--with-bar .navbar-search {
+    top: 122px;
+  }
+}
+
+/* Mobile menu groups (Shop, Collections). */
+.mobile-menu {
+  overflow-y: auto;
+}
+
+.mobile-menu-group {
+  padding: 12px 0 6px;
+  border-bottom: 1px solid rgba(41, 76, 56, 0.12);
+}
+
+.mobile-menu-heading {
+  margin: 4px 0 6px;
+  color: #c45e80;
+  font-family: "Manrope", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.mobile-menu-group a {
+  display: block;
+  padding: 10px 0;
+  color: #294c38;
+  text-decoration: none;
+  font-family: "Manrope", sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+/* Home page at the very top: one layer below the hero models (z-index 1600
+   in hero.css) so their heads can rise over the header's lower edge. */
+.navbar--top {
+  z-index: 1500;
+}

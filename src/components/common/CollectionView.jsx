@@ -2,9 +2,7 @@ import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import useProducts from "../../hooks/useProducts";
 import useSEO from "../../hooks/useSEO";
-import ProductCard from "../ui/ProductCard";
-import { ProductGridSkeleton } from "../ui/Skeletons";
-import Breadcrumbs from "./Breadcrumbs";
+import ShopPage, { bannerPhotos } from "./ShopPage";
 import { COLLECTIONS, getCollection } from "../../config/site.js";
 import {
   productInCollection,
@@ -14,7 +12,8 @@ import {
 
 import "../../styles/seo-extras.css";
 
-// One template for every category page (hoodies, T-shirts, sweatshirts, tote
+// One template for every category page (laid out by ShopPage: banner,
+// filters, sorting, product grid) (hoodies, T-shirts, sweatshirts, tote
 // bags, phone cases, mugs). The text for each lives in src/config/site.js --
 // the same place the build script reads, so the HTML search engines receive
 // matches what visitors see.
@@ -58,39 +57,25 @@ function CollectionView({ collectionKey }) {
   const otherCollections = COLLECTIONS.filter((item) => item.key !== collection.key);
 
   return (
-    <section className="collection-page">
-      <Breadcrumbs items={crumbs} />
-
-      <div className="collection-header">
-        <span>{collection.eyebrow}</span>
-
-        <h1>{collection.h1}</h1>
-
-        <p>{collection.tagline}</p>
-      </div>
-
-      {loading ? (
-        <ProductGridSkeleton count={10} />
-      ) : error ? (
-        <p className="collection-empty">
-          We couldn't load the products just now. Please refresh the page in a moment.
-        </p>
-      ) : items.length === 0 ? (
-        <p className="collection-empty">
+    <ShopPage
+      crumbs={crumbs}
+      title={collection.h1}
+      subtitle={collection.tagline}
+      photos={bannerPhotos(collection.key)}
+      products={items}
+      allProducts={products}
+      loading={loading}
+      error={error}
+      currentCollection={collection.key}
+      emptyNote={
+        <>
           New designs are on the way. Browse our{" "}
           <Link to="/collections">other collections</Link> in the meantime.
-        </p>
-      ) : (
-        <div className="products-grid">
-          {items.map((product, index) => (
-            <ProductCard key={product.id} {...product} priority={index < 4} />
-          ))}
-        </div>
-      )}
-
+        </>
+      }
+    >
       <div className="collection-intro">
         <h2>About our {collection.nav.toLowerCase()}</h2>
-
         {collection.intro.map((paragraph) => (
           <p key={paragraph.slice(0, 40)}>{paragraph}</p>
         ))}
@@ -98,20 +83,18 @@ function CollectionView({ collectionKey }) {
 
       <nav className="collection-links" aria-label="More collections">
         <h2>Keep browsing</h2>
-
         <ul>
           {otherCollections.map((item) => (
             <li key={item.key}>
               <Link to={item.path}>{item.nav}</Link>
             </li>
           ))}
-
           <li>
             <Link to="/blog">Gift &amp; style ideas</Link>
           </li>
         </ul>
       </nav>
-    </section>
+    </ShopPage>
   );
 }
 

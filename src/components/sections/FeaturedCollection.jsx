@@ -1,5 +1,4 @@
 import "../../styles/featuredcollection.css";
-import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 
 import model1 from "../../assets/hero/model1.webp";
@@ -14,13 +13,15 @@ const products = [
     image: model1,
     title: "Signature Hoodies",
     category: "Graphic Wear",
+    link: "/hoodies",
     className: "featured-card orbit-card orbit-left-top",
   },
   {
     id: 2,
     image: model2,
-    title: "Minimal Tees",
+    title: "Cozy Sweatshirts",
     category: "Premium Apparel",
+    link: "/sweatshirts",
     className: "featured-card orbit-card orbit-center",
   },
   {
@@ -28,6 +29,7 @@ const products = [
     image: model3,
     title: "Canvas Totes",
     category: "Accessories",
+    link: "/totebags",
     className: "featured-card orbit-card orbit-right-top",
   },
   {
@@ -35,6 +37,7 @@ const products = [
     image: model4,
     title: "Phone Cases",
     category: "Lifestyle",
+    link: "/phonecases",
     className: "featured-card orbit-card orbit-left-bottom",
   },
   {
@@ -42,19 +45,16 @@ const products = [
     image: model5,
     title: "Premium Mugs",
     category: "Home",
+    link: "/mugs",
     className: "featured-card orbit-card orbit-right-bottom",
   },
 ];
 
 function FeaturedCollection() {
   return (
-    <motion.section
-      className="featured-section"
-      initial={{ opacity: 0, y: 120 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 1 }}
-    >
+    // Plain HTML + CSS: the cards' gentle floating and hover effects live in
+    // featuredcollection.css, so no animation library is needed here.
+    <section className="featured-section">
       {/* ================= HEADING ================= */}
 
 <div className="featured-heading">
@@ -83,40 +83,11 @@ function FeaturedCollection() {
   <div className="orbit-ring ring-one"></div>
   <div className="orbit-ring ring-two"></div>
 
-  {products.map((product, index) => (
+  {products.map((product) => (
 
-    <motion.article
-
+    <article
       key={product.id}
-
       className={product.className}
-
-      initial={{
-        opacity: 0,
-        y: 120,
-        scale: .8
-      }}
-
-      whileInView={{
-        opacity: 1,
-        y: 0,
-        scale: 1
-      }}
-
-      viewport={{ once: true }}
-
-      transition={{
-        duration: .8,
-        delay: index * .15
-      }}
-
-      whileHover={{
-        y: -20,
-        rotateX: 10,
-        rotateY: -10,
-        scale: 1.05
-      }}
-
     >
 
       <div
@@ -132,7 +103,10 @@ function FeaturedCollection() {
 
           <h3>{product.title}</h3>
 
-          <Link to="/collections">
+          <Link
+            to={product.link}
+            aria-label={`Explore ${product.title}`}
+          >
             Explore →
           </Link>
 
@@ -140,7 +114,7 @@ function FeaturedCollection() {
 
       </div>
 
-    </motion.article>
+    </article>
 
   ))}
   </div>
@@ -167,7 +141,7 @@ function FeaturedCollection() {
 
 </div>
 
-</motion.section>
+</section>
 
   );
 }

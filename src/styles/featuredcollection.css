@@ -558,3 +558,16 @@
     }
 
 }
+
+/* =========================================================
+   REDUCED MOTION: no floating for visitors who asked their
+   device to limit movement.
+========================================================= */
+
+@media (prefers-reduced-motion: reduce){
+
+    .orbit-card{
+        animation:none;
+    }
+
+}

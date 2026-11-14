@@ -48,13 +48,13 @@
 
 .tg-section h2{
     margin:0;
-    font-family:"Bodoni Moda", "Cormorant Garamond", Georgia, serif;
+    font-family:"Cormorant Garamond", Georgia, serif;
     font-weight:600;
     line-height:1.08;
-    letter-spacing:-.015em;
+    letter-spacing:-.01em;
     text-wrap:balance;
     color:var(--tg-forest);
-    font-size:clamp(1.9rem, 6.4cqw, 3.3rem);
+    font-size:clamp(2.1rem, 7cqw, 3.7rem);
 }
 
 .tg-section h2 em{
@@ -149,9 +149,9 @@
 
 .tg-tx h3{
     margin:0;
-    font-family:"Bodoni Moda", "Cormorant Garamond", Georgia, serif;
+    font-family:"Cormorant Garamond", Georgia, serif;
     font-weight:600;
-    font-size:1.02rem;
+    font-size:1.2rem;
     line-height:1.25;
     color:var(--tg-forest);
     text-wrap:balance;

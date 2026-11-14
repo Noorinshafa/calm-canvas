@@ -95,6 +95,15 @@
                 CARD
 =====================================================*/
 
+.collection-card:focus-visible{
+
+    outline:3px solid #C34C66;
+
+    outline-offset:4px;
+
+}
+
+
 .collection-card{
 
     position:relative;
@@ -221,23 +230,11 @@
                 BUTTON
 =====================================================*/
 
-.collection-overlay button:focus-visible{
+.collection-cta{
 
-    outline:2px solid #fff;
-
-    outline-offset:2px;
-
-}
-
-.collection-overlay button{
+    display:inline-block;
 
     width:max-content;
-
-    border:none;
-
-    outline:none;
-
-    cursor:pointer;
 
     padding:15px 28px;
 
@@ -258,7 +255,7 @@
 }
 
 
-.collection-card:hover .collection-overlay button{
+.collection-card:hover .collection-cta{
 
     background:#C34C66;
 
