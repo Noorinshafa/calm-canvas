@@ -11,7 +11,7 @@
     --h-forest:#143C35;
     --h-forest-deep:#0F302A;
     --h-rose:#D67A9B;
-    --h-rose-strong:#D16E91;
+    --h-rose-strong:#C54774;
     --h-blush:#FCF6F4;
     --h-blush-band:#FAEDEA;
     --h-card:#FFFFFF;
@@ -172,7 +172,7 @@
 }
 
 .home-btn--pink:hover{
-    background:#B85A7C;
+    background:#AB3A63;
 }
 
 /*-------------------- trust band --------------------*/
@@ -613,9 +613,9 @@
     letter-spacing:.02em;
 }
 
-.home-card-badge--rose{ background:#D2647F; }
-.home-card-badge--teal{ background:#2F8676; }
-.home-card-badge--gold{ background:#9C6E2E; }
+.home-card-badge--rose{ background:#C94667; }
+.home-card-badge--teal{ background:#2E8273; }
+.home-card-badge--gold{ background:#986B2D; }
 .home-card-badge--red{ background:#A42F44; }
 
 .home-card-body{

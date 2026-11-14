@@ -371,16 +371,39 @@ async function prerender() {
     // No built files (for example when testing the page generator alone).
   }
 
-  // The home page's main photo (the three models at the top) is only found by
-  // the browser once the app has started. Tell it about the photo in the home
-  // page's HTML instead, so it downloads at the same time as the app's code.
-  // Only the AVIF copies are named: browsers that cannot show AVIF ignore the
-  // hint and load the WebP fallback as usual. The sizes must match
-  // MODELS_SIZES in src/components/sections/Hero.jsx.
+  // The home page's top photos are only found by the browser once the app
+  // has started. Tell it about them in the home page's HTML instead, so they
+  // download at the same time as the app's code.
+  // 1. The soft room photo behind the hero. It covers the largest area of the
+  //    first screen, so it is the page's "Largest Contentful Paint" on phones
+  //    and computers: it gets top priority. The sizes must match BG_SIZES in
+  //    src/components/sections/Hero.jsx.
+  // 2. The three models. Only on computers, where they stand beside the text;
+  //    on phones they sit lower down and must not slow down the app's code on
+  //    a slow connection. Only the AVIF copies are named: browsers that cannot
+  //    show AVIF ignore the hint and load the WebP fallback as usual. The sizes
+  //    must match MODELS_SIZES in Hero.jsx.
   const homePreloadLinks = [];
 
   try {
     const assetFiles = await readdir(path.join(DIST, "assets"));
+    const bg = [960, 1672]
+      .map((width) => {
+        const file = assetFiles.find((name) =>
+          new RegExp(`^hero-bg-${width}-[\\w-]+\\.webp$`).test(name)
+        );
+        return file ? `/assets/${file} ${width}w` : null;
+      })
+      .filter(Boolean);
+
+    if (bg.length === 2) {
+      homePreloadLinks.push(
+        `<link rel="preload" as="image" type="image/webp" fetchpriority="high" imagesrcset="${esc(
+          bg.join(", ")
+        )}" imagesizes="100vw" />`
+      );
+    }
+
     const avif = [560, 820, 1129]
       .map((width) => {
         const file = assetFiles.find((name) =>
@@ -392,9 +415,9 @@ async function prerender() {
 
     if (avif.length === 3) {
       homePreloadLinks.push(
-        `<link rel="preload" as="image" type="image/avif" fetchpriority="high" imagesrcset="${esc(
+        `<link rel="preload" as="image" type="image/avif" media="(min-width: 1024px)" imagesrcset="${esc(
           avif.join(", ")
-        )}" imagesizes="${esc("(max-width: 1023px) min(92vw, 440px), 660px")}" />`
+        )}" imagesizes="660px" />`
       );
     }
   } catch {

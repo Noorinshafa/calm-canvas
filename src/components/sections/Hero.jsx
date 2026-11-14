@@ -19,8 +19,9 @@ import models820avif from "../../assets/home/models-820.avif";
 import models1129avif from "../../assets/home/models-1129.avif";
 
 // Shared with scripts/postbuild.mjs, which tells the browser to start loading
-// this photo from the home page HTML (before the app has even started).
+// these photos from the home page HTML (before the app has even started).
 export const MODELS_SIZES = "(max-width: 1023px) min(92vw, 440px), 660px";
+export const BG_SIZES = "100vw";
 
 // The handwritten lines on the home page use the "Allura" script font. Only
 // the letters in these lines are downloaded (Google Fonts "text=" option, a
@@ -54,12 +55,12 @@ function Hero({ festive = false }) {
         className="hero-bg-img"
         src={bg1672}
         srcSet={`${bg960} 960w, ${bg1672} 1672w`}
-        sizes="100vw"
+        sizes={BG_SIZES}
         width="1672"
         height="941"
         alt=""
-        decoding="async"
-        fetchPriority="low"
+        // Largest picture on the first screen (the page's LCP): top priority.
+        fetchPriority="high"
       />
 
       <div className="hero-inner">
