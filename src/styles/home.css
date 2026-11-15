@@ -375,8 +375,8 @@
     scroll-snap-align:start;
 }
 
-/* White card: full (uncropped) product photo, name, "Shop Now" button and a
-   green line along the bottom edge. */
+/* White card: full (uncropped) product photo, name and "Shop Now" button,
+   framed by a thin forest-green border (same as the product cards). */
 .home-coll-card{
     display:flex;
     flex-direction:column;
@@ -385,7 +385,7 @@
     padding:10px 10px 0;
     border-radius:22px;
     background:#FFFFFF;
-    border-bottom:5px solid var(--h-forest);
+    border:2px solid var(--h-forest);
     box-shadow:0 14px 30px rgba(120,60,75,.13);
     text-decoration:none;
     color:inherit;
@@ -424,23 +424,6 @@
     transform:scale(1.05);
 }
 
-/* Small round icon in the photo's corner. */
-.home-coll-icon{
-    position:absolute;
-    left:10px;
-    bottom:10px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    width:34px;
-    height:34px;
-    border-radius:50%;
-    background:rgba(255,255,255,.92);
-    color:#2F2A2A;
-    box-shadow:0 4px 10px rgba(0,0,0,.10);
-}
-
-.home-coll-icon svg{ width:18px; height:18px; }
 
 .home-coll-body{
     display:flex;
@@ -547,11 +530,8 @@
     .home-coll-card{
         padding:7px 7px 0;
         border-radius:18px;
-        border-bottom-width:4px;
     }
     .home-coll-media{ border-radius:13px; }
-    .home-coll-icon{ width:28px; height:28px; left:7px; bottom:7px; }
-    .home-coll-icon svg{ width:15px; height:15px; }
     .home-coll-body{ gap:10px; padding:11px 4px 14px; }
     .home-coll-name{ font-size:1.15rem; }
     .home-coll-shop{

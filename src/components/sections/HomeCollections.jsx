@@ -20,33 +20,14 @@ import phonecases620 from "../../assets/home/cat-phonecases-620.webp";
 import decorFlowers from "../../assets/home/decor-flowers.webp";
 import decorLeaves from "../../assets/home/decor-leaves.webp";
 
-// Small line icons for the round badges (drawn here so no icon library is
-// needed for shapes it does not have, such as a hoodie or a sweater).
-const ICONS = {
-  hoodie: "M9.2 4.6C9.6 3.1 10.7 2.2 12 2.2s2.4.9 2.8 2.4M9.2 4.6 5 6.6 3.5 18.5H6l1.2-8.2V20h9.6v-9.7l1.2 8.2h2.5L19 6.6l-4.2-2c-.4 1.7-1.5 2.8-2.8 2.8S9.6 6.3 9.2 4.6zM9.5 14.5h5v3h-5z",
-  tee: "M8.5 4 4 6.5l1.8 4 2.2-1V20h8V9.5l2.2 1 1.8-4L15.5 4c-.6 1.4-1.9 2.2-3.5 2.2S9.1 5.4 8.5 4z",
-  sweater: "M9 4.5 5 6.2 3.5 18.5H6l1.2-8.2V20h9.6v-9.7l1.2 8.2h2.5L19 6.2l-4-1.7c-.5 1.2-1.7 2-3 2s-2.5-.8-3-2zM7.2 20h9.6",
-  mug: "M5 7h11v8a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4V7zM16 9h1.5a2.5 2.5 0 0 1 0 5H16",
-  tote: "M5 8h14l-1.2 12H6.2L5 8zM9 10V6.5a3 3 0 0 1 6 0V10",
-  phone: "M8 2.8h8a1.6 1.6 0 0 1 1.6 1.6v15.2a1.6 1.6 0 0 1-1.6 1.6H8a1.6 1.6 0 0 1-1.6-1.6V4.4A1.6 1.6 0 0 1 8 2.8zM11 18h2",
-};
-
 const COLLECTIONS = [
-  { name: "Hoodies", link: "/hoodies", icon: "hoodie", images: [hoodies400, hoodies620], alt: "Forest green hoodie with an \"It's okay to take a break\" print" },
-  { name: "Sweatshirts", link: "/sweatshirts", icon: "sweater", images: [sweatshirts400, sweatshirts620], alt: "Pink sweatshirt with a floral line-art print" },
-  { name: "T-Shirts", link: "/tshirts", icon: "tee", images: [tshirts400, tshirts620], alt: "Pink T-shirt with a moon and hand line-art print" },
-  { name: "Mugs", link: "/mugs", icon: "mug", images: [mugs400, mugs620], alt: "Cream mug with a wildflower print" },
-  { name: "Tote Bags", link: "/totebags", icon: "tote", images: [totebags400, totebags620], alt: "Canvas tote bag with a leaf and pink circle print" },
-  { name: "Phone Cases", link: "/phonecases", icon: "phone", images: [phonecases400, phonecases620], alt: "Cream phone case with a pink wildflower print" },
+  { name: "Hoodies", link: "/hoodies", images: [hoodies400, hoodies620], alt: "Forest green hoodie with an \"It's okay to take a break\" print" },
+  { name: "Sweatshirts", link: "/sweatshirts", images: [sweatshirts400, sweatshirts620], alt: "Pink sweatshirt with a floral line-art print" },
+  { name: "T-Shirts", link: "/tshirts", images: [tshirts400, tshirts620], alt: "Pink T-shirt with a moon and hand line-art print" },
+  { name: "Mugs", link: "/mugs", images: [mugs400, mugs620], alt: "Cream mug with a wildflower print" },
+  { name: "Tote Bags", link: "/totebags", images: [totebags400, totebags620], alt: "Canvas tote bag with a leaf and pink circle print" },
+  { name: "Phone Cases", link: "/phonecases", images: [phonecases400, phonecases620], alt: "Cream phone case with a pink wildflower print" },
 ];
-
-function Icon({ name }) {
-  return (
-    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d={ICONS[name]} />
-    </svg>
-  );
-}
 
 function Arrow({ left = false }) {
   return (
@@ -116,7 +97,7 @@ function HomeCollections() {
           )}
 
           <ul className="home-collections-row" ref={rowRef}>
-            {COLLECTIONS.map(({ name, link, icon, images: [small, large], alt }) => (
+            {COLLECTIONS.map(({ name, link, images: [small, large], alt }) => (
               <li key={link}>
                 <Link to={link} className="home-coll-card">
                   <span className="home-coll-media">
@@ -130,9 +111,6 @@ function HomeCollections() {
                       loading="lazy"
                       decoding="async"
                     />
-                    <span className="home-coll-icon">
-                      <Icon name={icon} />
-                    </span>
                   </span>
                   <span className="home-coll-body">
                     <span className="home-coll-name">{name}</span>
