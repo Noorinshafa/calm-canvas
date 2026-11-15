@@ -4,8 +4,10 @@ import {
   productPath,
   cleanProductName,
   findCollectionForProduct,
+  formatPrice,
 } from "../../utils/seoShared.js";
 import OptimizedImage from "./OptimizedImage";
+import { priceTag } from "../../content/sale.js";
 
 // How wide a card is on screen in the shop grids (2 across on phones, 3 on
 // tablets, about 290px wide next to the filter sidebar on computers).
@@ -18,8 +20,9 @@ const CARD_WIDTHS = [384, 768];
 // If `sizes` says the photo is smaller than it really is, the browser
 // downloads a copy that is too small and the photo looks blurry.
 //
-// The small label on the photo is the product type (Hoodie, Mug...). There are
-// no "bestseller", rating or sale labels: the shop has no data behind them.
+// There are no type, "bestseller" or rating labels on the photo. A
+// "% OFF" tag appears only for real price reductions, and low-priced
+// sweatshirts say "Special Price" (src/content/sale.js).
 // The whole card is one link to the product page, where the size and colour
 // are chosen before adding to the cart.
 function ProductCard({
@@ -28,6 +31,7 @@ function ProductCard({
   image,
   title,
   price,
+  priceValue,
   blueprintTitle,
   blueprint_id,
   priority = false,
@@ -36,8 +40,8 @@ function ProductCard({
 }) {
   const href = productPath({ id, slug });
   const name = cleanProductName(title);
-  const noun = findCollectionForProduct({ blueprintTitle, blueprint_id, title })?.noun || "";
-  const type = noun ? noun.charAt(0).toUpperCase() + noun.slice(1) : "";
+  const collection = findCollectionForProduct({ blueprintTitle, blueprint_id, title });
+  const tag = priceTag(slug, priceValue, collection?.key);
 
   return (
     <article className="pcard">
@@ -54,12 +58,20 @@ function ProductCard({
               height="600"
             />
           )}
-          {type && <span className="pcard-badge">{type}</span>}
+          {tag && <span className="sale-tag">{tag.label}</span>}
         </span>
         <span className="pcard-body">
           <h3 className="pcard-name">{name}</h3>
           <span className="pcard-foot">
-            <span className="pcard-price">{price}</span>
+            <span className="pcard-price">
+              {price}
+              {tag?.wasPrice && (
+                <s className="price-was">
+                  <span className="sr-only">Was </span>
+                  {formatPrice(tag.wasPrice)}
+                </s>
+              )}
+            </span>
             <span className="pcard-cta" aria-hidden="true">
               <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M6 7h12l-1 13H7L6 7zM9 7V5.5a3 3 0 0 1 6 0V7" />

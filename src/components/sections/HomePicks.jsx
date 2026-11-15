@@ -7,10 +7,12 @@ import { COLLECTIONS } from "../../config/site.js";
 import {
   cleanProductName,
   findCollectionForProduct,
+  formatPrice,
   productInCollection,
   productPath,
 } from "../../utils/seoShared.js";
 import { CHRISTMAS_PICKS } from "../../content/christmas.js";
+import { priceTag } from "../../content/sale.js";
 
 const COUNT = 8;
 const CHRISTMAS_HOME_SLUGS = new Set(
@@ -48,15 +50,17 @@ export function pickMix(products, { skipSlugs = new Set(), count = COUNT } = {})
   return chosen;
 }
 
-export function typeLabel(product) {
-  const noun = findCollectionForProduct(product)?.noun || "";
-  return noun ? noun.charAt(0).toUpperCase() + noun.slice(1) : "";
-}
-
-// One product card (home page style): photo with a small label, name, real
-// price and a "Shop Now" pill. The whole card is one link to the product.
-export function HomeProductCard({ product, badge, tone = "rose" }) {
+// One product card (home page style): photo, name, real price and a
+// "Shop Now" pill. The whole card is one link to the product.
+export function HomeProductCard({ product }) {
   const name = cleanProductName(product.title);
+  // "% OFF" only for real price reductions; "Special Price" for low-priced
+  // sweatshirts (see src/content/sale.js).
+  const tag = priceTag(
+    product.slug,
+    product.priceValue,
+    findCollectionForProduct(product)?.key
+  );
   return (
     <Link to={productPath(product)} className="home-card">
       <span className="home-card-media">
@@ -68,12 +72,20 @@ export function HomeProductCard({ product, badge, tone = "rose" }) {
           width="600"
           height="600"
         />
-        {badge && <span className={`home-card-badge home-card-badge--${tone}`}>{badge}</span>}
+        {tag && <span className="sale-tag">{tag.label}</span>}
       </span>
       <span className="home-card-body">
         <h3 className="home-card-name">{name}</h3>
         <span className="home-card-foot">
-          <span className="home-card-price">{product.price}</span>
+          <span className="home-card-price">
+            {product.price}
+            {tag?.wasPrice && (
+              <s className="price-was">
+                <span className="sr-only">Was </span>
+                {formatPrice(tag.wasPrice)}
+              </s>
+            )}
+          </span>
           <span className="home-card-cta" aria-hidden="true">
             Shop Now
           </span>
@@ -82,8 +94,6 @@ export function HomeProductCard({ product, badge, tone = "rose" }) {
     </Link>
   );
 }
-
-const TONES = ["rose", "teal", "rose", "gold"];
 
 function HomePicks({ festive = false }) {
   const { products, loading, error } = useProducts();
@@ -110,13 +120,9 @@ function HomePicks({ festive = false }) {
         <ProductGridSkeleton count={COUNT} className="home-picks-grid" />
       ) : (
         <ul className="home-picks-grid">
-          {picks.map((product, index) => (
+          {picks.map((product) => (
             <li key={product.id}>
-              <HomeProductCard
-                product={product}
-                badge={typeLabel(product)}
-                tone={TONES[index % TONES.length]}
-              />
+              <HomeProductCard product={product} />
             </li>
           ))}
         </ul>
@@ -151,13 +157,9 @@ export function HomeAlsoLike({ festive = false }) {
         <ProductGridSkeleton count={COUNT} className="home-picks-grid" />
       ) : (
         <ul className="home-picks-grid">
-          {picks.map((product, index) => (
+          {picks.map((product) => (
             <li key={product.id}>
-              <HomeProductCard
-                product={product}
-                badge={typeLabel(product)}
-                tone={TONES[(index + 1) % TONES.length]}
-              />
+              <HomeProductCard product={product} />
             </li>
           ))}
         </ul>

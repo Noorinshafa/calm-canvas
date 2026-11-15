@@ -98,7 +98,7 @@ function HomeChristmas() {
         <ul className="home-picks-grid">
           {picks.map((product) => (
             <li key={product.id}>
-              <HomeProductCard product={product} badge="Christmas Pick" tone="red" />
+              <HomeProductCard product={product} />
             </li>
           ))}
         </ul>

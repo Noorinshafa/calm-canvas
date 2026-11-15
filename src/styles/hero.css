@@ -149,6 +149,10 @@
     transform:translateY(-2px);
 }
 
+.hero-btn-short{
+    display:none;
+}
+
 .hero-btn:focus-visible{
     outline:3px solid #D67A9B;
     outline-offset:3px;
@@ -201,20 +205,28 @@
 
 /*-------------------- tablet and phone --------------------*/
 
-/* Text first, models underneath. Their shoes still step into the section
+/* Text first, models underneath, over the tall pastel room photo (arch and
+   plants). Sized so that on a phone the first screen shows the heading, both
+   buttons and the models' faces. Their shoes still step into the section
    below; the header is not overlapped on small screens. */
 @media (max-width:1023px){
 
     .hero{
         height:auto;
-        padding:34px 0 0;
+        padding:28px 0 0;
+        background:#F4E9E4;
     }
 
+    .hero-bg-img{
+        object-position:50% 30%;
+    }
+
+    /* A soft light wash only behind the text, so the photo stays visible. */
     .hero::before{
         background:linear-gradient(180deg,
-            rgba(253,245,242,.9) 0%,
-            rgba(253,245,242,.7) 45%,
-            rgba(253,245,242,.15) 100%);
+            rgba(253,247,244,.82) 0%,
+            rgba(253,247,244,.62) 34%,
+            rgba(253,247,244,0) 58%);
     }
 
     .hero-inner{
@@ -229,16 +241,45 @@
 
     .hero-script{
         justify-content:center;
-        font-size:1.7rem;
+        margin-bottom:10px;
+        font-size:1.55rem;
         background-position:50% 100%;
     }
 
-    .hero-subtitle{
-        margin:0 auto 24px;
+    .hero-title{
+        margin-bottom:14px;
+        font-size:clamp(2.2rem, 9.6vw, 3.2rem);
+        line-height:1.04;
     }
 
+    .hero-title-accent{
+        margin-top:4px;
+    }
+
+    .hero-subtitle{
+        max-width:24em;
+        margin:0 auto 22px;
+        font-size:.98rem;
+        line-height:1.55;
+    }
+
+    /* Both buttons side by side. */
     .hero-actions{
         justify-content:center;
+        flex-wrap:nowrap;
+        gap:10px;
+        max-width:440px;
+        margin:0 auto;
+    }
+
+    .hero-btn{
+        flex:1 1 0;
+        min-width:0;
+        min-height:50px;
+        padding:0 14px;
+        border-radius:12px;
+        font-size:.95rem;
+        white-space:nowrap;
     }
 
     .hero-models{
@@ -247,8 +288,8 @@
         top:auto;
         right:auto;
         height:auto;
-        width:min(440px, 92%);
-        margin:22px auto -60px;
+        width:min(420px, 96%);
+        margin:18px auto -56px;
     }
 
     .hero-models img{
@@ -257,10 +298,15 @@
 
 }
 
-@media (max-width:420px){
-    .hero-btn{
-        flex:1 1 100%;
-    }
+@media (max-width:520px){
+    .hero-btn-long{ display:none; }
+    .hero-btn-short{ display:inline; }
+}
+
+/* Very narrow screens (or very large phone text): stack the buttons. */
+@media (max-width:340px){
+    .hero-actions{ flex-wrap:wrap; }
+    .hero-btn{ flex:1 1 100%; }
 }
 
 @media (prefers-reduced-motion: reduce){

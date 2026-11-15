@@ -123,7 +123,7 @@ function HomeCollections() {
                     <img
                       src={large}
                       srcSet={`${small} 400w, ${large} 620w`}
-                      sizes="(max-width: 640px) 70vw, 260px"
+                      sizes="(max-width: 640px) 46vw, 260px"
                       alt={alt}
                       width="620"
                       height="620"

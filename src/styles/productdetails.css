@@ -73,6 +73,11 @@
 
     align-items:center;
 
+    /* While a newly picked photo loads, its thumbnail (already downloaded)
+       is shown here, so the gallery reacts instantly. */
+    background-position:center;
+    background-repeat:no-repeat;
+    background-size:contain;
 }
 
 .details-image-img{
@@ -87,6 +92,10 @@
 
     transition:.35s;
 
+}
+
+.details-image-img.is-loading{
+    opacity:0;
 }
 
 /*==================================================
@@ -140,6 +149,20 @@
 
 }
 
+.thumbnail-btn{
+    padding:0;
+    border:0;
+    background:none;
+    border-radius:20px;
+    cursor:pointer;
+}
+
+.thumbnail-btn:focus-visible{
+    outline:3px solid #d89caf;
+    outline-offset:3px;
+}
+
+.thumbnail-btn.active .thumbnail,
 .thumbnail.active{
 
     border-color:#5f4446;
@@ -863,4 +886,23 @@
 
     font-size: 0.95rem;
 
+}
+
+/*==================================================
+    COLOUR / SIZE UNDER THE PHOTOS (wide screens)
+    On screens from 1101px the dropdowns sit in the
+    photo panel, side by side, filling the space under
+    the thumbnails (see useWideLayout in ProductDetails).
+==================================================*/
+.details-image .product-options{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
+    gap:0 22px;
+    margin-top:30px;
+    padding-top:22px;
+    border-top:1px solid #efe5e1;
+}
+
+.details-image .option-group{
+    margin:0 0 4px;
 }

@@ -16,6 +16,7 @@ import {
 } from "../../utils/seoShared.js";
 import { PRODUCT_COPY } from "../../content/productCopy.js";
 import { themesForProduct } from "../../content/themes.js";
+import { priceTag } from "../../content/sale.js";
 import {
   buildOptionModel,
   findVariant,
@@ -23,6 +24,11 @@ import {
   nextSelection,
 } from "../../utils/variantOptions.js";
 import { trackAddToCart, trackViewItem } from "../../utils/analytics";
+import {
+  canOptimize,
+  optimizedImageUrl,
+  optimizedSrcSet,
+} from "../../utils/imageUrl.js";
 import toast from "react-hot-toast";
 
 import "../../styles/productdetails.css";
@@ -40,6 +46,77 @@ import Breadcrumbs from "../common/Breadcrumbs";
 const RELATED_SIZES =
   "(max-width: 768px) calc(100vw - 50px), (max-width: 1100px) 43vw, 22vw";
 const RELATED_WIDTHS = [384, 768, 1024];
+
+// ---------------------------------------------------------------------------
+// Photo gallery speed
+//
+// The big photo uses these widths/sizes (they must match the main photo in
+// scripts/postbuild.mjs). Clicking a thumbnail used to start downloading the
+// big copy only then, so the old photo stayed on screen for a moment. Now:
+//  1. after the page has loaded and the browser is idle, the big copies of
+//     the current colour's photos are fetched quietly one at a time (skipped
+//     when the visitor's phone asks to save data);
+//  2. pointing at / touching / focusing a thumbnail fetches its big copy
+//     straight away;
+//  3. on click, the (already downloaded) thumbnail is shown at once in the
+//     big frame and the sharp copy fades in as soon as it is ready -- usually
+//     instantly, because of 1 and 2.
+// ---------------------------------------------------------------------------
+const MAIN_WIDTHS = [768, 1024];
+const MAIN_SIZES = "(max-width: 900px) 100vw, 50vw";
+const THUMB_WIDTH = 256;
+const MAX_WARM_PHOTOS = 8;
+
+const resizable = (src) => !import.meta.env.DEV && canOptimize(src);
+
+// The address of the small copy the thumbnail shows (already in the cache).
+function thumbUrl(src) {
+  return resizable(src) ? optimizedImageUrl(src, THUMB_WIDTH) : src;
+}
+
+// Downloads the big copy exactly as the main photo would pick it (same
+// srcset and sizes), so the browser cache has it when the photo is shown.
+const warmedPhotos = new Map();
+function warmPhoto(src) {
+  if (!src || typeof window === "undefined") return null;
+  if (warmedPhotos.has(src)) return warmedPhotos.get(src);
+
+  const img = new window.Image();
+  img.decoding = "async";
+  if (resizable(src)) {
+    img.sizes = MAIN_SIZES;
+    img.srcset = optimizedSrcSet(src, MAIN_WIDTHS);
+    img.src = optimizedImageUrl(src, MAIN_WIDTHS[0]);
+  } else {
+    img.src = src;
+  }
+  warmedPhotos.set(src, img);
+  return img;
+}
+
+function saveDataWanted() {
+  const connection = typeof navigator !== "undefined" ? navigator.connection : null;
+  return Boolean(connection && (connection.saveData || /2g/.test(connection.effectiveType || "")));
+}
+
+// Colour and size choices sit under the photos on wide screens (two-column
+// layout, from 1101px), and next to the price on phones and tablets.
+const WIDE_LAYOUT = "(min-width: 1101px)";
+function useWideLayout() {
+  const [wide, setWide] = useState(
+    () => typeof window !== "undefined" && window.matchMedia(WIDE_LAYOUT).matches
+  );
+
+  useEffect(() => {
+    const query = window.matchMedia(WIDE_LAYOUT);
+    const update = () => setWide(query.matches);
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
+
+  return wide;
+}
 
 // The pre-built HTML for a product page (see scripts/postbuild.mjs) records
 // which product it is on the #root element. Reading it lets a page opened
@@ -192,6 +269,10 @@ function ProductDetails() {
   }, [productId]);
 
   const [selectedImage, setSelectedImage] = useState("");
+  // The photo the shopper just switched to, while its sharp copy is loading
+  // (its thumbnail is shown in the big frame meanwhile).
+  const [pendingPhoto, setPendingPhoto] = useState("");
+  const wideLayout = useWideLayout();
   const [quantity, setQuantity] = useState(1);
   // One entry per dropdown (colour, size, phone model, finish...), holding the
   // shopper's current choice for that dropdown.
@@ -395,6 +476,56 @@ function ProductDetails() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [product]);
 
+  // Quietly download the big copies of the current colour's photos once the
+  // page has finished loading and the browser is idle, one at a time, so
+  // clicking a thumbnail shows the photo instantly. (Each copy is resized
+  // once by Vercel and then cached, see vercel.json "images".)
+  const gallerySources = galleryImages.map((image) => image.src).join("|");
+  useEffect(() => {
+    if (!gallerySources || saveDataWanted()) return undefined;
+
+    const queue = gallerySources.split("|").slice(0, MAX_WARM_PHOTOS);
+    let cancelled = false;
+    let idleHandle;
+
+    const next = () => {
+      if (cancelled) return;
+      const src = queue.shift();
+      if (!src) return;
+      const img = warmPhoto(src);
+      if (!img || (img.complete && img.naturalWidth > 0)) {
+        next();
+      } else {
+        img.addEventListener("load", next, { once: true });
+        img.addEventListener("error", next, { once: true });
+      }
+    };
+
+    const start = () => {
+      if ("requestIdleCallback" in window) {
+        idleHandle = window.requestIdleCallback(next, { timeout: 2500 });
+      } else {
+        idleHandle = window.setTimeout(next, 1200);
+      }
+    };
+
+    if (document.readyState === "complete") start();
+    else window.addEventListener("load", start, { once: true });
+
+    return () => {
+      cancelled = true;
+      window.removeEventListener("load", start);
+      if ("cancelIdleCallback" in window) window.cancelIdleCallback(idleHandle);
+      else window.clearTimeout(idleHandle);
+    };
+  }, [gallerySources]);
+
+  // When the sharp copy of the photo just picked has loaded, drop the
+  // thumbnail placeholder.
+  function handleMainLoaded() {
+    setPendingPhoto("");
+  }
+
   if (!productId) {
     if (catalogLoading) {
       return <ProductPageSkeleton />;
@@ -464,6 +595,39 @@ function ProductDetails() {
   // same links the pre-built page contains.
   const themes = product ? themesForProduct(product) : [];
 
+  // "% OFF" for real price reductions only, "Special Price" for low-priced
+  // sweatshirts (src/content/sale.js), from the price of the size/colour
+  // chosen right now.
+  const tag = product
+    ? priceTag(productSlug, activePriceValue, seo?.collection?.key)
+    : null;
+
+  // The colour / size / model dropdowns. Rendered once: under the photos on
+  // wide screens, above the quantity on phones and tablets (useWideLayout).
+  const optionsBlock =
+    product && hasVariants && optionModel.groups.length ? (
+      <div className="product-options">
+        {optionModel.groups.map((group, groupIndex) => (
+          <div className="option-group" key={`${group.label}-${groupIndex}`}>
+            <h4>Choose {group.label}</h4>
+
+            <select
+              className="product-select"
+              value={selection[groupIndex] ?? ""}
+              onChange={(e) => handleOptionChange(groupIndex, e.target.value)}
+              aria-label={`Choose ${group.label.toLowerCase()}`}
+            >
+              {group.values.map((value) => (
+                <option key={value} value={value}>
+                  {value}
+                </option>
+              ))}
+            </select>
+          </div>
+        ))}
+      </div>
+    ) : null;
+
   function handleOptionChange(groupIndex, value) {
     const next = nextSelection(
       optionModel,
@@ -481,8 +645,16 @@ function ProductDetails() {
     // Show the new colour's photo. If the photo on screen already belongs to
     // the new choice (e.g. only the size changed), leave it where it is.
     if (gallery.length && !gallery.some((image) => image.src === selectedImage)) {
-      setSelectedImage(gallery[0].src);
+      showPhoto(gallery[0].src);
     }
+  }
+
+  function showPhoto(src) {
+    if (!src || src === mainImage) return;
+    const cached = warmedPhotos.get(src);
+    // Already downloaded: swap straight away, no placeholder needed.
+    setPendingPhoto(cached && cached.complete && cached.naturalWidth > 0 ? "" : src);
+    setSelectedImage(src);
   }
 
   function handleAddToCart({ redirectToCheckout }) {
@@ -543,19 +715,32 @@ function ProductDetails() {
         <div className="product-container">
           <div className="details-image">
 
-  <div className="main-image">
+  <div
+    className="main-image"
+    style={
+      pendingPhoto && pendingPhoto === mainImage
+        ? { backgroundImage: `url("${thumbUrl(mainImage)}")` }
+        : undefined
+    }
+  >
 
     {mainImage && (
 
   <OptimizedImage
-    className="details-image-img"
+    // A new element per photo, so the previous photo disappears at once
+    // and the thumbnail placeholder behind it shows until this one is ready.
+    key={mainImage}
+    className={`details-image-img${
+      pendingPhoto && pendingPhoto === mainImage ? " is-loading" : ""
+    }`}
     src={mainImage}
     alt={productName}
-    widths={[768, 1024]}
-    sizes="(max-width: 900px) 100vw, 50vw"
+    widths={MAIN_WIDTHS}
+    sizes={MAIN_SIZES}
     width="760"
     height="760"
     priority
+    onLoad={handleMainLoaded}
   />
 
 )}
@@ -566,22 +751,32 @@ function ProductDetails() {
 
     {galleryImages.map((img, index) => (
 
-      <OptimizedImage
-        key={index}
-        src={img.src}
-        alt={`${productName} — view ${index + 1}`}
-        className={`thumbnail ${
-          selectedImage === img.src ? "active" : ""
-        }`}
-        widths={[256]}
-        width="95"
-        height="95"
-        onClick={() => setSelectedImage(img.src)}
-      />
+      <button
+        key={img.src}
+        type="button"
+        className={`thumbnail-btn${selectedImage === img.src ? " active" : ""}`}
+        aria-label={`Show view ${index + 1}`}
+        aria-pressed={selectedImage === img.src}
+        onClick={() => showPhoto(img.src)}
+        onPointerEnter={() => warmPhoto(img.src)}
+        onTouchStart={() => warmPhoto(img.src)}
+        onFocus={() => warmPhoto(img.src)}
+      >
+        <OptimizedImage
+          src={img.src}
+          alt=""
+          className="thumbnail"
+          widths={[THUMB_WIDTH]}
+          width="95"
+          height="95"
+        />
+      </button>
 
     ))}
 
   </div>
+
+  {wideLayout && optionsBlock}
 
 </div>
 
@@ -595,7 +790,16 @@ function ProductDetails() {
 
   <h1>{productName}</h1>
 
-  <p className="product-price">{formatPrice(activePriceValue)}</p>
+  <p className="product-price">
+    {formatPrice(activePriceValue)}
+    {tag?.wasPrice && (
+      <s className="price-was">
+        <span className="sr-only">Was </span>
+        {formatPrice(tag.wasPrice)}
+      </s>
+    )}
+    {tag && <span className="sale-tag sale-tag--inline">{tag.label}</span>}
+  </p>
 
   <div
     className="product-description"
@@ -614,34 +818,7 @@ function ProductDetails() {
 
     <>
 
-  {optionModel.groups.map((group, groupIndex) => (
-
-  <div className="option-group" key={`${group.label}-${groupIndex}`}>
-
-  <h4>Choose {group.label}</h4>
-
-  <select
-    className="product-select"
-    value={selection[groupIndex] ?? ""}
-    onChange={(e) => handleOptionChange(groupIndex, e.target.value)}
-    aria-label={`Choose ${group.label.toLowerCase()}`}
-  >
-    {group.values.map((value) => (
-
-      <option
-        key={value}
-        value={value}
-      >
-        {value}
-      </option>
-
-    ))}
-
-  </select>
-
-</div>
-
-  ))}
+  {!wideLayout && optionsBlock}
 
   <div className="quantity-section">
 

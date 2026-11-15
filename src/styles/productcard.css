@@ -1,8 +1,9 @@
 /*==================================================
    PRODUCT CARD (shop pages, gift pages, "You may
    also like", blog posts)
-   Photo with a small type label, name, real price
-   and a "Shop Now" pill. The whole card is a link.
+   Photo, name, real price and a "Shop Now" pill,
+   framed by a thin forest-green border. The whole
+   card is a link.
 ==================================================*/
 
 .pcard{
@@ -16,8 +17,8 @@
     overflow:hidden;
     border-radius:18px;
     background:#FFFFFF;
-    border:1px solid #F1E3E0;
-    box-shadow:0 10px 26px rgba(120,60,75,.08);
+    border:2px solid #143C35;
+    box-shadow:0 10px 26px rgba(20,60,53,.08);
     text-decoration:none;
     color:inherit;
     transition:transform .3s ease, box-shadow .3s ease;
@@ -53,19 +54,6 @@
     transform:scale(1.05);
 }
 
-.pcard-badge{
-    position:absolute;
-    top:12px;
-    left:12px;
-    padding:4px 11px;
-    border-radius:999px;
-    background:#143C35;
-    color:#FFFFFF;
-    font-family:"Manrope", sans-serif;
-    font-size:.72rem;
-    font-weight:700;
-    letter-spacing:.02em;
-}
 
 .pcard-body{
     display:flex;
@@ -128,9 +116,11 @@
     .pcard-body{ padding:10px 10px 12px; gap:8px; }
     .pcard-name{ font-size:.85rem; }
     .pcard-price{ font-size:1rem; }
-    .pcard-cta{ padding:6px 10px; font-size:.72rem; }
+    /* Price (and any previous price) on its own line, then a full-width
+       "Shop Now" button, so everything fits on a narrow phone card. */
+    .pcard-foot{ flex-direction:column; align-items:stretch; gap:8px; }
+    .pcard-cta{ justify-content:center; min-height:34px; padding:0 10px; font-size:.75rem; }
     .pcard-cta svg{ display:none; }
-    .pcard-badge{ top:8px; left:8px; font-size:.66rem; padding:3px 9px; }
 }
 
 @media (prefers-reduced-motion: reduce){

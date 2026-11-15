@@ -539,9 +539,26 @@
 }
 
 @media (max-width:640px){
+    /* Two cards per screen; the row still scrolls sideways to the rest. */
     .home-collections-row{
-        grid-auto-columns:70%;
-        gap:14px;
+        grid-auto-columns:calc((100% - 12px) / 2);
+        gap:12px;
+    }
+    .home-coll-card{
+        padding:7px 7px 0;
+        border-radius:18px;
+        border-bottom-width:4px;
+    }
+    .home-coll-media{ border-radius:13px; }
+    .home-coll-icon{ width:28px; height:28px; left:7px; bottom:7px; }
+    .home-coll-icon svg{ width:15px; height:15px; }
+    .home-coll-body{ gap:10px; padding:11px 4px 14px; }
+    .home-coll-name{ font-size:1.15rem; }
+    .home-coll-shop{
+        min-height:34px;
+        padding:0 14px;
+        font-size:.78rem;
+        gap:6px;
     }
     .home-coll-nav{ display:none; }
     .home-collections-decor{ opacity:.6; }
@@ -564,6 +581,7 @@
     height:100%;
     overflow:hidden;
     border-radius:14px;
+    border:2px solid var(--h-forest);
     background:var(--h-card);
     box-shadow:0 10px 26px rgba(60,30,40,.08);
     text-decoration:none;
@@ -600,23 +618,6 @@
 .home-card:hover .home-card-media img{
     transform:scale(1.04);
 }
-
-.home-card-badge{
-    position:absolute;
-    top:10px;
-    left:10px;
-    padding:4px 11px;
-    border-radius:999px;
-    color:#fff;
-    font-size:.72rem;
-    font-weight:700;
-    letter-spacing:.02em;
-}
-
-.home-card-badge--rose{ background:#C94667; }
-.home-card-badge--teal{ background:#2E8273; }
-.home-card-badge--gold{ background:#986B2D; }
-.home-card-badge--red{ background:#A42F44; }
 
 .home-card-body{
     display:flex;
@@ -679,9 +680,22 @@
         grid-template-columns:repeat(2, minmax(0, 1fr));
         gap:12px;
     }
-    .home-card-body{ padding:10px; }
+    .home-card-body{ padding:10px; gap:8px; }
+    .home-card-name{ font-size:.85rem; }
+    /* Price on its own line, then a full-width "Shop Now" button, so both
+       always fit on a narrow card (also with a larger phone text size). */
+    .home-card-foot{
+        flex-direction:column;
+        align-items:stretch;
+        gap:8px;
+    }
     .home-card-price{ font-size:1rem; }
-    .home-card-cta{ padding:5px 10px; font-size:.72rem; }
+    .home-card-cta{
+        justify-content:center;
+        min-height:36px;
+        padding:0 10px;
+        font-size:.78rem;
+    }
 }
 
 .home-more{
@@ -792,9 +806,10 @@
 
 .home-xmas-head{
     display:flex;
+    flex-wrap:wrap;
     align-items:baseline;
     justify-content:space-between;
-    gap:16px;
+    gap:6px 16px;
     margin:clamp(28px, 3.5vw, 40px) 0 18px;
 }
 

@@ -378,8 +378,10 @@ async function prerender() {
   // download at the same time as the app's code.
   // 1. The soft room photo behind the hero. It covers the largest area of the
   //    first screen, so it is the page's "Largest Contentful Paint" on phones
-  //    and computers: it gets top priority. The sizes must match BG_SIZES in
-  //    src/components/sections/Hero.jsx.
+  //    and computers: it gets top priority. Phones and tablets use a tall
+  //    photo, computers a wide one; each preload only applies to its own
+  //    screen size, so nobody downloads both. Sizes and the 1023px limit must
+  //    match BG_SIZES / BG_PHONE_MEDIA in src/components/sections/Hero.jsx.
   // 2. The three models. Only on computers, where they stand beside the text;
   //    on phones they sit lower down and must not slow down the app's code on
   //    a slow connection. Only the AVIF copies are named: browsers that cannot
@@ -389,19 +391,31 @@ async function prerender() {
 
   try {
     const assetFiles = await readdir(path.join(DIST, "assets"));
-    const bg = [960, 1672]
-      .map((width) => {
-        const file = assetFiles.find((name) =>
-          new RegExp(`^hero-bg-${width}-[\\w-]+\\.webp$`).test(name)
-        );
-        return file ? `/assets/${file} ${width}w` : null;
-      })
-      .filter(Boolean);
+    const findSet = (prefix, widths) =>
+      widths
+        .map((width) => {
+          const file = assetFiles.find((name) =>
+            new RegExp(`^${prefix}${width}-[\\w-]+\\.webp$`).test(name)
+          );
+          return file ? `/assets/${file} ${width}w` : null;
+        })
+        .filter(Boolean);
 
-    if (bg.length === 2) {
+    const bgPhone = findSet("hero-bg-m-", [480, 720, 941]);
+    const bgWide = findSet("hero-bg-", [960, 1672]);
+
+    if (bgPhone.length === 3) {
       homePreloadLinks.push(
-        `<link rel="preload" as="image" type="image/webp" fetchpriority="high" imagesrcset="${esc(
-          bg.join(", ")
+        `<link rel="preload" as="image" type="image/webp" fetchpriority="high" media="(max-width: 1023px)" imagesrcset="${esc(
+          bgPhone.join(", ")
+        )}" imagesizes="100vw" />`
+      );
+    }
+
+    if (bgWide.length === 2) {
+      homePreloadLinks.push(
+        `<link rel="preload" as="image" type="image/webp" fetchpriority="high" media="(min-width: 1024px)" imagesrcset="${esc(
+          bgWide.join(", ")
         )}" imagesizes="100vw" />`
       );
     }

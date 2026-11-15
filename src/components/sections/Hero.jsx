@@ -5,6 +5,11 @@ import "../../styles/hero.css";
 // Soft, blurred room photo behind the hero (tiny files: 10 KB and 21 KB).
 import bg960 from "../../assets/home/hero-bg-960.webp";
 import bg1672 from "../../assets/home/hero-bg-1672.webp";
+// Phones and tablets: a tall pastel room photo (arch, plants) that fits a
+// portrait screen instead of a cropped strip of the wide one (6-14 KB).
+import bgM480 from "../../assets/home/hero-bg-m-480.webp";
+import bgM720 from "../../assets/home/hero-bg-m-720.webp";
+import bgM941 from "../../assets/home/hero-bg-m-941.webp";
 
 // Three models (transparent background) in graphic tees, hoodies and a
 // tote bag. Their heads rise a little into the header and their shoes step
@@ -22,6 +27,8 @@ import models1129avif from "../../assets/home/models-1129.avif";
 // these photos from the home page HTML (before the app has even started).
 export const MODELS_SIZES = "(max-width: 1023px) min(92vw, 440px), 660px";
 export const BG_SIZES = "100vw";
+// Below this width the tall phone photo is used (must match postbuild.mjs).
+export const BG_PHONE_MEDIA = "(max-width: 1023px)";
 
 // The handwritten lines on the home page use the "Allura" script font. Only
 // the letters in these lines are downloaded (Google Fonts "text=" option, a
@@ -51,17 +58,26 @@ function Hero({ festive = false }) {
 
   return (
     <section className="hero" aria-labelledby="hero-title">
-      <img
-        className="hero-bg-img"
-        src={bg1672}
-        srcSet={`${bg960} 960w, ${bg1672} 1672w`}
-        sizes={BG_SIZES}
-        width="1672"
-        height="941"
-        alt=""
-        // Largest picture on the first screen (the page's LCP): top priority.
-        fetchPriority="high"
-      />
+      <picture>
+        <source
+          media={BG_PHONE_MEDIA}
+          srcSet={`${bgM480} 480w, ${bgM720} 720w, ${bgM941} 941w`}
+          sizes={BG_SIZES}
+          width="941"
+          height="1672"
+        />
+        <img
+          className="hero-bg-img"
+          src={bg1672}
+          srcSet={`${bg960} 960w, ${bg1672} 1672w`}
+          sizes={BG_SIZES}
+          width="1672"
+          height="941"
+          alt=""
+          // Largest picture on the first screen (the page's LCP): top priority.
+          fetchPriority="high"
+        />
+      </picture>
 
       <div className="hero-inner">
         <div className="hero-copy">
@@ -94,7 +110,9 @@ function Hero({ festive = false }) {
 
           <div className="hero-actions">
             <Link to="/collections" className="hero-btn hero-btn--primary">
-              Shop the Collection
+              {/* Shorter label on phones, where the two buttons sit side by side. */}
+              <span className="hero-btn-long">Shop the Collection</span>
+              <span className="hero-btn-short">Shop Now</span>
               <svg
                 viewBox="0 0 24 24"
                 width="18"
