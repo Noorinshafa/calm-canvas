@@ -138,6 +138,39 @@ export function relatedProducts(product, allProducts, limit = 4) {
   return [...sameTemplate, ...sameCollection].slice(0, limit);
 }
 
+// "Explore other collections" on a product page, used by BOTH the React page
+// and the pre-built HTML (scripts/postbuild.mjs): one product from each of the
+// OTHER collections. Which one is picked rotates with the product's position
+// in the catalog, so across all product pages every product (including every
+// mug and phone case) is linked from several pages of other collections. That
+// lets search engines reach the whole catalog from the pages they already
+// crawl most (clothing), not only through one category page.
+export function crossCollectionPicks(product, allProducts, exclude = []) {
+  if (!product || !Array.isArray(allProducts)) return [];
+
+  const pool = allProducts.filter((item) => item && item.indexable !== false);
+  const own = findCollectionForProduct(product);
+  const position = Math.max(
+    0,
+    pool.findIndex((item) => item.id === product.id)
+  );
+  const taken = new Set([product.id, ...exclude.map((item) => item.id)]);
+  const picks = [];
+
+  for (const collection of COLLECTIONS) {
+    if (collection === own) continue;
+    const items = pool.filter(
+      (item) => !taken.has(item.id) && findCollectionForProduct(item) === collection
+    );
+    if (!items.length) continue;
+    const pick = items[position % items.length];
+    taken.add(pick.id);
+    picks.push(pick);
+  }
+
+  return picks;
+}
+
 // Title + meta description for a single product page.
 export function buildProductSeo(product) {
   const name = cleanProductName(product.title);

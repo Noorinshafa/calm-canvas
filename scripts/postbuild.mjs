@@ -117,6 +117,7 @@ async function prerender() {
     productInCollection,
     findCollectionForProduct,
     relatedProducts,
+    crossCollectionPicks,
     buildProductSeo,
     breadcrumbJsonLd,
     faqJsonLd,
@@ -212,6 +213,27 @@ async function prerender() {
         .join("") +
       `</ol></nav>`
     );
+  }
+
+  // Up to `count` products taking turns between the collections (hoodies,
+  // T-shirts, sweatshirts, bags, cases, mugs...), so the home page's source
+  // links to every kind of product, not mostly to the first ones in the list.
+  function mixedPicks(list, count) {
+    const groups = COLLECTIONS.map((collection) =>
+      list.filter((item) => findCollectionForProduct(item) === collection)
+    );
+    const picks = [];
+    for (let round = 0; picks.length < count; round += 1) {
+      let added = false;
+      for (const group of groups) {
+        if (group[round] && picks.length < count) {
+          picks.push(group[round]);
+          added = true;
+        }
+      }
+      if (!added) break;
+    }
+    return picks;
   }
 
   function productListHtml(list) {
@@ -463,7 +485,7 @@ async function prerender() {
       `</ul></nav>` +
       (indexableProducts.length
         ? `<section><h2>Studio picks</h2>${productListHtml(
-            indexableProducts.slice(0, 12)
+            mixedPicks(indexableProducts, 12)
           )}</section>`
         : "") +
       `<p>${link(CHRISTMAS_PAGE.path, "Christmas gifts")} · ${THEME_PAGES.map((theme) =>
@@ -916,6 +938,7 @@ async function prerender() {
     // browser picks the same file for both and downloads it only once.
     const firstPhotoSrcSet = images[0] ? optimizedSrcSet(images[0].src, [768, 1024]) : undefined;
     const related = relatedProducts(product, indexableProducts, 4);
+    const otherCollections = crossCollectionPicks(product, indexableProducts, related);
     const themes = themesForProduct(product);
 
     const bodyHtml =
@@ -963,6 +986,14 @@ async function prerender() {
       (related.length
         ? `<section class="product-extra"><h2>You may also like</h2>${productListHtml(
             related
+          )}</section>`
+        : "") +
+      // One product from each other collection (crossCollectionPicks in
+      // src/utils/seoShared.js, also shown by the app), so every product is
+      // linked from pages of other collections.
+      (otherCollections.length
+        ? `<section class="product-extra"><h2>Explore other collections</h2>${productListHtml(
+            otherCollections
           )}</section>`
         : "");
 

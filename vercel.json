@@ -1,4 +1,9 @@
 {
+  "functions": {
+    "api/product-page.js": {
+      "includeFiles": "dist/{app,404}.html"
+    }
+  },
   "cleanUrls": true,
   "trailingSlash": false,
   "redirects": [
@@ -107,7 +112,7 @@
     },
     {
       "source": "/products/:slug",
-      "destination": "/app.html"
+      "destination": "/api/product-page?slug=:slug"
     },
     {
       "source": "/product/:id",

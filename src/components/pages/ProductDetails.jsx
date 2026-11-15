@@ -13,6 +13,7 @@ import {
   productJsonLd,
   productPath,
   relatedProducts,
+  crossCollectionPicks,
 } from "../../utils/seoShared.js";
 import { PRODUCT_COPY } from "../../content/productCopy.js";
 import { themesForProduct } from "../../content/themes.js";
@@ -591,6 +592,12 @@ function ProductDetails() {
   // src/utils/seoShared.js). Empty until the catalog has loaded.
   const related = product ? relatedProducts(product, allProducts, 4) : [];
 
+  // One product from each other collection -- the same picks the pre-built
+  // page links to (see crossCollectionPicks in src/utils/seoShared.js).
+  const otherCollections = product
+    ? crossCollectionPicks(catalogEntry || product, allProducts, related)
+    : [];
+
   // Theme gift pages this design belongs to (cat lovers, floral, ...), the
   // same links the pre-built page contains.
   const themes = product ? themesForProduct(product) : [];
@@ -991,6 +998,32 @@ function ProductDetails() {
         sizes={RELATED_SIZES}
         widths={RELATED_WIDTHS}
       />
+
+    ))}
+
+  </div>
+
+</section>
+
+)}
+
+{otherCollections.length > 0 && (
+
+<section className="related-products related-products--explore">
+
+  <div className="related-heading">
+
+    <span>✦ SHOP THE STUDIO</span>
+
+    <h2>Explore Other Collections</h2>
+
+  </div>
+
+  <div className="related-grid">
+
+    {otherCollections.map((item) => (
+
+      <ProductCard key={item.id} {...item} />
 
     ))}
 
