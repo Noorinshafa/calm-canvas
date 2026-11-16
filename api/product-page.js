@@ -15,6 +15,7 @@ import {
   relatedProducts,
 } from "../src/utils/seoShared.js";
 import { crawlableImageUrl, optimizedImageUrl, optimizedSrcSet } from "../src/utils/imageUrl.js";
+import { buildProductFaq } from "../src/content/productFaq.js";
 
 // ---------------------------------------------------------------------------
 // Product page for a product that has no pre-built page yet.
@@ -115,7 +116,7 @@ function productListHtml(list) {
   );
 }
 
-function headHtml({ name, description, canonical, image, noindex, jsonLd }) {
+function headHtml({ name, description, canonical, image, noindex, jsonLd, productId }) {
   const title = buildTitle(name);
   const img = absoluteUrl(crawlableImageUrl(image || DEFAULT_OG_IMAGE, SITE_URL));
   return [
@@ -134,6 +135,11 @@ function headHtml({ name, description, canonical, image, noindex, jsonLd }) {
     `<meta name="twitter:description" content="${esc(description)}" />`,
     `<meta name="twitter:image" content="${esc(img)}" />`,
     `<script type="application/ld+json" id="seo-jsonld">${jsonForHtml(jsonLd)}</script>`,
+    // Start fetching the product's details straight away (the pre-built
+    // pages do the same, see scripts/postbuild.mjs).
+    `<link rel="preload" as="fetch" href="/api/product?id=${esc(
+      encodeURIComponent(productId)
+    )}" crossorigin />`,
   ].join("\n    ");
 }
 
@@ -204,6 +210,7 @@ export default async function handler(req, res) {
   const related = relatedProducts(product, indexable, 4);
   const others = crossCollectionPicks(product, indexable, related);
   const firstPhoto = product.images?.[0]?.src || product.image;
+  const faq = buildProductFaq(product, seo.collection?.key);
 
   const body =
     `<nav aria-label="Breadcrumb"><ol>${crumbs
@@ -221,6 +228,11 @@ export default async function handler(req, res) {
         )}" sizes="(max-width: 900px) 100vw, 50vw" alt="${esc(name)}" width="760" height="760" fetchpriority="high">`
       : "") +
     paragraphs.map((text) => `<p>${esc(text)}</p>`).join("") +
+    (faq.length
+      ? `<section><h2>Frequently asked questions</h2>${faq
+          .map((entry) => `<h3>${esc(entry.q)}</h3><p>${esc(entry.a)}</p>`)
+          .join("")}</section>`
+      : "") +
     (related.length ? `<section><h2>You may also like</h2>${productListHtml(related)}</section>` : "") +
     (others.length
       ? `<section><h2>Explore other collections</h2>${productListHtml(others)}</section>`
@@ -251,6 +263,7 @@ export default async function handler(req, res) {
         canonical,
         image: product.image,
         noindex: product.indexable === false,
+        productId: product.id,
         jsonLd: [
           breadcrumbJsonLd(crumbs),
           productJsonLd(product, {

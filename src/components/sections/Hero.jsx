@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../../styles/hero.css";
 
@@ -15,47 +14,36 @@ import bgM941 from "../../assets/home/hero-bg-m-941.webp";
 // tote bag. Their heads rise a little into the header and their shoes step
 // into the section below (see .hero-models in hero.css).
 import models560 from "../../assets/home/models-560.webp";
+import models640 from "../../assets/home/models-640.webp";
 import models820 from "../../assets/home/models-820.webp";
 import models1129 from "../../assets/home/models-1129.webp";
 // The same photo as AVIF (about 25% smaller); browsers that cannot show AVIF
 // use the WebP files above.
 import models560avif from "../../assets/home/models-560.avif";
+import models640avif from "../../assets/home/models-640.avif";
 import models820avif from "../../assets/home/models-820.avif";
 import models1129avif from "../../assets/home/models-1129.avif";
 
-// Shared with scripts/postbuild.mjs, which tells the browser to start loading
-// these photos from the home page HTML (before the app has even started).
-export const MODELS_SIZES = "(max-width: 1023px) min(92vw, 440px), 660px";
+// How wide the models are shown, so the browser picks the right file
+// (.hero-models in hero.css): on computers they are as tall as the hero plus
+// 108px, i.e. 582px wide when the hero is 560px tall (1024-1279px screens)
+// and 617px wide when it is 600px tall (1280px and wider). The 640px file
+// covers both on ordinary screens; sharper screens get the 820px or 1129px
+// file as before.
+// The same text is used by scripts/postbuild.mjs, which tells the browser to
+// start loading these photos from the home page HTML (before the app has even
+// started): keep the two identical.
+export const MODELS_SIZES =
+  "(max-width: 1023px) min(92vw, 440px), (max-width: 1279px) 582px, 617px";
 export const BG_SIZES = "100vw";
 // Below this width the tall phone photo is used (must match postbuild.mjs).
 export const BG_PHONE_MEDIA = "(max-width: 1023px)";
 
-// The handwritten lines on the home page use the "Allura" script font. Only
-// the letters in these lines are downloaded (Google Fonts "text=" option, a
-// file of a few KB), and it is loaded after the page has appeared, so it can
-// never slow down the first view. Until it arrives a normal serif is shown.
-export const SCRIPT_LINES = [
-  "Welcome to ShopCalmCanvas",
-  "The Christmas Gift Shop",
-  "More Than Just a Brand",
-];
-
-function useScriptFont() {
-  useEffect(() => {
-    const id = "scc-script-font";
-    if (document.getElementById(id)) return;
-    const letters = [...new Set(SCRIPT_LINES.join(""))].join("");
-    const link = document.createElement("link");
-    link.id = id;
-    link.rel = "stylesheet";
-    link.href = `https://fonts.googleapis.com/css2?family=Allura&display=swap&text=${encodeURIComponent(letters)}`;
-    document.head.appendChild(link);
-  }, []);
-}
+// The handwritten lines on the home page use the "Allura" script font. It is
+// served from this site (see the @font-face rule at the top of hero.css), not
+// from Google Fonts.
 
 function Hero({ festive = false }) {
-  useScriptFont();
-
   return (
     <section className="hero" aria-labelledby="hero-title">
       <picture>
@@ -143,12 +131,12 @@ function Hero({ festive = false }) {
       <picture className="hero-models">
         <source
           type="image/avif"
-          srcSet={`${models560avif} 560w, ${models820avif} 820w, ${models1129avif} 1129w`}
+          srcSet={`${models560avif} 560w, ${models640avif} 640w, ${models820avif} 820w, ${models1129avif} 1129w`}
           sizes={MODELS_SIZES}
         />
         <img
           src={models820}
-          srcSet={`${models560} 560w, ${models820} 820w, ${models1129} 1129w`}
+          srcSet={`${models560} 560w, ${models640} 640w, ${models820} 820w, ${models1129} 1129w`}
           sizes={MODELS_SIZES}
           width="1129"
           height="1297"

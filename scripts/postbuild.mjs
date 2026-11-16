@@ -85,6 +85,7 @@ async function prerender() {
   const { TERMS, PRIVACY, parseLegalInline } = await load("src/content/legal.js");
   const { CHRISTMAS_PAGE, resolvePicks } = await load("src/content/christmas.js");
   const { THEME_PAGES, themeProducts, themesForProduct } = await load("src/content/themes.js");
+  const { buildProductFaq } = await load("src/content/productFaq.js");
   const { optimizedImageUrl, crawlableImageUrl, optimizedSrcSet } = await load(
     "src/utils/imageUrl.js"
   );
@@ -411,6 +412,12 @@ async function prerender() {
   //    must match MODELS_SIZES in Hero.jsx.
   const homePreloadLinks = [];
 
+  // Exactly the same text as MODELS_SIZES in src/components/sections/Hero.jsx
+  // (on computers it means 582px wide up to 1279px, 617px from 1280px), so
+  // the file loaded early here is the one the page then uses.
+  const MODELS_SIZES =
+    "(max-width: 1023px) min(92vw, 440px), (max-width: 1279px) 582px, 617px";
+
   try {
     const assetFiles = await readdir(path.join(DIST, "assets"));
     const findSet = (prefix, widths) =>
@@ -442,7 +449,7 @@ async function prerender() {
       );
     }
 
-    const avif = [560, 820, 1129]
+    const avif = [560, 640, 820, 1129]
       .map((width) => {
         const file = assetFiles.find((name) =>
           new RegExp(`^models-${width}-[\\w-]+\\.avif$`).test(name)
@@ -451,11 +458,11 @@ async function prerender() {
       })
       .filter(Boolean);
 
-    if (avif.length === 3) {
+    if (avif.length === 4) {
       homePreloadLinks.push(
         `<link rel="preload" as="image" type="image/avif" media="(min-width: 1024px)" imagesrcset="${esc(
           avif.join(", ")
-        )}" imagesizes="660px" />`
+        )}" imagesizes="${esc(MODELS_SIZES)}" />`
       );
     }
   } catch {
@@ -940,6 +947,8 @@ async function prerender() {
     const related = relatedProducts(product, indexableProducts, 4);
     const otherCollections = crossCollectionPicks(product, indexableProducts, related);
     const themes = themesForProduct(product);
+    // The same questions the product page shows (src/content/productFaq.js).
+    const faq = buildProductFaq(product, collection?.key);
 
     const bodyHtml =
       crumbsHtml(crumbs) +
@@ -972,6 +981,14 @@ async function prerender() {
             .join("")}</section>`
         : "") +
       `<section class="product-extra">${SHIPPING_GLANCE}</section>` +
+      (faq.length
+        ? `<section class="product-extra product-faq"><h2>Frequently asked questions</h2><div class="faq-list">${faq
+            .map(
+              (entry) =>
+                `<details><summary>${esc(entry.q)}</summary><p>${esc(entry.a)}</p></details>`
+            )
+            .join("")}</div></section>`
+        : "") +
       // Links to the theme gift pages this design belongs to (the same ones
       // the product page shows after it loads, see themesForProduct).
       (themes.length

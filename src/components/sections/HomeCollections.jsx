@@ -51,7 +51,13 @@ function HomeCollections() {
 
     function update() {
       const max = row.scrollWidth - row.clientWidth;
-      setCanScroll({ prev: row.scrollLeft > 4, next: row.scrollLeft < max - 4 });
+      const prev = row.scrollLeft > 4;
+      const next = row.scrollLeft < max - 4;
+      // Only redraw when an arrow actually appears or disappears, not on
+      // every scroll event while the row is being swiped.
+      setCanScroll((current) =>
+        current.prev === prev && current.next === next ? current : { prev, next }
+      );
     }
 
     update();

@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
 import useProducts from "../../hooks/useProducts";
@@ -18,6 +18,7 @@ import {
 import { PRODUCT_COPY } from "../../content/productCopy.js";
 import { themesForProduct } from "../../content/themes.js";
 import { priceTag } from "../../content/sale.js";
+import { buildProductFaq } from "../../content/productFaq.js";
 import {
   buildOptionModel,
   findVariant,
@@ -54,26 +55,27 @@ const RELATED_WIDTHS = [384, 768, 1024];
 // The big photo uses these widths/sizes (they must match the main photo in
 // scripts/postbuild.mjs). Clicking a thumbnail used to start downloading the
 // big copy only then, so the old photo stayed on screen for a moment. Now:
-//  1. after the page has loaded and the browser is idle, the big copies of
-//     the current colour's photos are fetched quietly one at a time (skipped
-//     when the visitor's phone asks to save data);
+//  1. as soon as the thumbnails are on screen, the big copies of the current
+//     colour's photos are fetched quietly, two at a time (skipped when the
+//     visitor's phone asks to save data). This used to wait for the whole
+//     page and the analytics scripts to finish loading, so a shopper who
+//     tapped a thumbnail in the first few seconds (typical when arriving from
+//     Pinterest) had to wait for a photo that had not even been asked for;
 //  2. pointing at / touching / focusing a thumbnail fetches its big copy
 //     straight away;
-//  3. on click, the (already downloaded) thumbnail is shown at once in the
-//     big frame and the sharp copy fades in as soon as it is ready -- usually
-//     instantly, because of 1 and 2.
+//  3. on click, a photo that is already downloaded is shown at once. If it is
+//     still on its way, a copy that IS already on screen stands in for it
+//     (its thumbnail, or else the photo shown until now) and the sharp copy
+//     fades in over it as soon as it arrives, so the big frame is never
+//     empty.
 // ---------------------------------------------------------------------------
 const MAIN_WIDTHS = [768, 1024];
 const MAIN_SIZES = "(max-width: 900px) 100vw, 50vw";
 const THUMB_WIDTH = 256;
 const MAX_WARM_PHOTOS = 8;
+const WARM_AT_ONCE = 2;
 
 const resizable = (src) => !import.meta.env.DEV && canOptimize(src);
-
-// The address of the small copy the thumbnail shows (already in the cache).
-function thumbUrl(src) {
-  return resizable(src) ? optimizedImageUrl(src, THUMB_WIDTH) : src;
-}
 
 // Downloads the big copy exactly as the main photo would pick it (same
 // srcset and sizes), so the browser cache has it when the photo is shown.
@@ -93,6 +95,12 @@ function warmPhoto(src) {
   }
   warmedPhotos.set(src, img);
   return img;
+}
+
+// The address of a photo element's picture if it has finished downloading
+// (the exact file the browser chose, so showing it again costs nothing), or "".
+function loadedPhotoUrl(img) {
+  return img && img.complete && img.naturalWidth > 0 ? img.currentSrc || img.src : "";
 }
 
 function saveDataWanted() {
@@ -270,9 +278,12 @@ function ProductDetails() {
   }, [productId]);
 
   const [selectedImage, setSelectedImage] = useState("");
-  // The photo the shopper just switched to, while its sharp copy is loading
-  // (its thumbnail is shown in the big frame meanwhile).
-  const [pendingPhoto, setPendingPhoto] = useState("");
+  // While the photo just switched to is still downloading:
+  // { photo: its address, url: an already-downloaded picture shown in its
+  // place meanwhile }. null when there is nothing to wait for.
+  const [placeholder, setPlaceholder] = useState(null);
+  const mainFrameRef = useRef(null);
+  const thumbRowRef = useRef(null);
   const wideLayout = useWideLayout();
   const [quantity, setQuantity] = useState(1);
   // One entry per dropdown (colour, size, phone model, finish...), holding the
@@ -342,6 +353,14 @@ function ProductDetails() {
   const seo = useMemo(
     () => (product ? buildProductSeo(product) : null),
     [product]
+  );
+
+  // Questions shoppers search for about this type of product, answered from
+  // this product's own details (see src/content/productFaq.js). The pre-built
+  // page shows the same list.
+  const faq = useMemo(
+    () => (product ? buildProductFaq(product, seo?.collection?.key) : []),
+    [product, seo]
   );
 
   const crumbs = useMemo(() => {
@@ -463,7 +482,9 @@ function ProductDetails() {
           startGallery.length &&
           !startGallery.some((image) => image.src === product.image)
         ) {
-          setSelectedImage(startGallery[0].src);
+          // The photo from the pre-built page stays on screen until this one
+          // has downloaded, instead of the frame going blank meanwhile.
+          switchPhoto(startGallery[0].src);
         }
       }
 
@@ -477,54 +498,100 @@ function ProductDetails() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [product]);
 
-  // Quietly download the big copies of the current colour's photos once the
-  // page has finished loading and the browser is idle, one at a time, so
-  // clicking a thumbnail shows the photo instantly. (Each copy is resized
-  // once by Vercel and then cached, see vercel.json "images".)
+  // Quietly download the big copies of the current colour's photos, two at a
+  // time, as soon as the thumbnails are on screen (at the browser's next quiet
+  // moment, at most 600 ms later), so tapping a thumbnail shows the photo at
+  // once. These downloads have a lower priority than the photo on screen, so
+  // they never slow it down. (Each copy is resized once by Vercel and then
+  // cached, see vercel.json "images".)
   const gallerySources = galleryImages.map((image) => image.src).join("|");
   useEffect(() => {
     if (!gallerySources || saveDataWanted()) return undefined;
 
     const queue = gallerySources.split("|").slice(0, MAX_WARM_PHOTOS);
     let cancelled = false;
+    let active = 0;
     let idleHandle;
 
-    const next = () => {
-      if (cancelled) return;
-      const src = queue.shift();
-      if (!src) return;
-      const img = warmPhoto(src);
-      if (!img || (img.complete && img.naturalWidth > 0)) {
-        next();
-      } else {
-        img.addEventListener("load", next, { once: true });
-        img.addEventListener("error", next, { once: true });
+    const pump = () => {
+      while (!cancelled && active < WARM_AT_ONCE && queue.length) {
+        const img = warmPhoto(queue.shift());
+        if (!img || img.complete) continue;
+
+        active += 1;
+        const done = () => {
+          active -= 1;
+          pump();
+        };
+        img.addEventListener("load", done, { once: true });
+        img.addEventListener("error", done, { once: true });
       }
     };
 
-    const start = () => {
-      if ("requestIdleCallback" in window) {
-        idleHandle = window.requestIdleCallback(next, { timeout: 2500 });
-      } else {
-        idleHandle = window.setTimeout(next, 1200);
-      }
-    };
-
-    if (document.readyState === "complete") start();
-    else window.addEventListener("load", start, { once: true });
+    if ("requestIdleCallback" in window) {
+      idleHandle = window.requestIdleCallback(pump, { timeout: 600 });
+    } else {
+      idleHandle = window.setTimeout(pump, 300);
+    }
 
     return () => {
       cancelled = true;
-      window.removeEventListener("load", start);
       if ("cancelIdleCallback" in window) window.cancelIdleCallback(idleHandle);
       else window.clearTimeout(idleHandle);
     };
   }, [gallerySources]);
 
-  // When the sharp copy of the photo just picked has loaded, drop the
-  // thumbnail placeholder.
-  function handleMainLoaded() {
-    setPendingPhoto("");
+  // What stands in for `src` in the big frame while its sharp copy loads:
+  //   under: whatever the frame shows right now (the photo, or the stand-in
+  //          covering for it), so the frame is never empty;
+  //   thumb: the small copy its thumbnail uses. It appears over `under` the
+  //          moment it has downloaded (usually it already has), so the
+  //          shopper sees the new photo straight away, then the sharp copy
+  //          fades in over both.
+  function standInFor(src) {
+    const frame = mainFrameRef.current;
+    const under =
+      loadedPhotoUrl(frame?.querySelector(".details-image-img:not(.is-loading)")) ||
+      loadedPhotoUrl(frame?.querySelector(".details-image-standin--under")) ||
+      loadedPhotoUrl(frame?.querySelector(".details-image-standin--thumb"));
+
+    let thumb = "";
+    const buttons = thumbRowRef.current?.querySelectorAll("[data-photo]") || [];
+    for (const button of buttons) {
+      if (button.dataset.photo === src) {
+        const img = button.querySelector("img");
+        thumb = img ? img.currentSrc || img.src || "" : "";
+        break;
+      }
+    }
+
+    return { under, thumb };
+  }
+
+  // Puts `src` in the big frame. Already downloaded: straight away. Still on
+  // its way: stand-ins are shown until it arrives (see handleMainLoaded).
+  function switchPhoto(src) {
+    const cached = warmedPhotos.get(src);
+    const ready = Boolean(cached && cached.complete && cached.naturalWidth > 0);
+    const standIn = ready ? null : standInFor(src);
+
+    setPlaceholder(
+      standIn && (standIn.under || standIn.thumb)
+        ? { photo: src, ...standIn, arrived: false }
+        : null
+    );
+    setSelectedImage(src);
+  }
+
+  // The sharp copy has arrived: it fades in over the stand-ins (0.35 s, see
+  // .details-image-img), which are removed once it has finished fading in.
+  function handleMainLoaded(photo) {
+    setPlaceholder((current) =>
+      current && current.photo === photo ? { ...current, arrived: true } : current
+    );
+    window.setTimeout(() => {
+      setPlaceholder((current) => (current && current.arrived ? null : current));
+    }, 450);
   }
 
   if (!productId) {
@@ -587,6 +654,10 @@ function ProductDetails() {
   // photo for the moment before it is chosen) -- the same address, so the photo
   // already on screen stays put instead of being loaded again.
   const mainImage = product ? selectedImage || product.image : seed.image;
+  // Stand-ins are on screen for the photo being shown...
+  const standInShown = Boolean(placeholder && placeholder.photo === mainImage);
+  // ...and the sharp copy is still downloading.
+  const waitingForPhoto = standInShown && !placeholder.arrived;
 
   // Same products the pre-built page lists (see relatedProducts in
   // src/utils/seoShared.js). Empty until the catalog has loaded.
@@ -658,10 +729,7 @@ function ProductDetails() {
 
   function showPhoto(src) {
     if (!src || src === mainImage) return;
-    const cached = warmedPhotos.get(src);
-    // Already downloaded: swap straight away, no placeholder needed.
-    setPendingPhoto(cached && cached.complete && cached.naturalWidth > 0 ? "" : src);
-    setSelectedImage(src);
+    switchPhoto(src);
   }
 
   function handleAddToCart({ redirectToCheckout }) {
@@ -722,14 +790,33 @@ function ProductDetails() {
         <div className="product-container">
           <div className="details-image">
 
-  <div
-    className="main-image"
-    style={
-      pendingPhoto && pendingPhoto === mainImage
-        ? { backgroundImage: `url("${thumbUrl(mainImage)}")` }
-        : undefined
-    }
-  >
+  <div className="main-image" ref={mainFrameRef}>
+
+    {standInShown && placeholder.under && (
+      <img
+        className="details-image-standin details-image-standin--under"
+        src={placeholder.under}
+        alt=""
+        aria-hidden="true"
+      />
+    )}
+
+    {standInShown && placeholder.thumb && (
+      <img
+        // A new element per photo, so a thumbnail that fails to load is
+        // simply hidden and never shown for another photo.
+        key={placeholder.thumb}
+        className="details-image-standin details-image-standin--thumb"
+        src={placeholder.thumb}
+        alt=""
+        aria-hidden="true"
+        onError={(event) => {
+          event.currentTarget.hidden = true;
+        }}
+      />
+    )}
+
+    {waitingForPhoto && <span className="details-image-wait" aria-hidden="true" />}
 
     {mainImage && (
 
@@ -737,9 +824,7 @@ function ProductDetails() {
     // A new element per photo, so the previous photo disappears at once
     // and the thumbnail placeholder behind it shows until this one is ready.
     key={mainImage}
-    className={`details-image-img${
-      pendingPhoto && pendingPhoto === mainImage ? " is-loading" : ""
-    }`}
+    className={`details-image-img${waitingForPhoto ? " is-loading" : ""}`}
     src={mainImage}
     alt={productName}
     widths={MAIN_WIDTHS}
@@ -747,14 +832,14 @@ function ProductDetails() {
     width="760"
     height="760"
     priority
-    onLoad={handleMainLoaded}
+    onLoad={() => handleMainLoaded(mainImage)}
   />
 
 )}
 
   </div>
 
-  <div className="thumbnail-row">
+  <div className="thumbnail-row" ref={thumbRowRef}>
 
     {galleryImages.map((img, index) => (
 
@@ -762,6 +847,7 @@ function ProductDetails() {
         key={img.src}
         type="button"
         className={`thumbnail-btn${selectedImage === img.src ? " active" : ""}`}
+        data-photo={img.src}
         aria-label={`Show view ${index + 1}`}
         aria-pressed={selectedImage === img.src}
         onClick={() => showPhoto(img.src)}
@@ -953,6 +1039,25 @@ function ProductDetails() {
   </ul>
 
 </section>
+
+{faq.length > 0 && (
+
+<section className="product-extra product-faq">
+
+  <h2>Frequently asked questions</h2>
+
+  <div className="faq-list">
+    {faq.map((entry) => (
+      <details key={entry.q}>
+        <summary>{entry.q}</summary>
+        <p>{entry.a}</p>
+      </details>
+    ))}
+  </div>
+
+</section>
+
+)}
 
 {themes.length > 0 && (
 

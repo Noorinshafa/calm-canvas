@@ -7,6 +7,21 @@
    Plain CSS: no animation script, nothing moves.
 =====================================================*/
 
+/* The script font for the handwritten lines ("Welcome to ShopCalmCanvas"
+   here, and the lines in the Christmas and story sections in home.css).
+   Served from this site instead of Google Fonts: no extra connections to
+   Google's servers, and no visitor data sent to them. Only the basic Latin
+   letters, digits and punctuation are in the file (17 KB), so any English
+   wording works. It is downloaded only when one of those lines is on the
+   page; until then a normal serif is shown. */
+@font-face{
+    font-family:"Allura";
+    font-style:normal;
+    font-weight:400;
+    font-display:swap;
+    src:url("../assets/fonts/allura-basic-latin.woff2") format("woff2");
+}
+
 .hero{
     --hero-h:600px;
     position:relative;
