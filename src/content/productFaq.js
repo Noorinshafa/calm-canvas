@@ -104,17 +104,23 @@ export function readProductFacts(product) {
   return {
     features,
     care,
+    // The fabric line: one giving percentages or a blend ratio first, then
+    // any line naming the fabric (but not "ethically sourced US cotton").
     material:
-      features.find((line) => /\d+\s?%|100%|cotton|polyester|fleece|canvas/i.test(line)) ||
+      features.find((line) => /\d+\s?%|\b\d{2}\/\d{2}\b/.test(line)) ||
+      features.find(
+        (line) =>
+          /cotton|polyester|fleece|canvas/i.test(line) && !/made in|sourced|dyes?\b/i.test(line)
+      ) ||
       "",
     caseBuild: features.find((line) => /polycarbonate|tpu|shell|liner/i.test(line)) || "",
     dtgMain: /dtg for (the )?main design|direct[- ]to[- ]garment/i.test(all),
     microwave: not("microwave") ? "no" : has(/microwave[- ]safe|microwavable/i) ? "yes" : "",
     dishwasher: not("dishwasher") ? "no" : has(/dishwasher[- ]safe|clean in dishwasher|dishwasher-? and/i) ? "yes" : "",
     topRack: has(/top rack/i),
-    leadFree: has(/lead[- ](and|,)?.{0,30}(free|compliant)|lead-free/i)
-      ? features.find((line) => /lead/i.test(line)) || ""
-      : "",
+    // Just the claim itself, e.g. "lead- and BPA-free" or
+    // "lead-, cadmium-, and BPA-compliant".
+    leadFree: (all.match(/\blead\b[-\s,]*(?:and\s+)?[^.;\n]*?\b(?:free|compliant)\b/i) || [])[0] || "",
     magsafe: has(/non-magsafe|not magsafe/i)
       ? "no"
       : has(/magsafe|magnet/i) || /magnetic/i.test(names)
@@ -166,7 +172,8 @@ function lowerFirst(text) {
 function cleanFeature(text) {
   return lowerFirst(
     String(text || "")
-      .replace(/^[A-Za-z][A-Za-z &/-]{2,30}:\s+/, "")
+      .replace(/^[A-Za-z][A-Za-z &/-]{2,45}:\s+/, "")
+      .replace(/;.*$/, "")
       .replace(/\s+—\s+.*$/, "")
       .replace(/\s+for\s+.*$/i, "")
       .replace(/\.$/, "")
@@ -326,7 +333,7 @@ function mugFaq(facts) {
   if (facts.leadFree) {
     list.push({
       q: `Is it lead-free?`,
-      a: `The maker lists it as ${cleanFeature(facts.leadFree.replace(/^.*?;\s*/, ""))}.`,
+      a: `The maker lists it as ${facts.leadFree.charAt(0).toLowerCase() + facts.leadFree.slice(1)}.`,
     });
   }
 
