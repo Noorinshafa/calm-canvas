@@ -52,7 +52,7 @@ export const CURRENCY = "USD";
 // ID is public by design (it appears in every site's page source). Leave it
 // as an empty string to switch the Pixel off completely: nothing is then
 // downloaded from Meta. How and when it loads is in src/utils/analytics.js.
-export const META_PIXEL_ID = "1851307609556483";
+export const META_PIXEL_ID = "1106151925595401";
 
 // IndexNow lets Bing, Yandex and other search engines learn about new and
 // changed pages immediately. The key is public by design: it is also saved as
