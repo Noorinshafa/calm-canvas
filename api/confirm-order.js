@@ -1,6 +1,7 @@
 import { createSafepayClient, extractValue } from "./_lib/safepay-node-core.js";
 import { createPrintifyOrder } from "./_lib/create-printify-order.js";
 import { openOrderState } from "./_lib/order-cookie.js";
+import { sendAlert } from "./_lib/notify.js";
 
 export default async function handler(req, res) {
   const tracker = req.query.tracker;
@@ -171,6 +172,16 @@ export default async function handler(req, res) {
         "details:",
         JSON.stringify(orderError.details)
       );
+
+      // Tell the owner straight away: the customer has paid but no Printify
+      // order exists yet. sendAlert never throws and gives up after 4 seconds,
+      // so it cannot change what happens next.
+      await sendAlert({
+        title: "URGENT: paid order not sent to Printify",
+        message: `A customer paid, but Printify refused the order.\nReason: ${orderError.message}\nSafepay tracker: ${tracker}\nCheck the payment in Safepay, then fix the order in Printify or refund the customer.`,
+        priority: 5,
+        tags: ["rotating_light"],
+      });
 
       // Leave the cookie in place -- the payment succeeded, so a page
       // refresh (or the customer contacting support and us re-hitting this

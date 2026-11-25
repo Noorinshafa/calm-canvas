@@ -1,6 +1,7 @@
 import crypto from "crypto";
 import { createSafepayClient, extractValue } from "./_lib/safepay-node-core.js";
 import { createPrintifyOrder } from "./_lib/create-printify-order.js";
+import { sendAlert } from "./_lib/notify.js";
 
 // This receives a notification straight from Safepay's own servers whenever
 // a payment succeeds (or fails, refunds, etc.) -- independent of the
@@ -98,6 +99,10 @@ export default async function handler(req, res) {
     return res.status(200).json({ received: true });
   }
 
+  // Set once Safepay confirms this payment really succeeded, so the owner is
+  // only alerted about orders that were actually paid.
+  let paymentVerified = false;
+
   try {
     const safepay = createSafepayClient();
     if (!safepay) {
@@ -117,6 +122,8 @@ export default async function handler(req, res) {
     if (state !== "TRACKER_ENDED") {
       return res.status(200).json({ received: true });
     }
+
+    paymentVerified = true;
 
     const orderState = JSON.parse(metadataOrderState);
     const orderCart = (orderState.cart || []).map((item) => ({
@@ -149,6 +156,17 @@ export default async function handler(req, res) {
         `safepay-webhook: fallback order creation failed for tracker ${tracker}:`,
         error.message
       );
+
+      if (paymentVerified) {
+        // The customer has paid but no Printify order exists yet. sendAlert
+        // never throws and gives up after 4 seconds.
+        await sendAlert({
+          title: "URGENT: paid order not sent to Printify",
+          message: `A customer paid, but the backup order step failed.\nReason: ${error.message}\nSafepay tracker: ${tracker}\nCheck the payment in Safepay, then fix the order in Printify or refund the customer.`,
+          priority: 5,
+          tags: ["rotating_light"],
+        });
+      }
     }
   }
 

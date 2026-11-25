@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && node scripts/postbuild.mjs",
+    "build": "node scripts/check-api.mjs && vite build && node scripts/postbuild.mjs",
     "lint": "eslint .",
     "preview": "vite preview"
   },
