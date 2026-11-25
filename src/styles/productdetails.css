@@ -365,6 +365,27 @@
 
 }
 
+.product-select[aria-invalid="true"]{
+
+    border-color:#b3364a;
+
+}
+
+/* "Please choose a size." under a size / phone model dropdown */
+.option-error{
+
+    display:block;
+
+    margin-top:8px;
+
+    color:#b3364a;
+
+    font-size:14px;
+
+    font-weight:500;
+
+}
+
 .product-select:focus{
 
     border-color:#d89caf;

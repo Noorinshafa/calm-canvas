@@ -290,6 +290,14 @@ function ProductDetails() {
   // shopper's current choice for that dropdown.
   const [selection, setSelection] = useState([]);
 
+  // Which dropdowns the shopper has actually picked themselves (true/false
+  // per dropdown). The page still starts on a size so it can show a price
+  // and photo, but size and phone model are shown as "Select size" until the
+  // shopper picks one: a wrong size can't be returned, so it must never be
+  // ordered by default.
+  const [chosen, setChosen] = useState([]);
+  const [optionError, setOptionError] = useState(null);
+
   // The API now only ever sends enabled/purchasable variants (see
   // api/_lib/printify-shared.js), so anything listed here is safe to sell --
   // but a product can still legitimately have zero of them (fully sold out).
@@ -300,6 +308,18 @@ function ProductDetails() {
   // Printify's own option list rather than guessed from the variant title --
   // see src/utils/variantOptions.js.
   const optionModel = useMemo(() => buildOptionModel(product), [product]);
+
+  // The dropdowns the shopper must pick themselves (see `chosen`): sizes and
+  // phone models, plus the single fallback list whose entries include the
+  // size ("White / S"). Colour and finish stay pre-selected, because the
+  // photo shows them. A dropdown with only one value needs no choice.
+  const mustChoose = (group) =>
+    group.values.length > 1 && (group.type === "size" || group.type === "other");
+
+  const chooseMessage = (group) => {
+    const label = group.label.toLowerCase();
+    return `Please choose ${/^[aeiou]/.test(label) ? "an" : "a"} ${label}.`;
+  };
 
   // The variant the shopper has picked right now. Variants of the same
   // product can cost different amounts (e.g. larger hoodie sizes), and the
@@ -422,6 +442,8 @@ function ProductDetails() {
     if (product) {
       setSelectedImage(product.image);
       setQuantity(1);
+      setChosen([]);
+      setOptionError(null);
 
       if (variants.length) {
         // Start on the cheapest option so the price shown on arrival is the
@@ -690,17 +712,43 @@ function ProductDetails() {
             <h4>Choose {group.label}</h4>
 
             <select
+              id={`product-option-${groupIndex}`}
               className="product-select"
-              value={selection[groupIndex] ?? ""}
+              value={
+                mustChoose(group) && !chosen[groupIndex]
+                  ? ""
+                  : selection[groupIndex] ?? ""
+              }
               onChange={(e) => handleOptionChange(groupIndex, e.target.value)}
               aria-label={`Choose ${group.label.toLowerCase()}`}
+              aria-invalid={optionError === groupIndex}
+              aria-describedby={
+                optionError === groupIndex
+                  ? `product-option-error-${groupIndex}`
+                  : undefined
+              }
             >
+              {mustChoose(group) && !chosen[groupIndex] && (
+                <option value="" disabled>
+                  Select {group.label.toLowerCase()}
+                </option>
+              )}
               {group.values.map((value) => (
                 <option key={value} value={value}>
                   {value}
                 </option>
               ))}
             </select>
+
+            {optionError === groupIndex && (
+              <small
+                id={`product-option-error-${groupIndex}`}
+                className="option-error"
+                role="alert"
+              >
+                {chooseMessage(group)}
+              </small>
+            )}
           </div>
         ))}
       </div>
@@ -720,6 +768,28 @@ function ProductDetails() {
 
     setSelection(next);
 
+    // Remember that the shopper picked this dropdown. If the new choice moved
+    // another must-pick dropdown they had already set (that size doesn't come
+    // in the new colour), ask them to pick it again rather than silently
+    // ordering a different size.
+    const movedAway = optionModel.groups
+      .map((group, index) =>
+        index !== groupIndex &&
+        chosen[index] &&
+        mustChoose(group) &&
+        next[index] !== selection[index]
+          ? index
+          : -1
+      )
+      .filter((index) => index !== -1);
+
+    const nextChosen = optionModel.groups.map((group, index) =>
+      index === groupIndex ? true : Boolean(chosen[index]) && !movedAway.includes(index)
+    );
+
+    setChosen(nextChosen);
+    setOptionError(movedAway.length ? movedAway[0] : null);
+
     // Show the new colour's photo. If the photo on screen already belongs to
     // the new choice (e.g. only the size changed), leave it where it is.
     if (gallery.length && !gallery.some((image) => image.src === selectedImage)) {
@@ -733,6 +803,22 @@ function ProductDetails() {
   }
 
   function handleAddToCart({ redirectToCheckout }) {
+    // The shopper must pick a size / phone model themselves (see `chosen`).
+    const missing = hasVariants
+      ? optionModel.groups.findIndex(
+          (group, index) => mustChoose(group) && !chosen[index]
+        )
+      : -1;
+
+    if (missing !== -1) {
+      setOptionError(missing);
+      toast.error(chooseMessage(optionModel.groups[missing]));
+      const field = document.getElementById(`product-option-${missing}`);
+      field?.scrollIntoView({ behavior: "smooth", block: "center" });
+      field?.focus({ preventScroll: true });
+      return;
+    }
+
     const selectedVariant = activeVariant;
 
     if (!selectedVariant) {
