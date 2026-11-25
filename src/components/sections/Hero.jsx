@@ -39,9 +39,10 @@ export const BG_SIZES = "100vw";
 // Below this width the tall phone photo is used (must match postbuild.mjs).
 export const BG_PHONE_MEDIA = "(max-width: 1023px)";
 
-// The handwritten lines on the home page use the "Allura" script font. It is
-// served from this site (see the @font-face rule at the top of hero.css), not
-// from Google Fonts.
+// The handwritten lines further down the home page use the "Allura" script
+// font. It is served from this site (see the @font-face rule at the top of
+// hero.css), not from Google Fonts. The hero itself no longer uses it, so the
+// font is not needed for the first screen.
 
 function Hero({ festive = false }) {
   return (
@@ -69,23 +70,6 @@ function Hero({ festive = false }) {
 
       <div className="hero-inner">
         <div className="hero-copy">
-          <p className="hero-script">
-            Welcome to ShopCalmCanvas
-            <svg
-              viewBox="0 0 24 24"
-              width="22"
-              height="22"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-            >
-              <path d="M12 20.5s-7.5-4.6-9.3-9.2C1.4 7.9 3.6 4.5 7 4.5c2.1 0 3.6 1.2 5 3 1.4-1.8 2.9-3 5-3 3.4 0 5.6 3.4 4.3 6.8-1.8 4.6-9.3 9.2-9.3 9.2z" />
-            </svg>
-          </p>
-
           <h1 id="hero-title" className="hero-title">
             Aesthetic Hoodies &amp; Gifts{" "}
             <span className="hero-title-accent">Made From Original Art</span>

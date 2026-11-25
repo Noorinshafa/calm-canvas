@@ -7,8 +7,8 @@
    Plain CSS: no animation script, nothing moves.
 =====================================================*/
 
-/* The script font for the handwritten lines ("Welcome to ShopCalmCanvas"
-   here, and the lines in the Christmas and story sections in home.css).
+/* The script font for the handwritten lines in the Christmas and story
+   sections (home.css). Kept here because this file loads on every home page.
    Served from this site instead of Google Fonts: no extra connections to
    Google's servers, and no visitor data sent to them. Only the basic Latin
    letters, digits and punctuation are in the file (17 KB), so any English
@@ -72,24 +72,6 @@
 }
 
 /*-------------------- text --------------------*/
-
-.hero-script{
-    display:inline-flex;
-    align-items:center;
-    gap:8px;
-    margin:0 0 12px;
-    padding-bottom:6px;
-    font-family:"Allura", "Cormorant Garamond", Georgia, serif;
-    font-size:clamp(1.9rem, 2.8vw, 2.5rem);
-    line-height:1.1;
-    color:#2E2A2A;
-    background:linear-gradient(90deg, #D67A9B, rgba(214,122,155,0)) no-repeat 0 100% / 80% 2px;
-}
-
-.hero-script svg{
-    flex:none;
-    color:#C45E80;
-}
 
 .hero-title{
     margin:0 0 18px;
@@ -252,13 +234,6 @@
 
     .hero-copy{
         max-width:none;
-    }
-
-    .hero-script{
-        justify-content:center;
-        margin-bottom:10px;
-        font-size:1.55rem;
-        background-position:50% 100%;
     }
 
     .hero-title{
