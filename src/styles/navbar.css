@@ -30,12 +30,40 @@
 }
 
 /* Home page at the very top (and nothing open in the header): the menu row
-   is see-through, so the banner shows behind it. It turns solid white as
-   soon as the page scrolls or a menu opens. Every home banner is light at
-   the top, so the dark menu text stays readable. */
+   is forest green, the same green as the top bar and the big "Calm Canvas"
+   word in the first banner, with white type and a white logo. It turns
+   white as soon as the page scrolls or a menu opens. */
 .navbar--top {
-  background: transparent;
-  border-bottom-color: transparent;
+  background: var(--c-forest);
+  border-bottom-color: var(--c-forest);
+}
+
+.navbar--top .navbar-logo img {
+  filter: brightness(0) invert(1);
+}
+
+.navbar--top .navbar-brand .brand-name,
+.navbar--top .navbar-links > a,
+.navbar--top .navbar-links > a.active,
+.navbar--top .nav-dd-toggle,
+.navbar--top .navbar-icon,
+.navbar--top .navbar-menu-button {
+  color: #FFFFFF;
+}
+
+.navbar--top .navbar-icon:hover,
+.navbar--top .navbar-menu-button:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.navbar--top .navbar-cart-count {
+  background: #FFFFFF;
+  color: var(--c-forest);
+}
+
+.navbar--top a:focus-visible,
+.navbar--top button:focus-visible {
+  outline-color: #FFFFFF;
 }
 
 .navbar-inner {

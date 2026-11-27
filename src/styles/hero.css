@@ -1,8 +1,8 @@
 /*=====================================================
    HOME HERO (redesign)
-   Three banners that take turns. The header above is see-
-   through on the home page (navbar.css), so every banner
-   starts at the very top and leaves room for it
+   Three banners that take turns. The header sits on top
+   of the banner on the home page (navbar.css), so every
+   banner starts at the very top and leaves room for it
    (--head). Headings use Anton, a tall condensed display
    type, served from this site.
 =====================================================*/
@@ -63,7 +63,7 @@
 .hb-copy{
     position:relative;
     z-index:5;
-    width:min(500px, 38vw);
+    width:min(540px, 42vw);
     margin-left:var(--edge);
     padding-bottom:48px;
 }
@@ -115,13 +115,9 @@
     background:radial-gradient(ellipse at 70% 45%, #FFFFFF 0%, #EEEEEC 50%, #DCDCDA 100%);
 }
 
-/* The group starts at the very top, behind the see-through header, so the
-   models rise all the way up: the one on the right reaches the top edge
-   (between the menu links and the search and bag icons) and the others step
-   down from it, ending below the menu. */
 .hb-models{
     position:absolute;
-    top:0;
+    top:var(--head);
     right:0;
     bottom:0;
     width:62%;
@@ -129,12 +125,13 @@
 
 .hb-word{
     position:absolute;
-    top:calc(var(--head) - 8px);
-    left:3%;
+    top:3%;
+    right:3%;
     z-index:0;
     font-family:"Anton", "Arial Narrow", Impact, sans-serif;
-    font-size:clamp(6rem, 12.5vw, 12.5rem);
+    font-size:clamp(5.5rem, 11.5vw, 11.5rem);
     line-height:.84;
+    text-align:right;
     text-transform:uppercase;
     color:var(--c-forest);
 }
@@ -152,10 +149,13 @@
     height:100%;
 }
 
-.hb-model--grey{ left:0; height:60%; z-index:1; }
-.hb-model--couple{ left:12%; height:70%; z-index:2; }
-.hb-model--black{ left:36%; height:84%; z-index:4; }
-.hb-model--white{ right:calc(var(--edge) - 28px); height:100%; z-index:3; }
+.hb-model--grey{ left:-2%; height:74%; z-index:1; }
+.hb-model--couple{ left:12%; height:84%; z-index:2; }
+/* The model in black is cropped at the top of her head in the photo, so she
+   reaches up under the green header (a few pixels past the top of the group)
+   and the crop is never seen. */
+.hb-model--black{ left:47%; height:calc(100% + 6px); z-index:4; }
+.hb-model--white{ left:76%; height:88%; z-index:3; }
 
 .hb-floor{
     position:absolute;
@@ -185,34 +185,22 @@
     object-position:center;
 }
 
-/* The wallpaper starts just under the menu and fades in from a plain
-   paper colour, so the gift boxes never sit behind the logo or the links. */
-.hb--christmas{ background:#F0E2CC; }
-
-.hb--christmas .hb-bg{
-    top:calc(var(--head) - 40px);
-    -webkit-mask-image:linear-gradient(to bottom, transparent 0, #000 70px);
-    mask-image:linear-gradient(to bottom, transparent 0, #000 70px);
-}
+.hb--christmas{ background:#EFE6D8; }
 
 /*---------- photo on the right (hoodies, tees) ----------*/
 
 .hb--hoodies{ background:#ACA9A6; }
 .hb--tees{ background:linear-gradient(110deg, #F1DDE2 0%, #DCCFE3 100%); }
 
-/* The photo fades in from the left (towards the text) and from the top
-   (under the menu). */
 .hb-photo{
     position:absolute;
-    top:calc(var(--head) - 40px);
+    top:0;
     right:0;
     bottom:0;
     width:62%;
     z-index:0;
-    -webkit-mask-image:linear-gradient(to right, transparent 0%, #000 22%), linear-gradient(to bottom, transparent 0, #000 80px);
-    -webkit-mask-composite:source-in;
-    mask-image:linear-gradient(to right, transparent 0%, #000 22%), linear-gradient(to bottom, transparent 0, #000 80px);
-    mask-composite:intersect;
+    -webkit-mask-image:linear-gradient(to right, transparent 0%, #000 22%);
+    mask-image:linear-gradient(to right, transparent 0%, #000 22%);
 }
 
 .hb-photo img{
@@ -347,16 +335,14 @@
     .hb-model--grey{ display:none; }
     .hb-model--couple{ left:-4%; height:82%; }
     .hb-model--black{ left:36%; height:100%; }
-    .hb-model--white{ left:70%; right:auto; height:86%; }
+    .hb-model--white{ left:70%; height:86%; }
 
     .hb-photo{
         top:auto;
         width:100%;
         height:50%;
         -webkit-mask-image:linear-gradient(to bottom, transparent 0%, #000 22%);
-        -webkit-mask-composite:source-over;
         mask-image:linear-gradient(to bottom, transparent 0%, #000 22%);
-        mask-composite:add;
     }
 
     .hero-controls{ bottom:14px; }
