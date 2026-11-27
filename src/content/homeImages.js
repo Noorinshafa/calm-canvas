@@ -15,38 +15,6 @@
 // Only addresses from images-api.printify.com/mockup/ can be resized by the
 // site (see src/utils/imageUrl.js).
 
-// The gifts banner at the top of the home page (src/components/sections/
-// Hero.jsx) shows three real shop products as photo cards: Printify's own
-// lifestyle photos of a mug, a phone case and a tote bag. Each card links to
-// its product. If a product is ever removed from the shop, another one from
-// the same collection takes its place (src/hooks/useHomePhoto.js).
-export const GIFT_CARDS = [
-  {
-    slug: "pastel-butterflies-mug",
-    collection: "mugs",
-    kind: "model",
-    name: "Pastel Butterflies Mug",
-    src: "https://images-api.printify.com/mockup/6a95deeef9f093a7d4025e3f/33719/10393/pastel-butterflies-mug-colorful-butterfly-ceramic-coffee-cup.jpg?camera_label=context-1",
-    alt: "Pastel butterflies mug filled with coffee on a table with candles and pine cones",
-  },
-  {
-    slug: "pink-tulip-bouquet-phone-case",
-    collection: "phonecases",
-    kind: "model",
-    name: "Pink Tulip Bouquet Phone Case",
-    src: "https://images-api.printify.com/mockup/6a89b928d83a98eae80ce4cb/62584/97555/pink-tulip-bouquet-phone-case-floral-iphone-case.jpg?camera_label=context-1",
-    alt: "Pink phone case with a white tulip bouquet print, standing on a stone",
-  },
-  {
-    slug: "watercolor-wildflower-botanical-tote-bag",
-    collection: "totebags",
-    kind: "model",
-    name: "Watercolor Wildflower Tote Bag",
-    src: "https://images-api.printify.com/mockup/688a2b8722a87b68c70e0d1a/103602/108946/watercolor-wildflower-botanical-tote-bag.jpg?camera_label=person-3",
-    alt: "Woman carrying a white tote bag with watercolour wildflowers",
-  },
-];
-
 // "Shop by category": one large photo per collection.
 // kind "model": a real model wearing the product (fills the tile).
 // kind "front": the product on its own (shown whole, centred).

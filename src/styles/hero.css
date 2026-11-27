@@ -1,6 +1,6 @@
 /*=====================================================
    HOME HERO (redesign)
-   Four banners that take turns. The header above is see-
+   Three banners that take turns. The header above is see-
    through on the home page (navbar.css), so every banner
    starts at the very top and leaves room for it
    (--head). Headings use Anton, a tall condensed display
@@ -19,8 +19,6 @@
     --head:132px;
     --hb-h:clamp(560px, 46vw, 720px);
     --edge:max(4vw, calc((100vw - 1380px) / 2));
-    --mx:0;
-    --my:0;
     position:relative;
     height:calc(var(--hb-h) + var(--head));
     padding:0;
@@ -65,7 +63,7 @@
 .hb-copy{
     position:relative;
     z-index:5;
-    width:min(540px, 42vw);
+    width:min(500px, 38vw);
     margin-left:var(--edge);
     padding-bottom:48px;
 }
@@ -111,41 +109,34 @@
     justify-content:center;
 }
 
-/*---------- banner 1: models in depth ----------*/
+/*---------- banner 1: models, back to front ----------*/
 
 .hb--models{
     background:radial-gradient(ellipse at 70% 45%, #FFFFFF 0%, #EEEEEC 50%, #DCDCDA 100%);
 }
 
+/* The group starts at the very top, behind the see-through header, so the
+   models rise all the way up: the one on the right reaches the top edge
+   (between the menu links and the search and bag icons) and the others step
+   down from it, ending below the menu. */
 .hb-models{
     position:absolute;
-    top:var(--head);
+    top:0;
     right:0;
     bottom:0;
     width:62%;
-    perspective:1200px;
-}
-
-/* Everything in the group moves a little with the mouse (--mx, --my set by
-   Hero.jsx): the nearer a layer (--depth), the more it moves. */
-.hb-word,
-.hb-model{
-    transform:translate3d(calc(var(--mx) * var(--depth) * 22px), calc(var(--my) * var(--depth) * 10px), 0);
-    transition:transform .4s var(--ease);
 }
 
 .hb-word{
     position:absolute;
-    top:3%;
-    right:3%;
+    top:calc(var(--head) - 8px);
+    left:3%;
     z-index:0;
     font-family:"Anton", "Arial Narrow", Impact, sans-serif;
-    font-size:clamp(5.5rem, 11.5vw, 11.5rem);
+    font-size:clamp(6rem, 12.5vw, 12.5rem);
     line-height:.84;
-    text-align:right;
     text-transform:uppercase;
     color:var(--c-forest);
-    transform:translate3d(calc(var(--mx) * var(--depth) * -22px), calc(var(--my) * var(--depth) * -10px), 0);
 }
 
 .hb-model{
@@ -161,10 +152,10 @@
     height:100%;
 }
 
-.hb-model--grey{ left:-2%; height:74%; z-index:1; }
-.hb-model--couple{ left:12%; height:84%; z-index:2; }
-.hb-model--black{ left:47%; height:98%; z-index:4; }
-.hb-model--white{ left:76%; height:88%; z-index:3; }
+.hb-model--grey{ left:0; height:60%; z-index:1; }
+.hb-model--couple{ left:12%; height:70%; z-index:2; }
+.hb-model--black{ left:36%; height:84%; z-index:4; }
+.hb-model--white{ right:calc(var(--edge) - 28px); height:100%; z-index:3; }
 
 .hb-floor{
     position:absolute;
@@ -177,7 +168,7 @@
     background:radial-gradient(ellipse at center, rgba(0,0,0,.16), transparent 70%);
 }
 
-/*---------- full-bleed wallpaper (Christmas, gifts) ----------*/
+/*---------- full-bleed wallpaper (Christmas) ----------*/
 
 .hb-bg{
     position:absolute;
@@ -194,27 +185,34 @@
     object-position:center;
 }
 
-.hb-bg--kraft img{
-    object-position:center bottom;
-}
+/* The wallpaper starts just under the menu and fades in from a plain
+   paper colour, so the gift boxes never sit behind the logo or the links. */
+.hb--christmas{ background:#F0E2CC; }
 
-.hb--christmas{ background:#EFE6D8; }
-.hb--gifts{ background:#D9C3A8; }
+.hb--christmas .hb-bg{
+    top:calc(var(--head) - 40px);
+    -webkit-mask-image:linear-gradient(to bottom, transparent 0, #000 70px);
+    mask-image:linear-gradient(to bottom, transparent 0, #000 70px);
+}
 
 /*---------- photo on the right (hoodies, tees) ----------*/
 
 .hb--hoodies{ background:#ACA9A6; }
 .hb--tees{ background:linear-gradient(110deg, #F1DDE2 0%, #DCCFE3 100%); }
 
+/* The photo fades in from the left (towards the text) and from the top
+   (under the menu). */
 .hb-photo{
     position:absolute;
-    top:0;
+    top:calc(var(--head) - 40px);
     right:0;
     bottom:0;
     width:62%;
     z-index:0;
-    -webkit-mask-image:linear-gradient(to right, transparent 0%, #000 22%);
-    mask-image:linear-gradient(to right, transparent 0%, #000 22%);
+    -webkit-mask-image:linear-gradient(to right, transparent 0%, #000 22%), linear-gradient(to bottom, transparent 0, #000 80px);
+    -webkit-mask-composite:source-in;
+    mask-image:linear-gradient(to right, transparent 0%, #000 22%), linear-gradient(to bottom, transparent 0, #000 80px);
+    mask-composite:intersect;
 }
 
 .hb-photo img{
@@ -226,56 +224,6 @@
 
 .hb-photo--tee img{
     object-position:center 20%;
-}
-
-/*---------- banner 4: product photo cards ----------*/
-
-.hb-cards{
-    position:absolute;
-    top:var(--head);
-    right:var(--edge);
-    bottom:0;
-    width:52%;
-    z-index:2;
-}
-
-.hb-card{
-    position:absolute;
-    display:block;
-    width:clamp(170px, 18vw, 260px);
-    padding:10px 10px 12px;
-    background:var(--c-white);
-    box-shadow:0 18px 40px rgba(0,0,0,.18);
-    color:var(--c-charcoal);
-    text-decoration:none;
-    transition:transform .3s var(--ease);
-}
-
-.hb-card img{
-    display:block;
-    width:100%;
-    aspect-ratio:1 / 1;
-    object-fit:cover;
-}
-
-.hb-card-name{
-    display:block;
-    margin-top:8px;
-    font-family:var(--f-sans);
-    font-size:.78rem;
-    font-weight:600;
-    line-height:1.3;
-}
-
-.hb-card--1{ left:4%; top:10%; transform:rotate(-6deg); }
-.hb-card--2{ left:36%; top:2%; transform:rotate(3deg); z-index:1; }
-.hb-card--3{ left:66%; top:14%; transform:rotate(-2deg); }
-
-.hb-card:hover{ transform:rotate(0deg) translateY(-6px); }
-
-.hb-card:focus-visible{
-    outline:2px solid var(--c-forest);
-    outline-offset:4px;
 }
 
 /*---------- controls ----------*/
@@ -399,29 +347,17 @@
     .hb-model--grey{ display:none; }
     .hb-model--couple{ left:-4%; height:82%; }
     .hb-model--black{ left:36%; height:100%; }
-    .hb-model--white{ left:70%; height:86%; }
+    .hb-model--white{ left:70%; right:auto; height:86%; }
 
     .hb-photo{
         top:auto;
         width:100%;
         height:50%;
         -webkit-mask-image:linear-gradient(to bottom, transparent 0%, #000 22%);
+        -webkit-mask-composite:source-over;
         mask-image:linear-gradient(to bottom, transparent 0%, #000 22%);
+        mask-composite:add;
     }
-
-    .hb-cards{
-        top:auto;
-        right:0;
-        left:0;
-        width:auto;
-        height:46%;
-    }
-
-    .hb-card{ width:34vw; padding:6px 6px 8px; }
-    .hb-card-name{ display:none; }
-    .hb-card--1{ left:4%; top:14%; }
-    .hb-card--2{ left:33%; top:2%; }
-    .hb-card--3{ left:62%; top:18%; }
 
     .hero-controls{ bottom:14px; }
 }
@@ -439,9 +375,6 @@
 @media (prefers-reduced-motion: reduce){
     .hb,
     .hb.is-active,
-    .hb-word,
-    .hb-model,
-    .hb-card,
     .hero-ctrl,
     .hero-dot::before{
         transition:none;
