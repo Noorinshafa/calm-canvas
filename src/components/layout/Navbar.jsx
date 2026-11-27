@@ -157,9 +157,8 @@ function Navbar() {
   }
 
   // On the home page, while it is scrolled to the very top and nothing is
-  // open in the header, the header sits one layer below the hero models so
-  // their heads can rise over its lower edge. Any scroll, menu or search puts
-  // the header back on top.
+  // open in the header, the menu row is see-through so the banner shows
+  // behind it (navbar.css). Any scroll, menu or search makes it solid.
   const underHero = isHome && atTop && !menuOpen && !searchOpen && !shopOpen;
 
   return (

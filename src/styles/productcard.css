@@ -59,6 +59,21 @@
     transition:opacity .45s var(--ease);
 }
 
+.pcard-media .pcard-img--back{
+    object-fit:contain;
+}
+
+/* Both photos are blended into the grey, so the front photo must fade out
+   while the hover photo fades in, or the two would show through each other. */
+.pcard-media .pcard-img{
+    transition:opacity .45s var(--ease);
+}
+
+.pcard-link:hover .has-model .pcard-img:not(.pcard-img--model),
+.pcard-link:focus-visible .has-model .pcard-img:not(.pcard-img--model){
+    opacity:0;
+}
+
 .pcard-link:hover .has-model .pcard-img--model,
 .pcard-link:focus-visible .has-model .pcard-img--model{
     opacity:1;
@@ -128,5 +143,6 @@
 }
 
 @media (prefers-reduced-motion: reduce){
+    .pcard-media .pcard-img,
     .pcard-media .pcard-img--model{ transition:none; }
 }

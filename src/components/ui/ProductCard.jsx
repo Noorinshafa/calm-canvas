@@ -31,8 +31,10 @@ function canHover() {
 // "front" photo (cardImage, on white), that photo is used and its white
 // background blends into the grey, so every product sits on the same studio
 // background. Otherwise the product's main photo fills the field as before.
-// On computers, pointing at the card fades in a photo of a real model wearing
-// the product (modelImage), which is only downloaded the first time.
+// On computers, pointing at the card fades in the back of the product
+// (backImage, e.g. the back of a hoodie), or a photo of a real model wearing
+// it (modelImage) when there is no back photo. It is only downloaded the
+// first time.
 //
 // There are no type, "bestseller" or rating labels on the photo. A
 // "% OFF" tag appears only for real price reductions, and low-priced
@@ -44,6 +46,7 @@ function ProductCard({
   slug,
   image,
   cardImage,
+  backImage,
   modelImage,
   title,
   price,
@@ -63,9 +66,13 @@ function ProductCard({
   const tag = priceTag(slug, priceValue, collection?.key);
   const studio = Boolean(cardImage);
   const photo = cardImage || image;
+  // The back photo is on white like the front one, so it is shown whole and
+  // blended into the grey field; a model photo fills the field.
+  const hoverImage = backImage || modelImage;
+  const hoverIsBack = Boolean(backImage);
 
   function loadModel() {
-    if (modelImage && !wantModel && canHover()) setWantModel(true);
+    if (hoverImage && !wantModel && canHover()) setWantModel(true);
   }
 
   return (
@@ -99,8 +106,8 @@ function ProductCard({
           )}
           {wantModel && (
             <OptimizedImage
-              className="pcard-img pcard-img--model"
-              src={modelImage}
+              className={`pcard-img pcard-img--model${hoverIsBack ? " pcard-img--back" : ""}`}
+              src={hoverImage}
               alt=""
               widths={widths}
               sizes={sizes}

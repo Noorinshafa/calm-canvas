@@ -15,134 +15,37 @@
 // Only addresses from images-api.printify.com/mockup/ can be resized by the
 // site (see src/utils/imageUrl.js).
 
-// The banner at the top of the home page: the heading, text and buttons stay
-// still, and behind them three little "studio sets" take turns every few
-// seconds. Each set is a painted plaster wall in white or grey (made by code, see
-// src/assets/home/wall-*.webp) with an arch and a round plinth (drawn with
-// CSS), and three real shop products on it: Printify's plain "front" photos,
-// whose white background blends into the wall (see .hero-set in hero.css).
-//   wall   "white", "grey" or "stone"
-//   season "christmas" = only 1 November to 26 December, "rest" = only the
-//          rest of the year, left out = always shown
-//   main   the large product in front of the arch
-//   side   a smaller product leaning on the left
-//   plinth the product standing on the plinth (a mug looks best)
-//   tag    the small link under the set
-// The first set's main photo is the page's largest picture:
-// scripts/postbuild.mjs tells the browser to start downloading it at once.
-export const HERO_SETS = [
+// The gifts banner at the top of the home page (src/components/sections/
+// Hero.jsx) shows three real shop products as photo cards: Printify's own
+// lifestyle photos of a mug, a phone case and a tote bag. Each card links to
+// its product. If a product is ever removed from the shop, another one from
+// the same collection takes its place (src/hooks/useHomePhoto.js).
+export const GIFT_CARDS = [
   {
-    key: "cozy",
-    wall: "white",
-    tag: { label: "Shop hoodies", path: "/hoodies" },
-    main: {
-      slug: "watercolor-butterflies-hoodie",
-      collection: "hoodies",
-      name: "Watercolor Butterflies Hoodie",
-      src: "https://images-api.printify.com/mockup/6a8a08a6346a01c09106e0c3/33379/98424/watercolor-butterflies-hoodie-pastel-pink-blue-green-butterfly-sweatshirt.jpg?camera_label=front",
-    },
-    side: {
-      slug: "pink-strawberry-daisy-pattern-slim-phone-case",
-      collection: "phonecases",
-      name: "Pink Strawberry Daisy Phone Case",
-      src: "https://images-api.printify.com/mockup/6abe376a502f8eabca0df000/130103/111286/pink-strawberry-daisy-pattern-slim-phone-case-pastel-floral-hearts.jpg?camera_label=front",
-    },
-    plinth: {
-      slug: "hanging-daisy-floral-mug",
-      collection: "mugs",
-      name: "Hanging Daisy Floral Mug",
-      src: "https://images-api.printify.com/mockup/6a95dffd0e3c28244a0b80e4/96176/108345/hanging-daisy-floral-mug-ceramic-coffee-cup-11oz-15oz.jpg?camera_label=front",
-    },
+    slug: "pastel-butterflies-mug",
+    collection: "mugs",
+    kind: "model",
+    name: "Pastel Butterflies Mug",
+    src: "https://images-api.printify.com/mockup/6a95deeef9f093a7d4025e3f/33719/10393/pastel-butterflies-mug-colorful-butterfly-ceramic-coffee-cup.jpg?camera_label=context-1",
+    alt: "Pastel butterflies mug filled with coffee on a table with candles and pine cones",
   },
   {
-    key: "christmas",
-    season: "christmas",
-    wall: "grey",
-    tag: { label: "Shop Christmas gifts", path: "/christmas-gifts" },
-    main: {
-      slug: "christmas-penguin-and-tree-merry-christmas-sweatshirt",
-      collection: "sweatshirts",
-      name: "Christmas Penguin Sweatshirt",
-      src: "https://images-api.printify.com/mockup/6adf8247c392daed6500d74f/25462/98502/christmas-penguin-and-tree-merry-christmas-sweatshirt.jpg?camera_label=front",
-    },
-    side: {
-      slug: "pink-strawberry-daisy-pattern-slim-phone-case",
-      collection: "phonecases",
-      name: "Pink Strawberry Daisy Phone Case",
-      src: "https://images-api.printify.com/mockup/6abe376a502f8eabca0df000/130103/111286/pink-strawberry-daisy-pattern-slim-phone-case-pastel-floral-hearts.jpg?camera_label=front",
-    },
-    plinth: {
-      slug: "red-glitter-drip-mug",
-      collection: "mugs",
-      name: "Red Glitter Drip Mug",
-      src: "https://images-api.printify.com/mockup/6a7f5bada00da47900093706/71302/12360/red-glitter-drip-mug-holiday-sparkle-coffee-cup.jpg?camera_label=front",
-    },
+    slug: "pink-tulip-bouquet-phone-case",
+    collection: "phonecases",
+    kind: "model",
+    name: "Pink Tulip Bouquet Phone Case",
+    src: "https://images-api.printify.com/mockup/6a89b928d83a98eae80ce4cb/62584/97555/pink-tulip-bouquet-phone-case-floral-iphone-case.jpg?camera_label=context-1",
+    alt: "Pink phone case with a white tulip bouquet print, standing on a stone",
   },
   {
-    key: "gifts",
-    season: "rest",
-    wall: "grey",
-    tag: { label: "Shop mugs", path: "/mugs" },
-    main: {
-      slug: "pink-ribbon-bow-hoodie",
-      collection: "hoodies",
-      name: "Pink Ribbon Bow Hoodie",
-      src: "https://images-api.printify.com/mockup/6a89d4437087bb9709071f9d/42229/98424/pink-ribbon-bow-hoodie-cute-bow-sleeve-design.jpg?camera_label=front",
-    },
-    side: {
-      slug: "sunflower-field-tough-phone-case",
-      collection: "phonecases",
-      name: "Sunflower Field Phone Case",
-      src: "https://images-api.printify.com/mockup/6a888966a9520d71fa0e90a1/112814/106392/sunflower-field-tough-phone-case.jpg?camera_label=front",
-    },
-    plinth: {
-      slug: "yellow-and-red-tulips-mug",
-      collection: "mugs",
-      name: "Yellow and Red Tulips Mug",
-      src: "https://images-api.printify.com/mockup/6a95a10fe5757574e30522e0/65216/6310/yellow-and-red-tulips-mug-ceramic-floral-coffee-cup.jpg?camera_label=front",
-    },
-  },
-  {
-    key: "sweatshirts",
-    wall: "stone",
-    tag: { label: "Shop sweatshirts", path: "/sweatshirts" },
-    main: {
-      slug: "watercolor-purple-and-pink-butterflies-crewneck-sweatshirt",
-      collection: "sweatshirts",
-      name: "Watercolor Butterflies Sweatshirt",
-      src: "https://images-api.printify.com/mockup/6a8a0dd23ca68b402a0fd6e0/25448/98502/watercolor-purple-and-pink-butterflies-crewneck-sweatshirt.jpg?camera_label=front",
-    },
-    side: {
-      slug: "sunflower-field-tough-phone-case",
-      collection: "phonecases",
-      name: "Sunflower Field Phone Case",
-      src: "https://images-api.printify.com/mockup/6a888966a9520d71fa0e90a1/112814/106392/sunflower-field-tough-phone-case.jpg?camera_label=front",
-    },
-    plinth: {
-      slug: "yellow-and-red-tulips-mug",
-      collection: "mugs",
-      name: "Yellow and Red Tulips Mug",
-      src: "https://images-api.printify.com/mockup/6a95a10fe5757574e30522e0/65216/6310/yellow-and-red-tulips-mug-ceramic-floral-coffee-cup.jpg?camera_label=front",
-    },
+    slug: "watercolor-wildflower-botanical-tote-bag",
+    collection: "totebags",
+    kind: "model",
+    name: "Watercolor Wildflower Tote Bag",
+    src: "https://images-api.printify.com/mockup/688a2b8722a87b68c70e0d1a/103602/108946/watercolor-wildflower-botanical-tote-bag.jpg?camera_label=person-3",
+    alt: "Woman carrying a white tote bag with watercolour wildflowers",
   },
 ];
-
-// The sets shown today: three, whatever the season.
-export function heroSetsFor(festive) {
-  return HERO_SETS.filter(
-    (set) => !set.season || set.season === (festive ? "christmas" : "rest")
-  );
-}
-
-// How wide each product photo is on screen, so the browser picks the right
-// copy. The set is drawn on a stage up to 820px wide (the full width on
-// phones); the main product is 62% of it, the others about 20%. Must match
-// .hero-stage in hero.css; scripts/postbuild.mjs uses MAIN for its early
-// download.
-export const HERO_MAIN_SIZES = "(max-width: 1023px) 62vw, 510px";
-export const HERO_MAIN_WIDTHS = [384, 768];
-export const HERO_SMALL_SIZES = "(max-width: 1023px) 22vw, 180px";
-export const HERO_SMALL_WIDTHS = [256, 384];
 
 // "Shop by category": one large photo per collection.
 // kind "model": a real model wearing the product (fills the tile).

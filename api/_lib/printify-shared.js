@@ -151,8 +151,10 @@ function cameraLabel(src) {
 //               background. The card shows it on a light grey field (the
 //               white turns into that grey), so every product in a grid sits
 //               on the same studio background.
+//   backImage   Printify's plain "back" photo (the back of a hoodie, tee or
+//               sweatshirt), shown when the card is hovered.
 //   modelImage  a photo of a real model wearing or carrying the product
-//               ("person" photos), shown when the card is hovered.
+//               ("person" photos), shown on hover when there is no back photo.
 // Both show the colour a shopper first sees on the product page (its first
 // available variant). null when the product has no such photo (for example
 // products that only have photos uploaded by the shop): the card then uses
@@ -171,11 +173,16 @@ function cardPhotos(product) {
       images.find((image) => matches(cameraLabel(image.src)));
 
     const front = find((label) => label === "front");
+    const back = find((label) => label === "back");
     const model = find((label) => label.startsWith("person"));
 
-    return { cardImage: front?.src || null, modelImage: model?.src || null };
+    return {
+      cardImage: front?.src || null,
+      backImage: back?.src || null,
+      modelImage: model?.src || null,
+    };
   } catch {
-    return { cardImage: null, modelImage: null };
+    return { cardImage: null, backImage: null, modelImage: null };
   }
 }
 
@@ -188,7 +195,7 @@ function cardPhotos(product) {
 // were loading so slowly, especially on mobile.
 export function mapProductSummary(product, blueprintTitle = "") {
   const priceValue = computePrice(product);
-  const { cardImage, modelImage } = cardPhotos(product);
+  const { cardImage, backImage, modelImage } = cardPhotos(product);
 
   return {
     id: product.id,
@@ -196,6 +203,7 @@ export function mapProductSummary(product, blueprintTitle = "") {
     description: product.description,
     image: product.images?.[0]?.src || null,
     cardImage,
+    backImage,
     modelImage,
     images: (product.images || [])
       .filter((img) => img.src)
@@ -227,6 +235,7 @@ export function mapProductCard(summary) {
     title: summary.title,
     image: summary.image,
     cardImage: summary.cardImage,
+    backImage: summary.backImage,
     modelImage: summary.modelImage,
     price: summary.price,
     priceValue: summary.priceValue,
@@ -250,6 +259,7 @@ export function mapProductFull(product, blueprintTitle = "") {
   delete summary.feedColor; // feed-only, not needed by the product page
   // Card-only photos: the product page shows the full photo list instead.
   delete summary.cardImage;
+  delete summary.backImage;
   delete summary.modelImage;
 
   const variants = availableVariants(product).map((variant) => {

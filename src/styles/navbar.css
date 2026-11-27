@@ -16,7 +16,9 @@
   z-index: 2000;
   transition:
     transform 0.45s var(--ease),
-    opacity 0.45s var(--ease);
+    opacity 0.45s var(--ease),
+    background-color 0.3s var(--ease),
+    border-color 0.3s var(--ease);
   will-change: transform, opacity;
 }
 
@@ -27,10 +29,13 @@
   pointer-events: none;
 }
 
-/* Home page at the very top: one layer below the hero models (z-index 1600
-   in hero.css) so their heads can rise over the header's lower edge. */
+/* Home page at the very top (and nothing open in the header): the menu row
+   is see-through, so the banner shows behind it. It turns solid white as
+   soon as the page scrolls or a menu opens. Every home banner is light at
+   the top, so the dark menu text stays readable. */
 .navbar--top {
-  z-index: 1500;
+  background: transparent;
+  border-bottom-color: transparent;
 }
 
 .navbar-inner {

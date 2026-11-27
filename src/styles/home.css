@@ -8,16 +8,14 @@
 =====================================================*/
 
 .home{
-    /* Room for the fixed header: menu row (92px, 82px below 1280px) plus the
-       40px top bar the header shows on the home page. */
-    padding-top:132px;
+    /* No room left for the fixed header: the banner at the top runs behind
+       it (the header is see-through there) and leaves that room itself
+       (--head in hero.css). */
+    padding-top:0;
     background:var(--c-warm);
     color:var(--c-charcoal);
 }
 
-@media (max-width:1279px){
-    .home{ padding-top:122px; }
-}
 
 /*-------------------- top bar (rendered in the header) --------------------*/
 

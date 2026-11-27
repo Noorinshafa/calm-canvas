@@ -396,37 +396,31 @@ async function prerender() {
     // No built files (for example when testing the page generator alone).
   }
 
-  // The home page's top photo is only found by the browser once the app has
-  // started. Tell it about it in the home page's HTML instead, so it downloads
-  // at the same time as the app's code: the large product of the first studio
-  // set (src/content/homeImages.js, always shown first) is the page's largest
-  // picture, so it gets top priority. The widths and sizes are the ones
-  // Hero.jsx uses (HERO_MAIN_WIDTHS, HERO_MAIN_SIZES), so the copy loaded
-  // early is exactly the one the page then shows. Skipped (with a
-  // warning) if that product is no longer in the shop, because the page then
-  // shows a different photo (src/hooks/useHomePhoto.js).
+  // The home page's first banner is only found by the browser once the app has
+  // started. Tell it about its largest picture (the cut-out couple, see
+  // src/components/sections/Hero.jsx) in the home page's HTML instead, so it
+  // downloads at the same time as the app's code, at top priority. Phones and
+  // tablets get the 480px-tall copy, computers the 900px one; the 1023px limit
+  // must match the <source media> in Hero.jsx so nobody downloads both.
   const homePreloadLinks = [];
 
   try {
-    const { HERO_SETS, HERO_MAIN_SIZES, HERO_MAIN_WIDTHS } = await load(
-      "src/content/homeImages.js"
-    );
-    const lead = HERO_SETS[0]?.main;
-    const stillSold =
-      !haveProducts || products.some((product) => product.slug === lead?.slug);
-    const srcset = lead ? optimizedSrcSet(lead.src, HERO_MAIN_WIDTHS) : undefined;
+    const assetFiles = await readdir(path.join(DIST, "assets"));
+    const find = (prefix) =>
+      assetFiles.find((name) => new RegExp(`^${prefix}-[\\w-]+\\.webp$`).test(name));
+    const small = find("model-couple-480");
+    const large = find("model-couple-900");
 
-    if (lead && stillSold && srcset) {
+    if (small && large) {
       homePreloadLinks.push(
-        `<link rel="preload" as="image" fetchpriority="high" imagesrcset="${esc(
-          srcset
-        )}" imagesizes="${esc(HERO_MAIN_SIZES)}" />`
+        `<link rel="preload" as="image" type="image/webp" fetchpriority="high" media="(max-width: 1023px)" href="/assets/${esc(small)}" />`,
+        `<link rel="preload" as="image" type="image/webp" fetchpriority="high" media="(min-width: 1024px)" href="/assets/${esc(large)}" />`
       );
-    } else if (lead && !stillSold) {
-      log(`home page photo "${lead.slug}" is no longer in the shop: update src/content/homeImages.js`);
+    } else {
+      log("home banner picture not found in dist/assets: early download skipped");
     }
   } catch (error) {
-    log(`home page photo preload skipped: ${briefError(error)}`);
+    log(`home banner preload skipped: ${briefError(error)}`);
   }
 
   const collectionsCrumb = { name: "Collections", path: "/collections" };
