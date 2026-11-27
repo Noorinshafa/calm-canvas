@@ -197,7 +197,7 @@ function listWords(values) {
 function arrivalAnswer(noun) {
   return {
     q: `How long will it take to arrive?`,
-    a: `Each ${noun} is printed for you after you order, which takes about ${PRINT_TIME_TEXT}. Delivery then takes about 2–5 business days in the US with Standard shipping (2–3 with Priority), and about 10–30 business days to other countries (3–5 with Priority). You'll see the exact shipping price for your country before you pay. If it's a gift for a date, order a little early.`,
+    a: `Each ${noun} is printed for you after you order, which takes about ${PRINT_TIME_TEXT}. Delivery then takes about 2–5 business days in the US with Standard shipping (2–3 with Priority), and about 10–30 business days to the UK, Canada and Europe (3–5 with Priority). You'll see the exact shipping price for your country before you pay. If it's a gift for a date, order a little early.`,
   };
 }
 

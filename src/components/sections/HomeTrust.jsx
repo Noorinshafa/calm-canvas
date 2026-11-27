@@ -4,7 +4,7 @@ import { FiPackage, FiGlobe, FiLock, FiRefreshCw } from "react-icons/fi";
 // (src/config/site.js). Nothing here may be added unless it is a real policy.
 const ITEMS = [
   { icon: FiPackage, title: "Printed to order", text: "Made for you in 2–7 business days" },
-  { icon: FiGlobe, title: "Ships worldwide", text: "US, UK, Canada & most countries" },
+  { icon: FiGlobe, title: "US, UK, Canada & Europe", text: "Shipping price shown before you pay" },
   { icon: FiLock, title: "Secure checkout", text: "Payments processed by Safepay" },
   { icon: FiRefreshCw, title: "Arrived damaged?", text: "Free reprint or full refund" },
 ];

@@ -38,10 +38,9 @@ export const SOCIAL_LINKS = [
 // "calm canvas" as the same site.
 export const BRAND_ALTERNATE_NAMES = ["Shop Calm Canvas", "Calm Canvas"];
 
-// Main markets named in the product structured data (ISO country codes). The
-// store itself ships to most countries worldwide -- the full list customers can
-// pick at checkout is in src/config/countries.js.
-export const SHIPPING_COUNTRIES = ["US", "GB", "CA", "AU", "PK"];
+// Main markets (ISO country codes). The full list of the 33 countries the
+// store ships to is in src/config/countries.js (US, UK, Canada and Europe).
+export const SHIPPING_COUNTRIES = ["US", "GB", "CA"];
 
 // Printed-to-order timing, matching the Shipping & Returns page.
 export const HANDLING_DAYS = { min: 2, max: 7 };
@@ -311,7 +310,7 @@ export const SHIPPING_SECTIONS = [
     paragraphs: [
       "Shipping is charged in addition to the price of your items. It is worked out at checkout from the items in your cart and the country you are sending them to, and you see the exact price before you pay. We charge what our production partner charges to ship your order, with no hidden fees.",
       "Where available you can choose between Standard and Priority delivery. Priority costs more and is faster. As a guide, once your order has been printed, Standard delivery usually takes about 2–5 business days within the United States and about 10–30 business days to other countries, and Priority usually takes about 2–3 business days within the United States and about 3–5 business days to other countries. These are estimates from our production partner. Carriers, customs and local holidays can cause delays.",
-      "We ship to most countries worldwide. A few destinations cannot be served because of legal or carrier restrictions. If we can't ship your items to your country, checkout will tell you before you pay. Customs duties, import taxes or local fees may apply to international orders depending on your country. They are set by the destination country, are not included in our shipping price, and are the recipient's responsibility.",
+      "We ship to the United States, the United Kingdom, Canada and Europe (the 27 EU countries plus Norway, Switzerland and Iceland). We are not able to accept orders for other countries. If a particular item can't be shipped to your country, checkout will tell you before you pay. Customs duties, import taxes or local fees may apply depending on your country. They are set by the destination country, are not included in our shipping price, and are the recipient's responsibility.",
     ],
   },
   {
@@ -343,6 +342,10 @@ export const SHIPPING_SECTIONS = [
 // Real questions customers ask, answered from the policies above. Used for
 // the FAQ section and FAQPage structured data on the Shipping & Returns page.
 export const SHIPPING_FAQ = [
+  {
+    q: "Which countries do you ship to?",
+    a: "The United States, the United Kingdom, Canada and Europe: the 27 EU countries plus Norway, Switzerland and Iceland. Orders for other countries can't be placed.",
+  },
   {
     q: "How much does shipping cost?",
     a: "Shipping is added at checkout and depends on the items in your cart and your country. Choose your country on a product page or at checkout to see the exact price before you pay. You can usually pick Standard or the faster Priority option.",

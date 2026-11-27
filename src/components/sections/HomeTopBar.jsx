@@ -16,10 +16,10 @@ function HomeTopBar({ festive = false }) {
         <span className="home-topbar-long">
           {festive ? "Christmas Gifts Are Here" : "Printed to Order"}
           <span className="home-topbar-sep" aria-hidden="true">|</span>
-          Shipping to the US, UK, Canada &amp; Worldwide
+          Shipping to the US, UK, Canada &amp; Europe
         </span>
         <span className="home-topbar-short">
-          {festive ? "Christmas Gifts Are Here" : "Printed to Order · Ships Worldwide"}
+          {festive ? "Christmas Gifts Are Here" : "Printed to Order · US, UK, Canada & Europe"}
         </span>
         <span className="home-topbar-star" aria-hidden="true">★</span>
       </Link>
