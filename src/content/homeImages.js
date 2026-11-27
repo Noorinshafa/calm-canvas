@@ -15,30 +15,80 @@
 // Only addresses from images-api.printify.com/mockup/ can be resized by the
 // site (see src/utils/imageUrl.js).
 
-// The two large photos beside the heading at the top of the home page. The
-// first is the page's largest picture: scripts/postbuild.mjs tells the
-// browser to start downloading it straight away.
-export const HERO_LOOKS = [
+// The three banners at the top of the home page (they take turns). Each photo
+// is one of Printify's real lifestyle photos of a shop product (a product in a
+// real room or on a real table). The first banner holds the page's main
+// heading and is the page's largest picture: scripts/postbuild.mjs tells the
+// browser to start downloading its photo straight away.
+//   tone   the colour of the text panel: "ivory", "forest" or "sage"
+//   side   which side the photo is on (computers): "left" or "right"
+//   season "christmas" = only 1 November to 26 December, "rest" = only the
+//          rest of the year, left out = always shown
+export const HERO_SLIDES = [
   {
-    slug: "pink-ribbon-bow-hoodie",
-    name: "Pink Ribbon Bow Hoodie",
-    src: "https://images-api.printify.com/mockup/6a89d4437087bb9709071f9d/42229/98429/pink-ribbon-bow-hoodie-cute-bow-sleeve-design.jpg?camera_label=person-3",
-    alt: "Woman wearing a burgundy hoodie with a large pink ribbon bow print",
+    key: "brand",
+    slug: "silhouette-couple-love-t-shirt",
+    src: "https://images-api.printify.com/mockup/6a9dc80cc46cb584ca0d1c5f/38192/127673/silhouette-couple-love-t-shirt-romantic-couple-graphic-tee.jpg?camera_label=lifestyle",
+    alt: "Woman relaxing on a living room floor in a black T-shirt with a couple silhouette print",
+    position: "50% 40%",
+    tone: "ivory",
+    side: "left",
+    heading: "Aesthetic Hoodies & Gifts Made From Original Art",
+    text: "Cozy sweatshirts, graphic tees, mugs, tote bags and phone cases, printed to order just for you.",
+    cta: { label: "Shop the collection", path: "/collections" },
   },
   {
-    slug: "faith-script-hoodie",
-    name: "Faith Script Hoodie",
-    src: "https://images-api.printify.com/mockup/6a9dd0687f05b87d4e079d6f/109409/104781/faith-script-hoodie-minimalist-faith-design.jpg?camera_label=person-2-front",
-    alt: "Man wearing a sage green hoodie with a handwritten faith design",
+    key: "christmas",
+    season: "christmas",
+    slug: "pastel-butterflies-mug",
+    src: "https://images-api.printify.com/mockup/6a95deeef9f093a7d4025e3f/33719/10393/pastel-butterflies-mug-colorful-butterfly-ceramic-coffee-cup.jpg?camera_label=context-1",
+    alt: "Pastel butterflies mug filled with coffee on a winter table with candles and pine cones",
+    position: "50% 50%",
+    tone: "forest",
+    side: "right",
+    heading: "Christmas gifts, printed just for them",
+    text: "Hoodies, sweatshirts, mugs and phone cases with original art, made to order for everyone on your list.",
+    cta: { label: "Shop Christmas gifts", path: "/christmas-gifts" },
+  },
+  {
+    key: "mugs",
+    season: "rest",
+    slug: "yellow-and-red-tulips-mug",
+    src: "https://images-api.printify.com/mockup/6a95a10fe5757574e30522e0/65216/71754/yellow-and-red-tulips-mug-ceramic-floral-coffee-cup.jpg?camera_label=context-7",
+    alt: "Hands in a cream knit sweater holding a mug printed with yellow and red tulips",
+    position: "50% 50%",
+    tone: "forest",
+    side: "right",
+    heading: "Mugs for slow mornings",
+    text: "Florals, animals and seasonal designs on ceramic mugs, printed when you order.",
+    cta: { label: "Shop mugs", path: "/mugs" },
+  },
+  {
+    key: "sweatshirts",
+    slug: "sunflower-bouquet-crewneck-sweatshirt",
+    src: "https://images-api.printify.com/mockup/6a848f905b2598a3e1059e0c/25458/128101/sunflower-bouquet-crewneck-sweatshirt-yellow-floral-sleeve-design.jpg?camera_label=folded-2",
+    alt: "Folded white sweatshirt with a sunflower bouquet print beside a woven basket",
+    position: "50% 45%",
+    tone: "sage",
+    side: "left",
+    heading: "Soft sweatshirts, original art",
+    text: "Florals, animals and seasonal designs on warm everyday crewnecks, printed when you order.",
+    cta: { label: "Shop sweatshirts", path: "/sweatshirts" },
   },
 ];
 
-// How wide the hero photos are on screen, so the browser picks the right
-// copy. The photos are square and fill a tall panel (object-fit: cover), so
-// the copy must be as wide as the panel is TALL. Must match .hero-look in
-// hero.css; scripts/postbuild.mjs uses the same text for its early download.
-export const HERO_SIZES =
-  "(max-width: 1023px) clamp(320px, 88vw, 560px), clamp(520px, 44vw, 680px)";
+// The banners shown today: three, whatever the season.
+export function heroSlidesFor(festive) {
+  return HERO_SLIDES.filter(
+    (slide) => !slide.season || slide.season === (festive ? "christmas" : "rest")
+  );
+}
+
+// How wide a banner photo is on screen, so the browser picks the right copy:
+// 60% of the screen on computers, the full width on phones and tablets. Must
+// match .hero-slide-media in hero.css; scripts/postbuild.mjs uses the same
+// text for its early download.
+export const HERO_SIZES = "(max-width: 1023px) 100vw, 60vw";
 export const HERO_WIDTHS = [384, 768, 1024];
 
 // "Shop by category": one large photo per collection.

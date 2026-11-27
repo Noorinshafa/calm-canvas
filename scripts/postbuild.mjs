@@ -398,9 +398,9 @@ async function prerender() {
 
   // The home page's top photo is only found by the browser once the app has
   // started. Tell it about it in the home page's HTML instead, so it downloads
-  // at the same time as the app's code: the first of the two large model
-  // photos (src/content/homeImages.js) is the page's "Largest Contentful
-  // Paint" on phones and computers, so it gets top priority. The widths and
+  // at the same time as the app's code: the photo of the first banner
+  // (src/content/homeImages.js, always shown first) is the page's "Largest
+  // Contentful Paint" on phones and computers, so it gets top priority. The widths and
   // sizes are the ones Hero.jsx uses (HERO_WIDTHS, HERO_SIZES), so the copy
   // loaded early is exactly the one the page then shows. Skipped (with a
   // warning) if that product is no longer in the shop, because the page then
@@ -408,10 +408,10 @@ async function prerender() {
   const homePreloadLinks = [];
 
   try {
-    const { HERO_LOOKS, HERO_SIZES, HERO_WIDTHS } = await load(
+    const { HERO_SLIDES, HERO_SIZES, HERO_WIDTHS } = await load(
       "src/content/homeImages.js"
     );
-    const lead = HERO_LOOKS[0];
+    const lead = HERO_SLIDES[0];
     const stillSold =
       !haveProducts || products.some((product) => product.slug === lead?.slug);
     const srcset = lead ? optimizedSrcSet(lead.src, HERO_WIDTHS) : undefined;

@@ -1,78 +1,183 @@
 /*=====================================================
    HOME HERO (redesign)
-   Heading and buttons on the left, two large photos of
-   real models wearing real products on the right, all
-   on one light grey "studio" background.
-   Plain CSS: no animation, nothing moves.
+   Three full-width banners that take turns: a large
+   real lifestyle photo of a shop product beside a
+   coloured panel (ivory, forest or sage). The photo
+   swaps sides from one banner to the next.
 =====================================================*/
 
-/*---------- hero ----------*/
-
 .hero{
-    --hero-h:clamp(520px, 44vw, 680px);
-    display:grid;
-    grid-template-columns:minmax(380px, .9fr) 1.5fr;
+    --hero-h:clamp(460px, 40vw, 600px);
+    position:relative;
     padding:0;
-    background:var(--c-grey);
+    background:var(--c-ivory);
     color:var(--c-charcoal);
 }
 
-.hero-copy{
-    align-self:center;
-    padding:48px clamp(28px, 4vw, 64px) 48px max(4vw, calc((100vw - 1380px) / 2));
-}
-
-.hero-title{
-    margin:0;
-    max-width:13ch;
-    font-family:var(--f-serif);
-    font-size:clamp(2.6rem, 4.3vw, 4.25rem);
-    font-weight:500;
-    line-height:1.04;
-    letter-spacing:-.01em;
-    color:var(--c-charcoal);
-}
-
-.hero-subtitle{
-    margin:22px 0 0;
-    max-width:38ch;
-    font-family:var(--f-sans);
-    font-size:1rem;
-    line-height:1.65;
-    color:var(--c-ink-soft);
-}
-
-.hero-actions{
-    display:flex;
-    flex-wrap:wrap;
-    gap:12px;
-    margin-top:32px;
-}
-
-.hero-looks{
+/* All banners sit in the same place; only the active one is visible. */
+.hero-slides{
     display:grid;
-    grid-template-columns:1fr 1fr;
 }
 
-.hero-look{
+.hero-slide{
+    grid-area:1 / 1;
+    display:grid;
+    grid-template-columns:3fr 2fr;
+    min-height:var(--hero-h);
+    opacity:0;
+    visibility:hidden;
+    transition:opacity .7s var(--ease), visibility 0s linear .7s;
+}
+
+.hero-slide.is-active{
+    opacity:1;
+    visibility:visible;
+    transition:opacity .7s var(--ease);
+}
+
+.hero-slide--photo-right{
+    grid-template-columns:2fr 3fr;
+}
+
+.hero-slide--photo-right .hero-slide-media{
+    order:2;
+}
+
+.hero-slide-media{
     position:relative;
     display:block;
-    height:var(--hero-h);
     overflow:hidden;
-    color:var(--c-charcoal);
-    text-decoration:none;
+    background:var(--c-grey);
 }
 
-/* The square photo fills the tall panel; the model stays centred and the
-   empty grey at the sides is what gets trimmed. */
-.hero-look-img{
+.hero-slide-img{
     position:absolute;
     inset:0;
     width:100%;
     height:100%;
     object-fit:cover;
-    object-position:50% 30%;
 }
+
+/*---------- text panel ----------*/
+
+.hero-slide-panel{
+    display:flex;
+    align-items:center;
+    padding:56px clamp(32px, 5vw, 88px) 96px;
+}
+
+.hero-slide--ivory .hero-slide-panel{
+    background:var(--c-ivory);
+    color:var(--c-charcoal);
+}
+
+.hero-slide--forest .hero-slide-panel{
+    background:var(--c-forest);
+    color:var(--c-ivory);
+}
+
+.hero-slide--sage .hero-slide-panel{
+    background:var(--c-sage);
+    color:var(--c-charcoal);
+}
+
+.hero-slide-copy{
+    max-width:30rem;
+}
+
+.hero-slide-title{
+    margin:0;
+    font-family:var(--f-serif);
+    font-size:clamp(2.2rem, 3.2vw, 3.3rem);
+    font-weight:500;
+    line-height:1.05;
+    letter-spacing:-.01em;
+    color:inherit;
+}
+
+.hero-slide-text{
+    margin:18px 0 30px;
+    max-width:36ch;
+    font-family:var(--f-sans);
+    font-size:1rem;
+    line-height:1.65;
+    color:inherit;
+}
+
+.hero-slide--ivory .hero-slide-text,
+.hero-slide--sage .hero-slide-text{
+    color:var(--c-charcoal);
+}
+
+/*---------- controls ----------*/
+
+.hero-controls{
+    position:absolute;
+    right:clamp(16px, 2vw, 28px);
+    bottom:clamp(16px, 2vw, 28px);
+    z-index:2;
+    display:flex;
+    align-items:center;
+    gap:2px;
+    padding:4px;
+    border-radius:999px;
+    background:rgba(255,255,255,.94);
+    box-shadow:0 2px 10px rgba(12,10,8,.10);
+}
+
+.hero-ctrl{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    color:var(--c-charcoal);
+    transition:background-color .2s var(--ease);
+}
+
+.hero-ctrl:hover{
+    background:var(--c-grey);
+}
+
+.hero-dots{
+    display:flex;
+    align-items:center;
+}
+
+/* 24px buttons (easy to tap) with a small dot drawn inside. */
+.hero-dot{
+    position:relative;
+    width:24px;
+    height:40px;
+}
+
+.hero-dot::before{
+    content:"";
+    position:absolute;
+    top:50%;
+    left:50%;
+    width:8px;
+    height:8px;
+    margin:-4px 0 0 -4px;
+    border-radius:50%;
+    border:1px solid var(--c-charcoal);
+    background:transparent;
+    transition:background-color .2s var(--ease), transform .2s var(--ease);
+}
+
+.hero-dot[aria-current="true"]::before{
+    background:var(--c-charcoal);
+    transform:scale(1.15);
+}
+
+.hero-ctrl:focus-visible,
+.hero-dot:focus-visible{
+    outline:2px solid var(--c-forest);
+    outline-offset:1px;
+}
+
+/*---------- caption tag on banner photos further down the page ----------*/
 
 .hero-look-name{
     position:absolute;
@@ -87,53 +192,63 @@
     line-height:1.3;
 }
 
-.hero-look:hover .hero-look-name{
-    text-decoration:underline;
-    text-underline-offset:3px;
-}
+/*---------- phones and tablets: photo on top, text below ----------*/
 
-.hero-look:focus-visible{
-    outline:2px solid var(--c-forest);
-    outline-offset:-4px;
-}
-
-/* Phones and tablets: text first, the two photos side by side below it. */
 @media (max-width:1023px){
-    .hero{
-        --hero-h:clamp(320px, 88vw, 560px);
+    .hero-slide,
+    .hero-slide--photo-right{
         grid-template-columns:1fr;
+        grid-template-rows:auto 1fr;
+        min-height:0;
     }
 
-    .hero-copy{
-        padding:36px 4% 32px;
+    .hero-slide--photo-right .hero-slide-media{
+        order:0;
     }
 
-    .hero-title{
-        max-width:16ch;
-        font-size:clamp(2.15rem, 7vw, 3.2rem);
+    .hero-slide-media{
+        aspect-ratio:4 / 3;
+        max-height:560px;
     }
 
-    .hero-subtitle{
-        margin-top:14px;
+    .hero-slide-panel{
+        align-items:flex-start;
+        padding:28px 5% 36px;
+    }
+
+    .hero-slide-copy{
+        max-width:36rem;
+    }
+
+    .hero-slide-title{
+        font-size:clamp(1.95rem, 6.4vw, 2.8rem);
+    }
+
+    .hero-slide-text{
+        margin:12px 0 22px;
         font-size:.95rem;
     }
 
-    .hero-actions{
-        margin-top:24px;
+    /* The controls sit on the bottom edge of the photo. */
+    .hero-controls{
+        top:calc(min(75vw, 560px) - 56px);
+        bottom:auto;
+        right:12px;
     }
 }
 
 @media (max-width:520px){
-    .hero-actions .btn{
-        flex:1 1 0;
-        padding:0 14px;
-    }
+    .hero-ctrl{ width:36px; height:36px; }
+    .hero-dot{ height:36px; }
+}
 
-    .hero-look-name{
-        left:10px;
-        bottom:10px;
-        max-width:calc(100% - 20px);
-        padding:5px 8px;
-        font-size:.7rem;
+@media (prefers-reduced-motion: reduce){
+    .hero-slide,
+    .hero-slide.is-active{
+        transition:none;
+    }
+    .hero-ctrl,
+    .hero-dot::before{
+        transition:none;
     }
 }
