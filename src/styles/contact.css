@@ -2,7 +2,7 @@
 
     min-height:100vh;
 
-    background:#fffdfc;
+    background:#FDFDFD;
 
     display:flex;
 
@@ -34,7 +34,7 @@
 
     font-weight:700;
 
-    color:#C14560;
+    color:#2A3723;
 
     margin-bottom:20px;
 
@@ -48,7 +48,7 @@
 
     font-size:4.5rem;
 
-    color:#60484d;
+    color:#111111;
 
     margin-bottom:30px;
 
@@ -58,7 +58,7 @@
 
     font-family:"Manrope",sans-serif;
 
-    color:#816B70;
+    color:#707070;
 
     line-height:2;
 
@@ -80,7 +80,7 @@
 
     padding:45px;
 
-    box-shadow:0 25px 60px rgba(232,183,201,.18);
+    box-shadow:0 25px 60px rgba(196,196,196,.18);
 
 }
 
@@ -90,7 +90,7 @@
 
     font-size:2rem;
 
-    color:#65484d;
+    color:#111111;
 
     margin-bottom:20px;
 
@@ -104,7 +104,7 @@
 
     font-weight:600;
 
-    color:#C14560;
+    color:#2A3723;
 
     transition:.35s;
 
@@ -112,7 +112,7 @@
 
 .email-card a:hover{
 
-    color:#A33650;
+    color:#1E2A19;
 
 }
 
@@ -130,7 +130,7 @@
 
     line-height:1.85;
 
-    color:#816B70;
+    color:#707070;
 
     margin-bottom:0;
 

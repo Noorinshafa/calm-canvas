@@ -1,128 +1,227 @@
 /*=====================================================
    HOME HERO (redesign)
-   Three full-width banners that take turns: a large
-   real lifestyle photo of a shop product beside a
-   coloured panel (ivory, forest or sage). The photo
-   swaps sides from one banner to the next.
+   The heading, text and buttons stay still on the left.
+   Behind them, three "studio sets" take turns: a painted
+   plaster wall (white or grey) with an arch and a round plinth, and three
+   real shop products on it. The products are Printify's
+   plain photos on white; multiplying them onto the wall
+   turns that white into the wall itself, so only the
+   product and its real shadow show.
 =====================================================*/
 
 .hero{
-    --hero-h:clamp(460px, 40vw, 600px);
+    --hero-h:clamp(520px, 42vw, 640px);
+    /* The set is drawn on a stage 1.357 times as wide as it is tall. */
+    --stage-h:min(var(--hero-h), calc(58vw * .737), 604px);
+    --stage-w:calc(var(--stage-h) * 1.357);
+    --edge:max(4vw, calc((100vw - 1380px) / 2));
     position:relative;
+    height:var(--hero-h);
     padding:0;
-    background:var(--c-ivory);
+    overflow:hidden;
+    background:#F4F4F3;
     color:var(--c-charcoal);
 }
 
-/* All banners sit in the same place; only the active one is visible. */
-.hero-slides{
-    display:grid;
-}
+/*---------- sets ----------*/
 
-.hero-slide{
-    grid-area:1 / 1;
-    display:grid;
-    grid-template-columns:3fr 2fr;
-    min-height:var(--hero-h);
-    opacity:0;
-    visibility:hidden;
-    transition:opacity .7s var(--ease), visibility 0s linear .7s;
-}
-
-.hero-slide.is-active{
-    opacity:1;
-    visibility:visible;
-    transition:opacity .7s var(--ease);
-}
-
-.hero-slide--photo-right{
-    grid-template-columns:2fr 3fr;
-}
-
-.hero-slide--photo-right .hero-slide-media{
-    order:2;
-}
-
-.hero-slide-media{
-    position:relative;
-    display:block;
-    overflow:hidden;
-    background:var(--c-grey);
-}
-
-.hero-slide-img{
+.hero-sets{
     position:absolute;
     inset:0;
+    z-index:0;
+}
+
+/* The new set fades in ON TOP of the old one, which stays fully visible
+   underneath until the fade has finished. */
+.hero-set{
+    position:absolute;
+    inset:0;
+    z-index:0;
+    background-size:cover;
+    background-position:center;
+    opacity:0;
+    visibility:hidden;
+    transition:opacity 0s linear .8s, visibility 0s linear .8s;
+}
+
+.hero-set.is-active{
+    z-index:1;
+    opacity:1;
+    visibility:visible;
+    transition:opacity .8s var(--ease);
+}
+
+/* Wall colours (shown until the wall picture has loaded). */
+.hero-set--white{ background-color:#F4F4F3; }
+.hero-set--grey{ background-color:#E5E5E4; }
+.hero-set--stone{ background-color:#D8D8D6; }
+
+/* The floor: a slightly darker band the products stand on. */
+.hero-set::before{
+    content:"";
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:0;
+    height:calc(var(--stage-h) * .17);
+    background:linear-gradient(rgba(0,0,0,.07), rgba(0,0,0,.025));
+    border-top:1px solid rgba(0,0,0,.08);
+}
+
+.hero-stage{
+    position:absolute;
+    right:var(--edge);
+    bottom:0;
+    width:var(--stage-w);
+    height:var(--stage-h);
+}
+
+.hero-arch{
+    position:absolute;
+    left:36%;
+    bottom:17%;
+    width:42%;
+    height:78%;
+    border-radius:999px 999px 0 0;
+    background:rgba(255,255,255,.32);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.35);
+}
+
+.hero-plinth{
+    position:absolute;
+    left:75%;
+    bottom:3.5%;
+    width:22%;
+    height:25%;
+    border-radius:0 0 50% 50% / 0 0 14% 14%;
+    background:linear-gradient(90deg, rgba(0,0,0,.10), rgba(255,255,255,.35) 45%, rgba(0,0,0,.13));
+}
+
+.hero-plinth::before{
+    content:"";
+    position:absolute;
+    left:0;
+    right:0;
+    top:0;
+    aspect-ratio:4 / 1;
+    transform:translateY(-50%);
+    border-radius:50%;
+    background:rgba(255,255,255,.55);
+    box-shadow:inset 0 -1px 0 rgba(0,0,0,.12);
+}
+
+.hero-prod{
+    position:absolute;
+    display:block;
+}
+
+.hero-prod-img{
+    display:block;
     width:100%;
-    height:100%;
-    object-fit:cover;
+    height:auto;
+    mix-blend-mode:multiply;
 }
 
-/*---------- text panel ----------*/
+.hero-prod--main{
+    left:25%;
+    bottom:11%;
+    width:62%;
+}
 
-.hero-slide-panel{
+.hero-prod--side{
+    left:5%;
+    bottom:6%;
+    width:25%;
+}
+
+/* Tilted. The tilt goes on the photo itself: tilting the link around it
+   would stop the photo's white background blending into the wall. */
+.hero-prod--side .hero-prod-img{
+    transform:rotate(-7deg);
+}
+
+.hero-prod--plinth{
+    left:73%;
+    bottom:22.5%;
+    width:26%;
+}
+
+.hero-prod:focus-visible,
+.hero-set-tag:focus-visible{
+    outline:2px solid var(--c-forest);
+    outline-offset:2px;
+}
+
+.hero-set-tag{
+    position:absolute;
+    top:5%;
+    right:2%;
+    font-family:var(--f-sans);
+    font-size:.85rem;
+    font-weight:600;
+    color:var(--c-charcoal);
+    text-decoration:underline;
+    text-underline-offset:5px;
+    text-decoration-thickness:1px;
+}
+
+.hero-set-tag:hover{
+    text-decoration-thickness:2px;
+}
+
+/*---------- text ----------*/
+
+.hero-copy{
+    position:relative;
+    z-index:2;
     display:flex;
-    align-items:center;
-    padding:56px clamp(32px, 5vw, 88px) 96px;
+    flex-direction:column;
+    justify-content:center;
+    height:100%;
+    width:min(560px, calc(100vw - var(--stage-w) - 2 * var(--edge)));
+    margin-left:var(--edge);
+    padding:32px 24px 72px 0;
 }
 
-.hero-slide--ivory .hero-slide-panel{
-    background:var(--c-ivory);
-    color:var(--c-charcoal);
-}
-
-.hero-slide--forest .hero-slide-panel{
-    background:var(--c-forest);
-    color:var(--c-ivory);
-}
-
-.hero-slide--sage .hero-slide-panel{
-    background:var(--c-sage);
-    color:var(--c-charcoal);
-}
-
-.hero-slide-copy{
-    max-width:30rem;
-}
-
-.hero-slide-title{
+.hero-title{
     margin:0;
     font-family:var(--f-serif);
-    font-size:clamp(2.2rem, 3.2vw, 3.3rem);
+    font-size:clamp(2.3rem, 3.5vw, 3.6rem);
     font-weight:500;
-    line-height:1.05;
+    line-height:1.04;
     letter-spacing:-.01em;
-    color:inherit;
+    color:var(--c-charcoal);
 }
 
-.hero-slide-text{
-    margin:18px 0 30px;
-    max-width:36ch;
+.hero-subtitle{
+    margin:20px 0 30px;
+    max-width:40ch;
     font-family:var(--f-sans);
     font-size:1rem;
     line-height:1.65;
-    color:inherit;
+    color:#3A3734;
 }
 
-.hero-slide--ivory .hero-slide-text,
-.hero-slide--sage .hero-slide-text{
-    color:var(--c-charcoal);
+.hero-actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
 }
 
 /*---------- controls ----------*/
 
 .hero-controls{
     position:absolute;
-    right:clamp(16px, 2vw, 28px);
-    bottom:clamp(16px, 2vw, 28px);
-    z-index:2;
+    left:var(--edge);
+    bottom:20px;
+    z-index:3;
     display:flex;
     align-items:center;
     gap:2px;
     padding:4px;
     border-radius:999px;
-    background:rgba(255,255,255,.94);
-    box-shadow:0 2px 10px rgba(12,10,8,.10);
+    background:rgba(255,255,255,.9);
+    box-shadow:0 2px 10px rgba(12,10,8,.08);
 }
 
 .hero-ctrl{
@@ -162,13 +261,11 @@
     margin:-4px 0 0 -4px;
     border-radius:50%;
     border:1px solid var(--c-charcoal);
-    background:transparent;
-    transition:background-color .2s var(--ease), transform .2s var(--ease);
+    transition:background-color .2s var(--ease);
 }
 
 .hero-dot[aria-current="true"]::before{
     background:var(--c-charcoal);
-    transform:scale(1.15);
 }
 
 .hero-ctrl:focus-visible,
@@ -192,61 +289,70 @@
     line-height:1.3;
 }
 
-/*---------- phones and tablets: photo on top, text below ----------*/
+/*---------- phones and tablets: text on top, the set below ----------*/
 
 @media (max-width:1023px){
-    .hero-slide,
-    .hero-slide--photo-right{
-        grid-template-columns:1fr;
-        grid-template-rows:auto 1fr;
-        min-height:0;
+    .hero{
+        --stage-w:min(100vw, 640px);
+        --stage-h:calc(var(--stage-w) * .737);
+        height:auto;
+        padding-bottom:var(--stage-h);
     }
 
-    .hero-slide--photo-right .hero-slide-media{
-        order:0;
+    .hero-stage{
+        right:auto;
+        left:50%;
+        transform:translateX(-50%);
     }
 
-    .hero-slide-media{
-        aspect-ratio:4 / 3;
-        max-height:560px;
+    .hero-copy{
+        height:auto;
+        width:auto;
+        margin:0;
+        padding:32px 5% 12px;
     }
 
-    .hero-slide-panel{
-        align-items:flex-start;
-        padding:28px 5% 36px;
+    .hero-title{
+        max-width:16ch;
+        font-size:clamp(2rem, 6.6vw, 3rem);
     }
 
-    .hero-slide-copy{
-        max-width:36rem;
-    }
-
-    .hero-slide-title{
-        font-size:clamp(1.95rem, 6.4vw, 2.8rem);
-    }
-
-    .hero-slide-text{
+    .hero-subtitle{
         margin:12px 0 22px;
         font-size:.95rem;
     }
 
-    /* The controls sit on the bottom edge of the photo. */
+    .hero-set-tag{
+        right:auto;
+        left:5%;
+        top:4%;
+    }
+
+    /* The controls sit under the buttons, above the set, so they never
+       cover a product. */
     .hero-controls{
-        top:calc(min(75vw, 560px) - 56px);
+        position:relative;
+        left:auto;
         bottom:auto;
-        right:12px;
+        width:fit-content;
+        margin:4px 5% 10px;
     }
 }
 
 @media (max-width:520px){
+    .hero-actions .btn{
+        flex:1 1 0;
+        padding:0 10px;
+        font-size:.86rem;
+    }
+
     .hero-ctrl{ width:36px; height:36px; }
     .hero-dot{ height:36px; }
 }
 
 @media (prefers-reduced-motion: reduce){
-    .hero-slide,
-    .hero-slide.is-active{
-        transition:none;
-    }
+    .hero-set,
+    .hero-set.is-active,
     .hero-ctrl,
     .hero-dot::before{
         transition:none;

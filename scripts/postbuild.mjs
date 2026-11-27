@@ -398,29 +398,29 @@ async function prerender() {
 
   // The home page's top photo is only found by the browser once the app has
   // started. Tell it about it in the home page's HTML instead, so it downloads
-  // at the same time as the app's code: the photo of the first banner
-  // (src/content/homeImages.js, always shown first) is the page's "Largest
-  // Contentful Paint" on phones and computers, so it gets top priority. The widths and
-  // sizes are the ones Hero.jsx uses (HERO_WIDTHS, HERO_SIZES), so the copy
-  // loaded early is exactly the one the page then shows. Skipped (with a
+  // at the same time as the app's code: the large product of the first studio
+  // set (src/content/homeImages.js, always shown first) is the page's largest
+  // picture, so it gets top priority. The widths and sizes are the ones
+  // Hero.jsx uses (HERO_MAIN_WIDTHS, HERO_MAIN_SIZES), so the copy loaded
+  // early is exactly the one the page then shows. Skipped (with a
   // warning) if that product is no longer in the shop, because the page then
   // shows a different photo (src/hooks/useHomePhoto.js).
   const homePreloadLinks = [];
 
   try {
-    const { HERO_SLIDES, HERO_SIZES, HERO_WIDTHS } = await load(
+    const { HERO_SETS, HERO_MAIN_SIZES, HERO_MAIN_WIDTHS } = await load(
       "src/content/homeImages.js"
     );
-    const lead = HERO_SLIDES[0];
+    const lead = HERO_SETS[0]?.main;
     const stillSold =
       !haveProducts || products.some((product) => product.slug === lead?.slug);
-    const srcset = lead ? optimizedSrcSet(lead.src, HERO_WIDTHS) : undefined;
+    const srcset = lead ? optimizedSrcSet(lead.src, HERO_MAIN_WIDTHS) : undefined;
 
     if (lead && stillSold && srcset) {
       homePreloadLinks.push(
         `<link rel="preload" as="image" fetchpriority="high" imagesrcset="${esc(
           srcset
-        )}" imagesizes="${esc(HERO_SIZES)}" />`
+        )}" imagesizes="${esc(HERO_MAIN_SIZES)}" />`
       );
     } else if (lead && !stillSold) {
       log(`home page photo "${lead.slug}" is no longer in the shop: update src/content/homeImages.js`);
@@ -443,7 +443,7 @@ async function prerender() {
     },
     body: () =>
       `<h1>Aesthetic Hoodies &amp; Gifts Made From Original Art</h1>` +
-      `<p>Cozy sweatshirts, graphic tees, mugs, tote bags and phone cases, printed to order just for you.</p>` +
+      `<p>Original artwork on cozy hoodies, sweatshirts, tees, mugs, tote bags and phone cases. Every piece is printed to order, just for you.</p>` +
       `<p>${esc(DEFAULT_DESCRIPTION)}</p>` +
       `<nav aria-label="Shop by collection"><h2>Shop by collection</h2><ul>` +
       COLLECTIONS.map(

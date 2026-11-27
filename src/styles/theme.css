@@ -10,20 +10,20 @@
 
   /* Brand Palette */
 
-  --forest:#143C35;
-  --teal:#136E6E;
-  --mauve:#95627F;
-  --rose:#D67A9B;
-  --blush:#E7D8E2;
+  --forest:#111111;
+  --teal:#111111;
+  --mauve:#2A3723;
+  --rose:#2A3723;
+  --blush:#DCDCDC;
 
-  --cream:#FAF8F6;
+  --cream:#FFFFFF;
   --white:#ffffff;
 
   /* Text */
 
   --heading:var(--forest);
-  --text:#35504B;
-  --muted:#7B7B7B;
+  --text:#3A3A3A;
+  --muted:#6B6B6B;
 
   /* Fonts */
 

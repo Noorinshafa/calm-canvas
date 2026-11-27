@@ -8,7 +8,7 @@
 
     min-height:100vh;
 
-    background:#fffdfb;
+    background:#FDFDFD;
 }
 
 .cart-heading{
@@ -22,7 +22,7 @@
 
     letter-spacing:3px;
 
-    color:#C14560;
+    color:#2A3723;
 
     font-size:.9rem;
 
@@ -35,7 +35,7 @@
 
     font-size:3.8rem;
 
-    color:#5f4446;
+    color:#111111;
 
     margin-top:12px;
 }
@@ -105,14 +105,14 @@
 
     font-size:1.5rem;
 
-    color:#5f4446;
+    color:#111111;
 
     margin-bottom:10px;
 }
 
 .cart-price{
 
-    color:#9C6426;
+    color:#111111;
 
     font-size:1.2rem;
 
@@ -146,9 +146,9 @@
 
     border-radius:50%;
 
-    background:#f4e6ea;
+    background:#E9E9E9;
 
-    color:#5f4446;
+    color:#111111;
 
     font-size:1.3rem;
 
@@ -159,7 +159,7 @@
 
 .quantity-box button:hover{
 
-    background:#d89caf;
+    background:#2A3723;
 
     color:white;
 }
@@ -170,7 +170,7 @@
 
     font-weight:700;
 
-    color:#5f4446;
+    color:#111111;
 }
 
 /* ===========================
@@ -183,7 +183,7 @@
 
     background:none;
 
-    color:#d66b6b;
+    color:#A8323F;
 
     cursor:pointer;
 
@@ -220,14 +220,14 @@
 
     font-family:"Cormorant Garamond",serif;
 
-    color:#5f4446;
+    color:#111111;
 
     margin-bottom:18px;
 }
 
 .cart-summary h3{
 
-    color:#9C6426;
+    color:#111111;
 
     font-size:2rem;
 
@@ -244,7 +244,7 @@
 
     border-radius:50px;
 
-    background:#5f4446;
+    background:#111111;
 
     color:white;
 
@@ -255,7 +255,7 @@
 
 .checkout-btn:hover{
 
-    background:#d89caf;
+    background:#2A3723;
 
     transform:translateY(-3px);
 }
@@ -277,7 +277,7 @@
 
     font-size:2.5rem;
 
-    color:#5f4446;
+    color:#111111;
 
     margin-bottom:15px;
 }

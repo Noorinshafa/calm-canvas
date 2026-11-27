@@ -6,8 +6,6 @@ import { ProductGridSkeleton } from "../ui/Skeletons";
 import Breadcrumbs from "./Breadcrumbs";
 import { COLLECTIONS } from "../../config/site.js";
 import { cleanProductName, productInCollection } from "../../utils/seoShared.js";
-import decorFlowers from "../../assets/home/decor-flowers.webp";
-import decorLeaves from "../../assets/home/decor-leaves.webp";
 import "../../styles/shoppage.css";
 
 // Small banner photos (360px, about 8 KB each): four per collection, taken
@@ -44,52 +42,42 @@ function priceOf(product) {
   return Number.isFinite(value) ? value : Number(String(product.price).replace(/[^0-9.]/g, ""));
 }
 
-function Heart({ filled = false, size = 20 }) {
-  return (
-    <svg viewBox="0 0 24 24" width={size} height={size} fill={filled ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M12 20.5s-7.5-4.6-9.3-9.2C1.4 7.9 3.6 4.5 7 4.5c2.1 0 3.6 1.2 5 3 1.4-1.8 2.9-3 5-3 3.4 0 5.6 3.4 4.3 6.8-1.8 4.6-9.3 9.2-9.3 9.2z" />
-    </svg>
-  );
-}
-
-// Pink banner at the top of every shop page: breadcrumbs, the page heading,
-// a short line, a heart divider and three photos on the right.
-export function ShopBanner({ crumbs, title, subtitle, photos = [], productPhotos = [] }) {
+// The header of every shop page: breadcrumbs, the page heading and a short
+// line on the left, and three real products from the page on the right, on
+// the same light grey "studio" background as the product cards (Printify's
+// plain photo on white, blended into the grey; see .studio in global.css).
+// `photos` (fixed banner pictures) is no longer shown: every page uses its
+// own products, so the header always matches what is for sale.
+export function ShopBanner({ crumbs, title, subtitle, productPhotos = [] }) {
   return (
     <header className="shop-banner">
-      <img className="shop-banner-decor shop-banner-decor--flowers" src={decorFlowers} alt="" width="300" height="290" decoding="async" />
-      <img className="shop-banner-decor shop-banner-decor--leaves" src={decorLeaves} alt="" width="342" height="580" decoding="async" />
-
       <div className="shop-banner-inner">
         <div className="shop-banner-text">
           {crumbs && <Breadcrumbs items={crumbs} />}
           <h1>{title}</h1>
           {subtitle && <p>{subtitle}</p>}
-          <span className="shop-banner-divider" aria-hidden="true">
-            <Heart filled size={18} />
-          </span>
         </div>
 
-        <div className="shop-banner-photos" aria-hidden="true">
-          {photos.slice(0, 3).map((src, index) => (
-            <span key={src} className={`shop-banner-photo shop-banner-photo--${index + 1}`}>
-              <img src={src} alt="" width="360" height="360" decoding="async" />
-            </span>
-          ))}
-          {photos.length === 0 &&
-            productPhotos.slice(0, 3).map((product, index) => (
-              <span key={product.id} className={`shop-banner-photo shop-banner-photo--${index + 1}`}>
+        {productPhotos.length > 0 && (
+          <div className="shop-banner-photos" aria-hidden="true">
+            {productPhotos.slice(0, 3).map((product) => (
+              <span
+                key={product.id}
+                className={product.cardImage ? "shop-banner-photo studio" : "shop-banner-photo"}
+              >
                 <OptimizedImage
-                  src={product.image}
-                  alt={cleanProductName(product.title)}
+                  className={product.cardImage ? "studio-img" : undefined}
+                  src={product.cardImage || product.image}
+                  alt=""
                   widths={[384]}
-                  sizes="240px"
+                  sizes="200px"
                   width="384"
                   height="384"
                 />
               </span>
             ))}
-        </div>
+          </div>
+        )}
       </div>
     </header>
   );
@@ -135,7 +123,6 @@ function ShopPage({
   crumbs,
   title,
   subtitle,
-  photos,
   products,
   allProducts = products,
   loading,
@@ -198,11 +185,12 @@ function ShopPage({
     setCategory(value);
   }
 
-  // Product photos for banners that have no fixed photos (gift pages).
-  const bannerProducts = useMemo(
-    () => (photos && photos.length ? [] : products.filter((product) => product.image).slice(0, 3)),
-    [photos, products]
-  );
+  // The three products in the page header: the first ones with a plain
+  // product photo (on white), else any with a photo.
+  const bannerProducts = useMemo(() => {
+    const studio = products.filter((product) => product.cardImage);
+    return (studio.length >= 3 ? studio : products.filter((product) => product.image)).slice(0, 3);
+  }, [products]);
 
   return (
     <div className="shop-page">
@@ -210,7 +198,6 @@ function ShopPage({
         crumbs={crumbs}
         title={title}
         subtitle={subtitle}
-        photos={photos}
         productPhotos={bannerProducts}
       />
 

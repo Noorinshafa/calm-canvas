@@ -8,7 +8,7 @@
 
     min-height:100vh;
 
-    background:#fffdfb;
+    background:#FDFDFD;
 }
 
 /* ===========================
@@ -26,7 +26,7 @@
 
     letter-spacing:3px;
 
-    color:#C14560;
+    color:#2A3723;
 
     font-size:.9rem;
 
@@ -37,7 +37,7 @@
 
     font-family:"Cormorant Garamond",serif;
 
-    color:#5f4446;
+    color:#111111;
 
     font-size:3.8rem;
 
@@ -76,7 +76,7 @@
 
     font-family:"Cormorant Garamond",serif;
 
-    color:#5f4446;
+    color:#111111;
 
     margin-bottom:25px;
 
@@ -109,7 +109,7 @@
 
     padding:16px;
 
-    border:1px solid #e5dede;
+    border:1px solid #E0E0E0;
 
     border-radius:14px;
 
@@ -130,14 +130,14 @@
 
     outline:none;
 
-    border-color:#d89caf;
+    border-color:#2A3723;
 }
 
 .checkout-left input:focus-visible,
 .checkout-left select:focus-visible,
 .checkout-left textarea:focus-visible{
 
-    outline:2px solid #d89caf;
+    outline:2px solid #2A3723;
 
     outline-offset:2px;
 }
@@ -160,7 +160,7 @@
 
 .checkout-left small{
 
-    color:#d84c4c;
+    color:#A8323F;
 
     display:block;
 
@@ -189,16 +189,16 @@
 
     margin-top:18px;
 
-    border:2px solid #ece4e6;
+    border:2px solid #E6E6E6;
 
     transition:.3s;
 }
 
 .payment-card.active{
 
-    border-color:#d89caf;
+    border-color:#2A3723;
 
-    background:#fff5f8;
+    background:#F7F7F7;
 }
 
 .payment-card.disabled{
@@ -231,7 +231,7 @@
 
     font-size:15px;
 
-    color:#5f4446;
+    color:#111111;
 }
 
 .agree-box input{
@@ -259,7 +259,7 @@
 
     border-radius:50px;
 
-    background:#5f4446;
+    background:#111111;
 
     color:white;
 
@@ -274,7 +274,7 @@
 
 .place-order-btn:hover{
 
-    background:#d89caf;
+    background:#2A3723;
 
     transform:translateY(-3px);
 }
@@ -304,7 +304,7 @@
 
     font-family:"Cormorant Garamond",serif;
 
-    color:#5f4446;
+    color:#111111;
 
     margin-bottom:30px;
 }
@@ -335,7 +335,7 @@
 
 .summary-item h4{
 
-    color:#5f4446;
+    color:#111111;
 
     margin-bottom:6px;
 }
@@ -364,7 +364,7 @@
 
     font-weight:700;
 
-     color:#9C6426;
+     color:#111111;
 
     margin-top:20px;
 
@@ -408,5 +408,5 @@
 
     font-size:2.5rem;
 
-    color:#9C6426;
+    color:#111111;
 }

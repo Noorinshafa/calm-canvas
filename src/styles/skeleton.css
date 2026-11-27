@@ -6,7 +6,7 @@
 =====================================================*/
 
 .skeleton-block{
-    background:#EAEAE7;
+    background:#EAEAEA;
     background-image:linear-gradient(
         100deg,
         rgba(255,255,255,0) 20%,
@@ -73,7 +73,7 @@
 /* Product page */
 .skeleton-product{
     padding:140px 7% 100px;
-    background:#F8F5EF;
+    background:#F5F5F5;
     min-height:70vh;
 }
 

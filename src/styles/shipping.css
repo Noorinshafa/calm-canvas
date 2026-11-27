@@ -3,9 +3,9 @@
 .ship-estimate {
   margin-top: 22px;
   padding: 18px 20px;
-  border: 1px solid #eadfdf;
+  border: 1px solid #E1E1E1;
   border-radius: 16px;
-  background: #fffdfb;
+  background: #FDFDFD;
 }
 
 .ship-estimate h4 {
@@ -24,7 +24,7 @@
   margin: 10px 0 0;
   font-size: 0.85rem;
   line-height: 1.5;
-  color: #7a6668;
+  color: #6B6B6B;
 }
 
 .ship-note a {
@@ -35,7 +35,7 @@
 .ship-problem {
   margin: 8px 0 0;
   font-size: 0.9rem;
-  color: #c0392b;
+  color: #A8323F;
 }
 
 .ship-list {
@@ -56,7 +56,7 @@
 .ship-eta {
   display: block;
   font-size: 0.82rem;
-  color: #7a6668;
+  color: #6B6B6B;
 }
 
 .ship-price {
@@ -75,15 +75,15 @@
   align-items: center;
   gap: 14px;
   padding: 16px;
-  border: 1px solid #e5dede;
+  border: 1px solid #E0E0E0;
   border-radius: 14px;
   cursor: pointer;
   transition: border-color 0.2s, background 0.2s;
 }
 
 .checkout-left .shipping-option.selected {
-  border-color: #d89caf;
-  background: #fff7f9;
+  border-color: #2A3723;
+  background: #F9F9F9;
 }
 
 .checkout-left .shipping-option input {
@@ -91,7 +91,7 @@
   margin: 0;
   padding: 0;
   flex: none;
-  accent-color: #d89caf;
+  accent-color: #2A3723;
 }
 
 .shipping-option-text {
@@ -114,19 +114,19 @@
 
 .shipping-hint {
   margin: 0;
-  color: #7a6668;
+  color: #6B6B6B;
 }
 
 .shipping-problem {
   margin: 0;
-  color: #c0392b;
+  color: #A8323F;
   font-weight: 500;
 }
 
 .shipping-retry {
   margin-top: 8px;
   background: none;
-  border: 1px solid #d89caf;
+  border: 1px solid #2A3723;
   border-radius: 999px;
   padding: 6px 16px;
   cursor: pointer;
@@ -139,11 +139,11 @@
   justify-content: space-between;
   gap: 12px;
   margin: 10px 0;
-  color: #5f4446;
+  color: #111111;
 }
 
 .cart-shipping-note {
   margin: 4px 0 18px;
   font-size: 0.9rem;
-  color: #7a6668;
+  color: #6B6B6B;
 }

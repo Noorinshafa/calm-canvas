@@ -1,20 +1,22 @@
 /* ==========================================
-        DESIGN TOKENS (redesign, 27 Nov 2026)
+        DESIGN TOKENS (redesign, 27 Nov 2026:
+        black, white and grey, with forest green
+        as the single small accent)
         One palette for the whole site. New and
         restyled components use these; older pages
         move over to them phase by phase.
 ========================================== */
 :root{
-    --c-charcoal:#0C0A08;      /* text, headings, icons */
-    --c-forest:#2A3723;        /* primary buttons, active nav, brand bands */
-    --c-sage:#B9BBA8;          /* dividers, quiet labels on forest */
-    --c-ivory:#E8E5DD;         /* section backgrounds, text on forest */
-    --c-champagne:#DCBC98;     /* small accents only */
-    --c-grey:#F1F1EF;          /* product image field */
-    --c-warm:#F7F6F3;          /* page and header background */
+    --c-charcoal:#111111;      /* text, headings, icons, primary buttons */
+    --c-forest:#2A3723;        /* the one accent: small labels, links, focus, hover */
+    --c-sage:#D4D4D4;          /* quiet dividers */
+    --c-ivory:#F4F4F4;         /* light grey panels */
+    --c-champagne:#E6E6E6;     /* mid grey panels */
+    --c-grey:#F2F2F2;          /* product image field */
+    --c-warm:#FFFFFF;          /* page and header background */
     --c-white:#FFFFFF;
-    --c-ink-soft:#5A5856;      /* secondary text, 6.5:1 on warm white */
-    --c-line:rgba(12,10,8,.10);/* hairlines */
+    --c-ink-soft:#555555;      /* secondary text, 7.5:1 on white */
+    --c-line:rgba(17,17,17,.12);/* hairlines */
     --c-error:#A8323F;         /* form errors, 6.6:1 on white */
     --f-serif:"Cormorant Garamond", Georgia, serif;
     --f-sans:"Manrope", system-ui, sans-serif;
@@ -38,8 +40,8 @@ html{
 
 body{
     font-family:"Manrope",sans-serif;
-    background:#fffcf8;
-    color:#4d4042;
+    background:#FCFCFC;
+    color:#111111;
     overflow-x:hidden;
 }
 
@@ -101,14 +103,14 @@ section{
 }
 
 .btn--primary{
-    background:var(--c-forest);
-    border-color:var(--c-forest);
+    background:var(--c-charcoal);
+    border-color:var(--c-charcoal);
     color:var(--c-white);
 }
 
 .btn--primary:hover{
-    background:var(--c-charcoal);
-    border-color:var(--c-charcoal);
+    background:var(--c-forest);
+    border-color:var(--c-forest);
 }
 
 .btn--outline{
@@ -124,14 +126,14 @@ section{
 
 /* On a forest band. */
 .btn--light{
-    background:var(--c-ivory);
-    border-color:var(--c-ivory);
+    background:var(--c-white);
+    border-color:var(--c-white);
     color:var(--c-charcoal);
 }
 
 .btn--light:hover{
-    background:var(--c-white);
-    border-color:var(--c-white);
+    background:var(--c-grey);
+    border-color:var(--c-grey);
 }
 
 .btn:focus-visible{
@@ -140,7 +142,7 @@ section{
 }
 
 .btn--light:focus-visible{
-    outline-color:var(--c-ivory);
+    outline-color:var(--c-white);
 }
 
 @media (prefers-reduced-motion: reduce){
@@ -217,7 +219,7 @@ select:focus-visible,
 
     padding:140px 6%;
 
-    background:#F8F5EF;
+    background:#F5F5F5;
 
     min-height:100vh;
 
@@ -231,7 +233,7 @@ select:focus-visible,
 
     margin-bottom:20px;
 
-    color:#153E3B;
+    color:#111111;
 
     font-family:"Cormorant Garamond",serif;
 
@@ -340,7 +342,7 @@ select:focus-visible,
     z-index:1;
     padding:4px 10px;
     border-radius:999px;
-    background:#A42F44;
+    background:#A8323F;
     color:#FFFFFF;
     font-family:"Manrope", sans-serif;
     font-size:.72rem;
@@ -348,7 +350,7 @@ select:focus-visible,
     letter-spacing:.04em;
     line-height:1.3;
     white-space:nowrap;
-    box-shadow:0 4px 10px rgba(164,47,68,.25);
+    box-shadow:0 4px 10px rgba(168,50,63,.25);
 }
 
 .sale-tag--inline{
@@ -362,7 +364,7 @@ select:focus-visible,
 
 .price-was{
     margin-left:7px;
-    color:#6A6262;
+    color:#646464;
     font-size:.78em;
     font-weight:500;
     text-decoration-thickness:1.5px;

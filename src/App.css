@@ -11,7 +11,7 @@
   z-index: 4000;
   padding: 10px 16px;
   border-radius: 6px;
-  background: #153e3b;
+  background: #111111;
   color: #fff;
   font-weight: 600;
   text-decoration: none;
@@ -38,8 +38,8 @@
   padding: 16px 20px;
   border-radius: 14px;
   background: #fff;
-  color: #1f2d2c;
-  border: 1px solid rgba(21, 62, 59, 0.18);
+  color: #111111;
+  border: 1px solid rgba(17,17,17, 0.18);
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.16);
   font-size: 14px;
   line-height: 1.5;
@@ -66,7 +66,7 @@
 }
 
 .cookie-banner a {
-  color: #153e3b;
+  color: #111111;
   text-decoration: underline;
 }
 
@@ -81,22 +81,22 @@
   min-height: 44px;
   padding: 0 18px;
   border-radius: 8px;
-  border: 2px solid #153e3b;
+  border: 2px solid #111111;
   background: #fff;
-  color: #153e3b;
+  color: #111111;
   font: inherit;
   font-weight: 600;
   cursor: pointer;
 }
 
 .cookie-banner-actions button:last-child {
-  background: #153e3b;
+  background: #111111;
   color: #fff;
 }
 
 .cookie-banner-actions button:focus-visible,
 .cookie-banner a:focus-visible {
-  outline: 3px solid #1b6f69;
+  outline: 3px solid #111111;
   outline-offset: 2px;
 }
 
@@ -134,8 +134,8 @@ main[tabindex]:focus-visible {
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  border: 3px solid #e7dfda;
-  border-top-color: #153e3b;
+  border: 3px solid #E0E0E0;
+  border-top-color: #111111;
   animation: route-spin 0.8s linear infinite;
 }
 

@@ -1,6 +1,6 @@
 .legal-page{
 
-    background:#fffdfc;
+    background:#FDFDFD;
 
     min-height:100vh;
 
@@ -30,7 +30,7 @@
 
     letter-spacing:4px;
 
-    color:#C14560;
+    color:#2A3723;
 
     margin-bottom:25px;
 
@@ -46,7 +46,7 @@
 
     line-height:1.1;
 
-    color:#5f4549;
+    color:#111111;
 
     margin-bottom:20px;
 
@@ -60,7 +60,7 @@
 
     line-height:1.9;
 
-    color:#816B70;
+    color:#707070;
 
 }
 
@@ -80,7 +80,7 @@
 
     padding:55px 60px;
 
-    box-shadow:0 25px 60px rgba(232,183,201,.14);
+    box-shadow:0 25px 60px rgba(196,196,196,.14);
 
 }
 
@@ -92,7 +92,7 @@
 
     font-weight:600;
 
-    color:#60484d;
+    color:#111111;
 
     margin:40px 0 16px;
 
@@ -112,7 +112,7 @@
 
     line-height:1.85;
 
-    color:#6d5c5f;
+    color:#606060;
 
     margin-bottom:14px;
 
@@ -129,7 +129,7 @@
 
     line-height:1.85;
 
-    color:#6d5c5f;
+    color:#606060;
 
 }
 
@@ -141,7 +141,7 @@
 
 .legal-content a{
 
-    color:#C14560;
+    color:#2A3723;
 
     font-weight:600;
 
@@ -151,13 +151,13 @@
 
 .legal-content a:hover{
 
-    color:#A33650;
+    color:#1E2A19;
 
 }
 
 .legal-content strong{
 
-    color:#5f4549;
+    color:#111111;
 
 }
 
@@ -175,6 +175,6 @@
 
     font-size:.85rem;
 
-    color:#a8949770;
+    color:#99999970;
 
 }

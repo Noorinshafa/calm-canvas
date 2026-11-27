@@ -1,6 +1,6 @@
 .about{
 
-    background:#fffdfc;
+    background:#FDFDFD;
 
     min-height:100vh;
 
@@ -30,7 +30,7 @@
 
     letter-spacing:4px;
 
-    color:#C14560;
+    color:#2A3723;
 
     margin-bottom:25px;
 
@@ -46,7 +46,7 @@
 
     line-height:1.05;
 
-    color:#5f4549;
+    color:#111111;
 
 }
 
@@ -62,7 +62,7 @@
 
     line-height:2;
 
-    color:#816B70;
+    color:#707070;
 
 }
 
@@ -88,7 +88,7 @@
 
     font-weight:600;
 
-    color:#5f4549;
+    color:#111111;
 
     margin-bottom:10px;
 }
@@ -101,7 +101,7 @@
 
     line-height:1.9;
 
-    color:#816B70;
+    color:#707070;
 }
 
 .about-body .about-links{
@@ -117,7 +117,7 @@
 
 .about-body .about-links a{
 
-    color:#95627F;
+    color:#2A3723;
 
     font-family:"Manrope",sans-serif;
 

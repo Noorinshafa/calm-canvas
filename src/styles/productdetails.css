@@ -6,7 +6,7 @@
 
     padding:100px 7% 110px;
 
-    background:#fffdfb;
+    background:#FDFDFD;
 
     min-height:100vh;
 
@@ -38,7 +38,7 @@
 
 .details-image{
 
-    background:#faf8f7;
+    background:#F8F8F8;
 
     border-radius:34px;
 
@@ -100,7 +100,7 @@
     margin:-17px 0 0 -17px;
     border-radius:50%;
     border:3px solid rgba(255,255,255,.85);
-    border-top-color:#5f4446;
+    border-top-color:#111111;
     box-shadow:0 2px 8px rgba(0,0,0,.12);
     opacity:0;
     animation:details-wait-show .2s ease .25s forwards, details-wait-spin .8s linear infinite;
@@ -188,7 +188,7 @@
 
     transform:translateY(-5px);
 
-    border-color:#D68496;
+    border-color:#2A3723;
 
 }
 
@@ -201,14 +201,14 @@
 }
 
 .thumbnail-btn:focus-visible{
-    outline:3px solid #d89caf;
+    outline:3px solid #2A3723;
     outline-offset:3px;
 }
 
 .thumbnail-btn.active .thumbnail,
 .thumbnail.active{
 
-    border-color:#5f4446;
+    border-color:#111111;
 
 }
 /*==================================================
@@ -232,7 +232,7 @@
 
     font-weight:700;
 
-    color:#C14560;
+    color:#2A3723;
 
     margin-bottom:12px;
 
@@ -246,7 +246,7 @@
 
     line-height:1.08;
 
-    color:#47363a;
+    color:#111111;
 
     margin-bottom:18px;
 
@@ -258,7 +258,7 @@
 
     font-size:2.2rem;
 
-    color:#9C6426;
+    color:#111111;
 
     margin-bottom:28px;
 
@@ -268,7 +268,7 @@
 
 .product-info p{
 
-    color:#6c6465;
+    color:#666666;
 
     line-height:1.9;
 
@@ -292,7 +292,7 @@
 
     font-size:15px;
 
-    color:#5f4446;
+    color:#111111;
 
     margin-bottom:14px;
 
@@ -315,7 +315,7 @@
 
     font-size:15px;
 
-    color:#5f4446;
+    color:#111111;
 
     margin-bottom:10px;
 
@@ -331,13 +331,13 @@
 
     padding:0 18px;
 
-    border:1px solid #e7dfda;
+    border:1px solid #E0E0E0;
 
     border-radius:16px;
 
     background:white;
 
-    color:#5f4446;
+    color:#111111;
 
     font-size:15px;
 
@@ -353,7 +353,7 @@
 
 .product-select:focus-visible{
 
-    outline:2px solid #d89caf;
+    outline:2px solid #2A3723;
 
     outline-offset:2px;
 
@@ -361,15 +361,36 @@
 
 .product-select:hover{
 
-    border-color:#d89caf;
+    border-color:#2A3723;
+
+}
+
+.product-select[aria-invalid="true"]{
+
+    border-color:#A8323F;
+
+}
+
+/* "Please choose a size." under a size / phone model dropdown */
+.option-error{
+
+    display:block;
+
+    margin-top:8px;
+
+    color:#A8323F;
+
+    font-size:14px;
+
+    font-weight:500;
 
 }
 
 .product-select:focus{
 
-    border-color:#d89caf;
+    border-color:#2A3723;
 
-    box-shadow:0 0 0 4px rgba(214,132,150,.15);
+    box-shadow:0 0 0 4px rgba(42,55,35,.15);
 
 }
 
@@ -377,19 +398,19 @@
 
     transform:translateY(-3px);
 
-    border-color:#d89caf;
+    border-color:#2A3723;
 
-    color:#C14560;
+    color:#2A3723;
 
 }
 
 .option-btn.active{
 
-    background:#5f4446;
+    background:#111111;
 
     color:white;
 
-    border-color:#5f4446;
+    border-color:#111111;
 
 }
 
@@ -409,7 +430,7 @@
 
     margin-bottom:14px;
 
-    color:#5f4446;
+    color:#111111;
 
     font-size:15px;
 
@@ -429,7 +450,7 @@
 
     border-radius:999px;
 
-    border:1px solid #ece3de;
+    border:1px solid #E5E5E5;
 
     overflow:hidden;
 
@@ -457,7 +478,7 @@
 
 .quantity-box button:hover{
 
-    background:#f8f4f2;
+    background:#F5F5F5;
 
 }
 
@@ -471,7 +492,7 @@
 
     font-weight:700;
 
-    color:#5f4446;
+    color:#111111;
 
 }
 /*==================================================
@@ -515,18 +536,18 @@
 
 .add-cart-btn{
 
-    background:#5f4446;
+    background:#111111;
 
     color:white;
 
     box-shadow:
-    0 12px 25px rgba(95,68,70,.18);
+    0 12px 25px rgba(17,17,17,.18);
 
 }
 
 .add-cart-btn:hover{
 
-    background:#C34C66;
+    background:#2A3723;
 
     transform:translateY(-4px);
 
@@ -536,15 +557,15 @@
 
     background:white;
 
-    color:#5f4446;
+    color:#111111;
 
-    border:2px solid #5f4446;
+    border:2px solid #111111;
 
 }
 
 .buy-now-btn:hover{
 
-    background:#5f4446;
+    background:#111111;
 
     color:white;
 
@@ -582,9 +603,9 @@
 
     border-radius:18px;
 
-    border:1px solid #efe8e3;
+    border:1px solid #E9E9E9;
 
-    color:#5f4446;
+    color:#111111;
 
     font-size:15px;
 
@@ -598,7 +619,7 @@
 
     transform:translateX(8px);
 
-    border-color:#D68496;
+    border-color:#2A3723;
 
     box-shadow:
     0 12px 25px rgba(0,0,0,.05);
@@ -613,7 +634,7 @@
 
     padding:110px 7%;
 
-    background:#fffdfb;
+    background:#FDFDFD;
 
 }
 
@@ -629,7 +650,7 @@
 
     display:inline-block;
 
-    color:#C14560;
+    color:#2A3723;
 
     letter-spacing:3px;
 
@@ -647,7 +668,7 @@
 
     font-size:3rem;
 
-    color:#47363a;
+    color:#111111;
 
     margin-bottom:18px;
 
@@ -925,7 +946,7 @@
 
     background: rgba(0,0,0,0.05);
 
-    color: var(--text, #6b6375);
+    color: var(--text, #666666);
 
     font-size: 0.95rem;
 
@@ -943,7 +964,7 @@
     gap:0 22px;
     margin-top:30px;
     padding-top:22px;
-    border-top:1px solid #efe5e1;
+    border-top:1px solid #E7E7E7;
 }
 
 .details-image .option-group{
@@ -976,3 +997,173 @@
     }
 }
 
+
+/*==================================================
+    REDESIGN (black, white and grey)
+    Placed last so it refines the rules above without
+    rewriting them.
+==================================================*/
+
+.product-details .main-image{
+    background:var(--c-grey);
+}
+
+.product-category{
+    letter-spacing:0;
+    text-transform:none;
+    font-size:.85rem;
+    font-weight:600;
+}
+
+.product-category a{
+    color:var(--c-forest);
+    text-decoration:underline;
+    text-underline-offset:4px;
+}
+
+.product-info h1{
+    font-size:clamp(2rem, 3vw, 2.8rem);
+    font-weight:500;
+    line-height:1.1;
+}
+
+.product-price{
+    font-family:var(--f-sans);
+}
+
+.add-cart-btn,
+.buy-now-btn{
+    height:54px;
+    border-radius:2px;
+    letter-spacing:0;
+    box-shadow:none;
+}
+
+.add-cart-btn:hover,
+.buy-now-btn:hover{
+    transform:none;
+}
+
+.buy-now-btn{
+    border-width:1px;
+}
+
+/*---------- size and colour buttons ----------*/
+
+.option-group--pills{
+    border:0;
+    padding:0;
+    min-width:0;
+}
+
+.option-group--pills legend{
+    padding:0;
+    margin-bottom:12px;
+    font-family:var(--f-sans);
+    font-size:15px;
+    font-weight:600;
+    color:var(--c-charcoal);
+}
+
+.option-current{
+    font-weight:400;
+    color:var(--c-ink-soft);
+}
+
+.option-pills{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+}
+
+.option-pill{
+    position:relative;
+    cursor:pointer;
+}
+
+/* The real radio button stays in place (for keyboards and screen readers)
+   but is invisible; the box next to it shows the state. */
+.option-pill input{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    margin:0;
+    opacity:0;
+    cursor:pointer;
+}
+
+.option-pill span{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-width:52px;
+    min-height:44px;
+    padding:0 14px;
+    border:1px solid rgba(17,17,17,.25);
+    border-radius:2px;
+    background:var(--c-white);
+    font-family:var(--f-sans);
+    font-size:.9rem;
+    font-weight:500;
+    color:var(--c-charcoal);
+    transition:border-color .15s var(--ease), background-color .15s var(--ease);
+}
+
+.option-pill:hover span{
+    border-color:var(--c-charcoal);
+}
+
+.option-pill input:checked + span{
+    border-color:var(--c-charcoal);
+    background:var(--c-charcoal);
+    color:var(--c-white);
+}
+
+.option-pill input:focus-visible + span{
+    outline:2px solid var(--c-forest);
+    outline-offset:2px;
+}
+
+.option-group--pills[aria-invalid="true"] .option-pill span{
+    border-color:var(--c-error);
+}
+
+/*---------- what every order comes with ----------*/
+
+.product-promises{
+    list-style:none;
+    margin:28px 0 0;
+    padding:0;
+    border-top:1px solid var(--c-line);
+}
+
+.product-promises li{
+    display:flex;
+    align-items:flex-start;
+    gap:14px;
+    padding:14px 0;
+    border-bottom:1px solid var(--c-line);
+    font-family:var(--f-sans);
+    font-size:.88rem;
+    line-height:1.45;
+    color:var(--c-ink-soft);
+}
+
+.product-promises svg{
+    flex:0 0 auto;
+    width:20px;
+    height:20px;
+    margin-top:1px;
+    color:var(--c-forest);
+}
+
+.product-promises strong{
+    display:block;
+    font-weight:600;
+    color:var(--c-charcoal);
+}
+
+@media (prefers-reduced-motion: reduce){
+    .option-pill span{ transition:none; }
+}

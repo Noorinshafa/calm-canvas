@@ -6,15 +6,17 @@
 
 .xmas-section,
 .xmas-page{
-    --xmas-cream:#FBF5EC;
+    /* Black, white and grey like the rest of the site, with the brand's
+       forest green and a festive red and gold as accents. */
+    --xmas-cream:#FFFFFF;
     --xmas-red:#9E2B3E;
     --xmas-red-dark:#7A1D2E;
-    --xmas-green:#17483F;
-    --xmas-forest:#143C35;
+    --xmas-green:#2A3723;
+    --xmas-forest:#1E2A19;
     --xmas-gold:#C9A15B;
     --xmas-gold-soft:#F0D08A;
-    --xmas-blush:#F6DDE2;
-    --xmas-ink:#2B1A1E;
+    --xmas-blush:#F2F2F2;
+    --xmas-ink:#111111;
     --xmas-text:#FFF8EE;
     container-type:inline-size;
     container-name:xmas;
@@ -115,7 +117,7 @@
     margin:0;
     font-size:clamp(.95rem, 2.2cqw, 1.05rem);
     line-height:1.75;
-    color:#5B454A;
+    color:#3A3A3A;
     max-width:58ch;
     text-wrap:pretty;
 }
@@ -154,7 +156,7 @@
     font:600 .84rem "Manrope", system-ui, sans-serif;
     color:var(--xmas-forest);
     background:#fff;
-    border:1px solid #E6D6CB;
+    border:1px solid #E2E2E2;
     border-radius:999px;
     padding:9px 16px;
     cursor:pointer;
@@ -366,7 +368,7 @@
     padding:0;
     list-style:none;
     font-size:.8rem;
-    color:#5B454A;
+    color:#3A3A3A;
 }
 
 .xmas-trust li{ display:inline-flex; align-items:center; gap:7px; }
@@ -375,13 +377,13 @@
 .xmas-note{
     margin:0;
     font-size:.78rem;
-    color:#7A6468;
+    color:#5E5E5E;
     max-width:52ch;
 }
 
 .xmas-empty{
     text-align:center;
-    color:#5B454A;
+    color:#3A3A3A;
     padding:20px 0;
 }
 
@@ -419,7 +421,7 @@
 
 .xmas-page .xmas-guide p{
     margin:0;
-    color:#4C3A3F;
+    color:#333333;
     line-height:1.85;
     font-size:1.02rem;
 }
@@ -438,7 +440,7 @@
 .xmas-page .xmas-guide ul a{
     display:inline-block;
     padding:9px 18px;
-    border:1px solid #E6D6CB;
+    border:1px solid #E2E2E2;
     border-radius:999px;
     background:#fff;
     color:var(--xmas-forest);
@@ -454,7 +456,7 @@
 }
 
 .xmas-page .breadcrumbs li,
-.xmas-page .breadcrumbs [aria-current="page"]{ color:#7A6468; }
+.xmas-page .breadcrumbs [aria-current="page"]{ color:#5E5E5E; }
 .xmas-page .breadcrumbs a{ color:var(--xmas-red); }
 
 @media (prefers-reduced-motion:reduce){

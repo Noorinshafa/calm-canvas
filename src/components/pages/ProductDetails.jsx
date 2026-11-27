@@ -32,6 +32,7 @@ import {
   optimizedSrcSet,
 } from "../../utils/imageUrl.js";
 import toast from "react-hot-toast";
+import { FiPackage, FiGlobe, FiRefreshCw, FiLock } from "react-icons/fi";
 
 import "../../styles/productdetails.css";
 import "../../styles/seo-extras.css";
@@ -702,55 +703,91 @@ function ProductDetails() {
     ? priceTag(productSlug, activePriceValue, seo?.collection?.key)
     : null;
 
-  // The colour / size / model dropdowns. Rendered once: under the photos on
+  // The colour / size / model choices. Rendered once: under the photos on
   // wide screens, above the quantity on phones and tablets (useWideLayout).
+  // Sizes and colours are shown as buttons, so every option can be seen at a
+  // glance (shoppers miss options hidden in a dropdown); long lists such as
+  // phone models stay a dropdown. Both kinds use the same rules: size and
+  // phone model must be picked by the shopper (see `chosen`).
+  const asButtons = (group) =>
+    (group.type === "size" || group.type === "color") && group.values.length <= 16;
+
   const optionsBlock =
     product && hasVariants && optionModel.groups.length ? (
       <div className="product-options">
-        {optionModel.groups.map((group, groupIndex) => (
-          <div className="option-group" key={`${group.label}-${groupIndex}`}>
-            <h4>Choose {group.label}</h4>
+        {optionModel.groups.map((group, groupIndex) => {
+          const unpicked = mustChoose(group) && !chosen[groupIndex];
+          const invalid = optionError === groupIndex;
+          const errorId = `product-option-error-${groupIndex}`;
+          const error = invalid && (
+            <small id={errorId} className="option-error" role="alert">
+              {chooseMessage(group)}
+            </small>
+          );
 
-            <select
-              id={`product-option-${groupIndex}`}
-              className="product-select"
-              value={
-                mustChoose(group) && !chosen[groupIndex]
-                  ? ""
-                  : selection[groupIndex] ?? ""
-              }
-              onChange={(e) => handleOptionChange(groupIndex, e.target.value)}
-              aria-label={`Choose ${group.label.toLowerCase()}`}
-              aria-invalid={optionError === groupIndex}
-              aria-describedby={
-                optionError === groupIndex
-                  ? `product-option-error-${groupIndex}`
-                  : undefined
-              }
-            >
-              {mustChoose(group) && !chosen[groupIndex] && (
-                <option value="" disabled>
-                  Select {group.label.toLowerCase()}
-                </option>
-              )}
-              {group.values.map((value) => (
-                <option key={value} value={value}>
-                  {value}
-                </option>
-              ))}
-            </select>
-
-            {optionError === groupIndex && (
-              <small
-                id={`product-option-error-${groupIndex}`}
-                className="option-error"
-                role="alert"
+          if (asButtons(group)) {
+            return (
+              <fieldset
+                className="option-group option-group--pills"
+                key={`${group.label}-${groupIndex}`}
+                aria-invalid={invalid}
+                aria-describedby={invalid ? errorId : undefined}
               >
-                {chooseMessage(group)}
-              </small>
-            )}
-          </div>
-        ))}
+                <legend>
+                  {group.label}
+                  {!unpicked && selection[groupIndex] && (
+                    <span className="option-current">: {selection[groupIndex]}</span>
+                  )}
+                </legend>
+                <div className="option-pills">
+                  {group.values.map((value, valueIndex) => (
+                    <label className="option-pill" key={value}>
+                      <input
+                        type="radio"
+                        id={valueIndex === 0 ? `product-option-${groupIndex}` : undefined}
+                        name={`product-option-${groupIndex}`}
+                        value={value}
+                        checked={!unpicked && selection[groupIndex] === value}
+                        onChange={() => handleOptionChange(groupIndex, value)}
+                      />
+                      <span>{value}</span>
+                    </label>
+                  ))}
+                </div>
+                {error}
+              </fieldset>
+            );
+          }
+
+          return (
+            <div className="option-group" key={`${group.label}-${groupIndex}`}>
+              <h4>Choose {group.label}</h4>
+
+              <select
+                id={`product-option-${groupIndex}`}
+                className="product-select"
+                value={unpicked ? "" : selection[groupIndex] ?? ""}
+                onChange={(e) => handleOptionChange(groupIndex, e.target.value)}
+                aria-label={`Choose ${group.label.toLowerCase()}`}
+                aria-invalid={invalid}
+                aria-describedby={invalid ? errorId : undefined}
+              >
+                {unpicked && (
+                  <option value="" disabled>
+                    Select {group.label.toLowerCase()}
+                  </option>
+                )}
+                {group.values.map((value) => (
+                  <option key={value} value={value}>
+                    {value}
+                  </option>
+                ))}
+              </select>
+
+              {error}
+            </div>
+          );
+        })}
       </div>
     ) : null;
 
@@ -964,7 +1001,11 @@ function ProductDetails() {
 <div className="product-info">
 
   <span className="product-category">
-    SHOPCALMCANVAS
+    {seo?.collection ? (
+      <Link to={seo.collection.path}>{seo.collection.nav}</Link>
+    ) : (
+      "ShopCalmCanvas"
+    )}
   </span>
 
   <h1>{productName}</h1>
@@ -1057,25 +1098,39 @@ function ProductDetails() {
 
   )}
 
-<div className="product-features">
-
-  <div className="feature-item">
-    ✓ Premium Print Quality
-  </div>
-
-  <div className="feature-item">
-    ✓ Secure Checkout
-  </div>
-
-  <div className="feature-item">
-    ✓ Printed On Demand
-  </div>
-
-  <div className="feature-item">
-    ✓ Customize Your Design
-  </div>
-
-</div>
+{/* What every order comes with, taken word for word from the shop's real
+    policies (Shipping & Returns page, src/config/site.js). Nothing may be
+    added here unless it is a real policy. */}
+<ul className="product-promises">
+  <li>
+    <FiPackage aria-hidden="true" />
+    <span>
+      <strong>Printed to order</strong>
+      Made for you in 2–7 business days, then shipped
+    </span>
+  </li>
+  <li>
+    <FiGlobe aria-hidden="true" />
+    <span>
+      <strong>Ships to the US, UK, Canada &amp; Europe</strong>
+      Shipping price shown before you pay
+    </span>
+  </li>
+  <li>
+    <FiRefreshCw aria-hidden="true" />
+    <span>
+      <strong>Arrived damaged or wrong?</strong>
+      Free reprint or full refund within 14 days
+    </span>
+  </li>
+  <li>
+    <FiLock aria-hidden="true" />
+    <span>
+      <strong>Secure checkout</strong>
+      Card payments processed by Safepay
+    </span>
+  </li>
+</ul>
 
 </div>
 
