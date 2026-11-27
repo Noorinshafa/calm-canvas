@@ -1,23 +1,20 @@
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import useProducts from "../../hooks/useProducts";
-import OptimizedImage from "../ui/OptimizedImage";
+import ProductCard from "../ui/ProductCard";
 import { ProductGridSkeleton } from "../ui/Skeletons";
 import { COLLECTIONS } from "../../config/site.js";
-import {
-  cleanProductName,
-  findCollectionForProduct,
-  formatPrice,
-  productInCollection,
-  productPath,
-} from "../../utils/seoShared.js";
+import { productInCollection } from "../../utils/seoShared.js";
 import { CHRISTMAS_PICKS } from "../../content/christmas.js";
-import { priceTag } from "../../content/sale.js";
 
 const COUNT = 8;
 const CHRISTMAS_HOME_SLUGS = new Set(
   CHRISTMAS_PICKS.filter((pick) => pick.home).map((pick) => pick.slug)
 );
+
+// How wide a card is in the home page grids: 2 across on phones, 3 on
+// tablets, 4 across the 1380px page on computers.
+const HOME_CARD_SIZES = "(max-width: 640px) 46vw, (max-width: 1100px) 30vw, 330px";
 
 // A mix of real products from every collection: the first hoodie, the first
 // tee, the first sweatshirt and so on, then the second of each, until there
@@ -50,49 +47,10 @@ export function pickMix(products, { skipSlugs = new Set(), count = COUNT } = {})
   return chosen;
 }
 
-// One product card (home page style): photo, name, real price and a
-// "Shop Now" pill. The whole card is one link to the product.
+// One product card on the home page: the same card as the shop pages
+// (src/components/ui/ProductCard.jsx), sized for the home page grid.
 export function HomeProductCard({ product }) {
-  const name = cleanProductName(product.title);
-  // "% OFF" only for real price reductions; "Special Price" for low-priced
-  // sweatshirts (see src/content/sale.js).
-  const tag = priceTag(
-    product.slug,
-    product.priceValue,
-    findCollectionForProduct(product)?.key
-  );
-  return (
-    <Link to={productPath(product)} className="home-card">
-      <span className="home-card-media">
-        <OptimizedImage
-          src={product.image}
-          alt={name}
-          widths={[384, 768]}
-          sizes="(max-width: 640px) 46vw, (max-width: 1100px) 30vw, 290px"
-          width="600"
-          height="600"
-        />
-        {tag && <span className="sale-tag">{tag.label}</span>}
-      </span>
-      <span className="home-card-body">
-        <h3 className="home-card-name">{name}</h3>
-        <span className="home-card-foot">
-          <span className="home-card-price">
-            {product.price}
-            {tag?.wasPrice && (
-              <s className="price-was">
-                <span className="sr-only">Was </span>
-                {formatPrice(tag.wasPrice)}
-              </s>
-            )}
-          </span>
-          <span className="home-card-cta" aria-hidden="true">
-            Shop Now
-          </span>
-        </span>
-      </span>
-    </Link>
-  );
+  return <ProductCard {...product} sizes={HOME_CARD_SIZES} />;
 }
 
 function HomePicks({ festive = false }) {
@@ -107,13 +65,13 @@ function HomePicks({ festive = false }) {
   return (
     <section className="home-section home-picks" aria-labelledby="picks-title">
       <div className="home-head">
-        <h2 id="picks-title" className="home-title">Studio Picks</h2>
-        <p className="home-sub">
-          Our favourite designs right now
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-            <path d="M12 20.5s-7.5-4.6-9.3-9.2C1.4 7.9 3.6 4.5 7 4.5c2.1 0 3.6 1.2 5 3 1.4-1.8 2.9-3 5-3 3.4 0 5.6 3.4 4.3 6.8-1.8 4.6-9.3 9.2-9.3 9.2z" />
-          </svg>
-        </p>
+        <div>
+          <h2 id="picks-title" className="home-title">Studio picks</h2>
+          <p className="home-sub">Our favourite designs right now</p>
+        </div>
+        <Link to="/collections" className="home-head-link">
+          Shop all
+        </Link>
       </div>
 
       {loading ? (
@@ -133,9 +91,9 @@ function HomePicks({ festive = false }) {
 
 export default HomePicks;
 
-// "You May Also Like": eight more real products, one from each collection in
+// "You may also like": eight more real products, one from each collection in
 // turn, skipping everything already shown higher up the home page (Studio
-// Picks and, while the Christmas look is on, the Christmas picks).
+// picks and, while the Christmas look is on, the Christmas picks).
 export function HomeAlsoLike({ festive = false }) {
   const { products, loading, error } = useProducts();
   const picks = useMemo(() => {
@@ -149,8 +107,10 @@ export function HomeAlsoLike({ festive = false }) {
   return (
     <section className="home-section home-picks home-also" aria-labelledby="also-title">
       <div className="home-head">
-        <h2 id="also-title" className="home-title">You May Also Like</h2>
-        <p className="home-sub">More original designs from the shop</p>
+        <div>
+          <h2 id="also-title" className="home-title">You may also like</h2>
+          <p className="home-sub">More original designs from the shop</p>
+        </div>
       </div>
 
       {loading ? (
@@ -166,11 +126,8 @@ export function HomeAlsoLike({ festive = false }) {
       )}
 
       <div className="home-more">
-        <Link to="/collections" className="home-btn">
-          Browse All Products
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-            <path d="M5 12h14M13 6l6 6-6 6" />
-          </svg>
+        <Link to="/collections" className="btn btn--outline">
+          Browse all products
         </Link>
       </div>
     </section>

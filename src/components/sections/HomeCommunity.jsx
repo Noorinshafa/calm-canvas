@@ -21,12 +21,6 @@ function HomeCommunity() {
   return (
     <section className="home-section home-community" aria-labelledby="community-title">
       <div className="home-community-card">
-        <span className="home-community-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-            <rect x="3" y="5" width="18" height="14" rx="2" />
-            <path d="m3.5 6.5 8.5 6.5 8.5-6.5" />
-          </svg>
-        </span>
         <div className="home-community-text">
           <h2 id="community-title">Join Our Community</h2>
           <p>Follow ShopCalmCanvas for new designs and gift ideas.</p>

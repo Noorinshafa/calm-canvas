@@ -46,9 +46,11 @@ function ChristmasGrid({ picks, label = "Christmas gifts" }) {
           return (
             <li className="xmas-card" key={product.id}>
               <Link to={productPath(product)} className="xmas-card-link">
-                <span className="xmas-ph">
+                {/* Printify's plain "front" photo on the light grey studio
+                    background when the product has one (see ProductCard). */}
+                <span className={product.cardImage ? "xmas-ph xmas-ph--studio" : "xmas-ph"}>
                   <OptimizedImage
-                    src={product.image}
+                    src={product.cardImage || product.image}
                     alt={pick.alt || name}
                     widths={[384, 768]}
                     sizes="(max-width: 640px) 50vw, (max-width: 1100px) 33vw, 25vw"

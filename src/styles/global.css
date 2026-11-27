@@ -66,6 +66,88 @@ section{
 }
 
 /* ==========================================
+        STUDIO PHOTOS AND BUTTONS (redesign)
+        Shared by the header, home page and
+        product cards.
+========================================== */
+
+/* Printify product and model photos are on pure white. Multiplying them onto
+   a light grey box turns that white into exactly the box's grey, so photos
+   and page share one seamless background. Used across the site. */
+.studio{
+    background:var(--c-grey);
+}
+
+.studio-img{
+    mix-blend-mode:multiply;
+}
+
+/* Shared buttons for the redesigned pages. */
+.btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-height:50px;
+    padding:0 28px;
+    border:1px solid transparent;
+    border-radius:2px;
+    font-family:var(--f-sans);
+    font-size:.92rem;
+    font-weight:600;
+    line-height:1.2;
+    text-align:center;
+    text-decoration:none;
+    transition:background-color .2s var(--ease), color .2s var(--ease), border-color .2s var(--ease);
+}
+
+.btn--primary{
+    background:var(--c-forest);
+    border-color:var(--c-forest);
+    color:var(--c-white);
+}
+
+.btn--primary:hover{
+    background:var(--c-charcoal);
+    border-color:var(--c-charcoal);
+}
+
+.btn--outline{
+    background:transparent;
+    border-color:var(--c-charcoal);
+    color:var(--c-charcoal);
+}
+
+.btn--outline:hover{
+    background:var(--c-charcoal);
+    color:var(--c-white);
+}
+
+/* On a forest band. */
+.btn--light{
+    background:var(--c-ivory);
+    border-color:var(--c-ivory);
+    color:var(--c-charcoal);
+}
+
+.btn--light:hover{
+    background:var(--c-white);
+    border-color:var(--c-white);
+}
+
+.btn:focus-visible{
+    outline:2px solid var(--c-forest);
+    outline-offset:3px;
+}
+
+.btn--light:focus-visible{
+    outline-color:var(--c-ivory);
+}
+
+@media (prefers-reduced-motion: reduce){
+    .btn{ transition:none; }
+}
+
+/* ==========================================
         KEYBOARD FOCUS VISIBILITY
         (WCAG 2.4.7) -- restores a visible
         focus indicator for keyboard users on

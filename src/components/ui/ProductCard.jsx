@@ -1,4 +1,5 @@
 import "../../styles/productcard.css";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import {
   productPath,
@@ -15,10 +16,23 @@ const CARD_SIZES = "(max-width: 640px) 50vw, (max-width: 1100px) 33vw, 300px";
 // The resized copies the browser may choose from (see src/utils/imageUrl.js).
 const CARD_WIDTHS = [384, 768];
 
+// Only devices with a real mouse show the model photo on hover. Phones never
+// download it.
+function canHover() {
+  return typeof window !== "undefined" && window.matchMedia?.("(hover: hover)").matches;
+}
+
 // A grid that lays its cards out differently from the shop grids (for example
 // "You may also like" on a product page) passes its own `sizes` and `widths`.
 // If `sizes` says the photo is smaller than it really is, the browser
 // downloads a copy that is too small and the photo looks blurry.
+//
+// The photo sits on a light grey field. When the product has Printify's plain
+// "front" photo (cardImage, on white), that photo is used and its white
+// background blends into the grey, so every product sits on the same studio
+// background. Otherwise the product's main photo fills the field as before.
+// On computers, pointing at the card fades in a photo of a real model wearing
+// the product (modelImage), which is only downloaded the first time.
 //
 // There are no type, "bestseller" or rating labels on the photo. A
 // "% OFF" tag appears only for real price reductions, and low-priced
@@ -29,6 +43,8 @@ function ProductCard({
   id,
   slug,
   image,
+  cardImage,
+  modelImage,
   title,
   price,
   priceValue,
@@ -38,18 +54,41 @@ function ProductCard({
   sizes = CARD_SIZES,
   widths = CARD_WIDTHS,
 }) {
+  const [wantModel, setWantModel] = useState(false);
+  const [modelReady, setModelReady] = useState(false);
+
   const href = productPath({ id, slug });
   const name = cleanProductName(title);
   const collection = findCollectionForProduct({ blueprintTitle, blueprint_id, title });
   const tag = priceTag(slug, priceValue, collection?.key);
+  const studio = Boolean(cardImage);
+  const photo = cardImage || image;
+
+  function loadModel() {
+    if (modelImage && !wantModel && canHover()) setWantModel(true);
+  }
 
   return (
     <article className="pcard">
-      <Link to={href} className="pcard-link">
-        <span className="pcard-media">
-          {image && (
+      <Link
+        to={href}
+        className="pcard-link"
+        onPointerEnter={loadModel}
+        onFocus={loadModel}
+      >
+        <span
+          className={[
+            "pcard-media",
+            studio ? "pcard-media--studio" : "",
+            modelReady ? "has-model" : "",
+          ]
+            .filter(Boolean)
+            .join(" ")}
+        >
+          {photo && (
             <OptimizedImage
-              src={image}
+              className="pcard-img"
+              src={photo}
               alt={name}
               widths={widths}
               sizes={sizes}
@@ -58,26 +97,30 @@ function ProductCard({
               height="600"
             />
           )}
+          {wantModel && (
+            <OptimizedImage
+              className="pcard-img pcard-img--model"
+              src={modelImage}
+              alt=""
+              widths={widths}
+              sizes={sizes}
+              width="600"
+              height="600"
+              onLoad={() => setModelReady(true)}
+            />
+          )}
           {tag && <span className="sale-tag">{tag.label}</span>}
         </span>
         <span className="pcard-body">
           <h3 className="pcard-name">{name}</h3>
-          <span className="pcard-foot">
-            <span className="pcard-price">
-              {price}
-              {tag?.wasPrice && (
-                <s className="price-was">
-                  <span className="sr-only">Was </span>
-                  {formatPrice(tag.wasPrice)}
-                </s>
-              )}
-            </span>
-            <span className="pcard-cta" aria-hidden="true">
-              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M6 7h12l-1 13H7L6 7zM9 7V5.5a3 3 0 0 1 6 0V7" />
-              </svg>
-              Shop Now
-            </span>
+          <span className="pcard-price">
+            {price}
+            {tag?.wasPrice && (
+              <s className="price-was">
+                <span className="sr-only">Was </span>
+                {formatPrice(tag.wasPrice)}
+              </s>
+            )}
           </span>
         </span>
       </Link>

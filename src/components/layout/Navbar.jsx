@@ -18,9 +18,9 @@ import "../../styles/navbar.css";
 // 3-9 KB instead of the 69 KB logo.png, which stays for structured data.
 import logo68 from "../../assets/logo-68.webp";
 import logo136 from "../../assets/logo-136.webp";
-// Pictures in the Shop panel. They are only downloaded when the panel opens.
-import tileHoodies from "../../assets/home/cat-hoodies-400.webp";
-import tileMugs from "../../assets/home/cat-mugs-400.webp";
+// Pictures in the Shop panel: real product photos (the same ones as the home
+// page's "Shop by category"). Only downloaded when the panel opens.
+import { CATEGORY_TILES } from "../../content/homeImages.js";
 
 // Every page linked here already exists.
 const CATEGORIES = [
@@ -41,10 +41,10 @@ const GIFT_COLLECTIONS = [
   { to: "/halloween", label: "Halloween & Spooky" },
 ];
 
-const SHOP_TILES = [
-  { to: "/hoodies", label: "Hoodies", image: tileHoodies },
-  { to: "/mugs", label: "Mugs", image: tileMugs },
-];
+const SHOP_TILES = ["hoodies", "totebags"]
+  .map((key) => CATEGORY_TILES.find((tile) => tile.key === key))
+  .filter(Boolean)
+  .map((tile) => ({ to: tile.path, label: tile.label, image: tile.src }));
 
 // The row of links beside "Shop" on computers. `wideOnly` links are hidden
 // between 1024 and 1279px, where they don't all fit; they stay one click away
@@ -256,13 +256,17 @@ function Navbar() {
                         className="nav-mega-tile"
                         onClick={() => setShopOpen(false)}
                       >
-                        <img
-                          src={tile.image}
-                          alt=""
-                          width="400"
-                          height="500"
-                          decoding="async"
-                        />
+                        <span className="nav-mega-tile-media studio">
+                          <OptimizedImage
+                            className="studio-img"
+                            src={tile.image}
+                            alt=""
+                            widths={[384]}
+                            sizes="220px"
+                            width="384"
+                            height="384"
+                          />
+                        </span>
                         <span>{tile.label}</span>
                       </Link>
                     ))}

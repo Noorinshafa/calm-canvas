@@ -1,12 +1,13 @@
 /*=====================================================
     FOOTER (redesign, phase 1)
-    Forest green band with ivory type: the one place
-    the brand colour is used at full strength.
+    Soft grey band (the same grey as the product
+    photos) with charcoal type.
 =====================================================*/
 
 .footer{
-    background:var(--c-forest);
-    color:var(--c-ivory);
+    background:var(--c-grey);
+    color:var(--c-charcoal);
+    border-top:1px solid var(--c-line);
     padding:clamp(56px, 7vw, 88px) 0 28px;
     font-family:var(--f-sans);
 }
@@ -28,7 +29,7 @@
     font-size:clamp(1.9rem, 2.6vw, 2.4rem);
     font-weight:600;
     line-height:1;
-    color:var(--c-ivory);
+    color:var(--c-charcoal);
 }
 
 .footer-about{
@@ -36,8 +37,7 @@
     max-width:34ch;
     font-size:.95rem;
     line-height:1.7;
-    color:var(--c-ivory);
-    opacity:.85;
+    color:var(--c-ink-soft);
 }
 
 .footer-social{
@@ -51,9 +51,9 @@
 .footer-contact a,
 .footer-col a,
 .footer-cookie-link{
-    color:var(--c-ivory);
+    color:var(--c-charcoal);
     text-decoration:underline;
-    text-decoration-color:rgba(232,229,221,.35);
+    text-decoration-color:rgba(12,10,8,.3);
     text-underline-offset:4px;
     text-decoration-thickness:1px;
     transition:text-decoration-color .2s var(--ease);
@@ -68,14 +68,14 @@
 .footer-contact a:hover,
 .footer-col a:hover,
 .footer-cookie-link:hover{
-    text-decoration-color:var(--c-ivory);
+    text-decoration-color:var(--c-charcoal);
 }
 
 .footer-contact{
     margin:0;
     font-size:.88rem;
     line-height:1.6;
-    color:var(--c-sage);
+    color:var(--c-ink-soft);
 }
 
 .footer-contact a{
@@ -96,7 +96,7 @@
     font-size:.82rem;
     font-weight:600;
     line-height:1.3;
-    color:var(--c-sage);
+    color:var(--c-ink-soft);
 }
 
 .footer-col ul{
@@ -123,10 +123,10 @@
     text-align:left;
 }
 
-/* Keyboard focus on the dark band. */
+/* Keyboard focus. */
 .footer a:focus-visible,
 .footer button:focus-visible{
-    outline:2px solid var(--c-ivory);
+    outline:2px solid var(--c-forest);
     outline-offset:3px;
 }
 
@@ -136,7 +136,7 @@
     width:min(1380px, 92%);
     margin:clamp(48px, 6vw, 72px) auto 0;
     padding-top:22px;
-    border-top:1px solid rgba(232,229,221,.18);
+    border-top:1px solid var(--c-line);
     display:flex;
     flex-wrap:wrap;
     gap:8px 28px;
@@ -146,7 +146,7 @@
     margin:0;
     font-size:.82rem;
     line-height:1.5;
-    color:var(--c-sage);
+    color:var(--c-ink-soft);
 }
 
 /*---------- breakpoints ----------*/

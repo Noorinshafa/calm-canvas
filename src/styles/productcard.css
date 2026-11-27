@@ -1,9 +1,9 @@
 /*==================================================
-   PRODUCT CARD (shop pages, gift pages, "You may
-   also like", blog posts)
-   Photo, name, real price and a "Shop Now" pill,
-   framed by a thin forest-green border. The whole
-   card is a link.
+   PRODUCT CARD (shop pages, gift pages, home page,
+   "You may also like", blog posts)
+   A light grey photo field, then the name and the
+   real price. No border, no shadow, no button: the
+   whole card is one link.
 ==================================================*/
 
 .pcard{
@@ -14,118 +14,119 @@
     display:flex;
     flex-direction:column;
     height:100%;
-    overflow:hidden;
-    border-radius:18px;
-    background:#FFFFFF;
-    border:2px solid #143C35;
-    box-shadow:0 10px 26px rgba(20,60,53,.08);
+    color:var(--c-charcoal);
     text-decoration:none;
-    color:inherit;
-    transition:transform .3s ease, box-shadow .3s ease;
-}
-
-.pcard-link:hover{
-    transform:translateY(-5px);
-    box-shadow:0 20px 40px rgba(120,60,75,.14);
 }
 
 .pcard-link:focus-visible{
-    outline:3px solid #D67A9B;
-    outline-offset:3px;
+    outline:2px solid var(--c-forest);
+    outline-offset:4px;
 }
+
+/*---------- photo field ----------*/
 
 .pcard-media{
     position:relative;
     display:block;
-    aspect-ratio:1 / 1;
+    aspect-ratio:4 / 5;
     overflow:hidden;
-    background:#F7F1EF;
+    background:var(--c-grey);
 }
 
-.pcard-media img{
-    display:block;
+.pcard-img{
+    position:absolute;
+    inset:0;
     width:100%;
     height:100%;
     object-fit:cover;
-    transition:transform .6s ease;
 }
 
-.pcard-link:hover .pcard-media img{
-    transform:scale(1.05);
+/* Printify "front" photos are on pure white. Multiplying them onto the grey
+   field turns that white into exactly the field's grey, so the product seems
+   to stand on one seamless studio background. The whole photo is shown
+   (contain), so sleeves and handles are never cut off. */
+.pcard-media--studio .pcard-img{
+    object-fit:contain;
+    mix-blend-mode:multiply;
 }
 
+/* The model photo (also on white) fades in over the product photo when the
+   card is pointed at, once it has downloaded. */
+.pcard-media .pcard-img--model{
+    object-fit:cover;
+    mix-blend-mode:multiply;
+    opacity:0;
+    transition:opacity .45s var(--ease);
+}
+
+.pcard-link:hover .has-model .pcard-img--model,
+.pcard-link:focus-visible .has-model .pcard-img--model{
+    opacity:1;
+}
+
+/* Price tags on cards: a small white label, top left. */
+.pcard .sale-tag{
+    top:10px;
+    left:10px;
+    right:auto;
+    padding:4px 8px;
+    border-radius:2px;
+    background:var(--c-white);
+    color:var(--c-error);
+    font-family:var(--f-sans);
+    font-size:.7rem;
+    font-weight:700;
+    letter-spacing:.02em;
+    box-shadow:none;
+}
+
+/*---------- name and price ----------*/
 
 .pcard-body{
     display:flex;
     flex-direction:column;
     flex:1;
-    gap:12px;
-    padding:14px 14px 16px;
+    gap:6px;
+    padding:14px 2px 4px;
 }
 
 .pcard-name{
     margin:0;
-    font-family:"Manrope", sans-serif;
-    font-weight:600;
-    font-size:.92rem;
-    line-height:1.4;
-    color:#2F2A2A;
+    font-family:var(--f-sans);
+    font-weight:500;
+    font-size:.9rem;
+    line-height:1.45;
+    color:var(--c-charcoal);
     display:-webkit-box;
     -webkit-line-clamp:2;
     -webkit-box-orient:vertical;
     overflow:hidden;
-    min-height:2.8em;
 }
 
-.pcard-foot{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:10px;
-    margin-top:auto;
+.pcard-link:hover .pcard-name{
+    text-decoration:underline;
+    text-underline-offset:3px;
+    text-decoration-thickness:1px;
 }
 
 .pcard-price{
-    font-family:"Manrope", sans-serif;
-    font-weight:700;
-    font-size:1.15rem;
-    color:#1F1B1B;
+    font-family:var(--f-sans);
+    font-weight:600;
+    font-size:.92rem;
+    color:var(--c-charcoal);
 }
 
-.pcard-cta{
-    display:inline-flex;
-    align-items:center;
-    gap:6px;
-    padding:8px 14px;
-    border-radius:999px;
-    background:#143C35;
-    color:#FFFFFF;
-    font-family:"Manrope", sans-serif;
-    font-size:.8rem;
-    font-weight:700;
-    white-space:nowrap;
-    transition:background-color .25s ease;
-}
-
-.pcard-link:hover .pcard-cta{
-    background:#0D2B26;
+.pcard .price-was{
+    color:var(--c-ink-soft);
 }
 
 @media (max-width:640px){
-    .pcard-link{ border-radius:14px; }
-    .pcard-body{ padding:10px 10px 12px; gap:8px; }
-    .pcard-name{ font-size:.85rem; }
-    .pcard-price{ font-size:1rem; }
-    /* Price (and any previous price) on its own line, then a full-width
-       "Shop Now" button, so everything fits on a narrow phone card. */
-    .pcard-foot{ flex-direction:column; align-items:stretch; gap:8px; }
-    .pcard-cta{ justify-content:center; min-height:34px; padding:0 10px; font-size:.75rem; }
-    .pcard-cta svg{ display:none; }
+    .pcard-body{ padding:10px 0 2px; gap:4px; }
+    .pcard-name{ font-size:.84rem; }
+    .pcard-price{ font-size:.88rem; }
+    .pcard .sale-tag{ top:8px; left:8px; padding:3px 6px; font-size:.64rem; }
 }
 
 @media (prefers-reduced-motion: reduce){
-    .pcard-link,
-    .pcard-media img{ transition:none; }
-    .pcard-link:hover,
-    .pcard-link:hover .pcard-media img{ transform:none; }
+    .pcard-media .pcard-img--model{ transition:none; }
 }

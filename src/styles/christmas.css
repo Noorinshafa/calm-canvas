@@ -261,6 +261,10 @@
 
 .xmas-card:hover .xmas-ph img{ transform:scale(1.04); }
 
+/* Product on white, blended onto the site's light grey (as on shop cards). */
+.xmas-ph--studio{ background:var(--c-grey); }
+.xmas-ph--studio img{ object-fit:contain; mix-blend-mode:multiply; }
+
 .xmas-badge{
     position:absolute;
     left:10px;

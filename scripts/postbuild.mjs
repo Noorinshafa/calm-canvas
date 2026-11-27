@@ -396,77 +396,37 @@ async function prerender() {
     // No built files (for example when testing the page generator alone).
   }
 
-  // The home page's top photos are only found by the browser once the app
-  // has started. Tell it about them in the home page's HTML instead, so they
-  // download at the same time as the app's code.
-  // 1. The soft room photo behind the hero. It covers the largest area of the
-  //    first screen, so it is the page's "Largest Contentful Paint" on phones
-  //    and computers: it gets top priority. Phones and tablets use a tall
-  //    photo, computers a wide one; each preload only applies to its own
-  //    screen size, so nobody downloads both. Sizes and the 1023px limit must
-  //    match BG_SIZES / BG_PHONE_MEDIA in src/components/sections/Hero.jsx.
-  // 2. The three models. Only on computers, where they stand beside the text;
-  //    on phones they sit lower down and must not slow down the app's code on
-  //    a slow connection. Only the AVIF copies are named: browsers that cannot
-  //    show AVIF ignore the hint and load the WebP fallback as usual. The sizes
-  //    must match MODELS_SIZES in Hero.jsx.
+  // The home page's top photo is only found by the browser once the app has
+  // started. Tell it about it in the home page's HTML instead, so it downloads
+  // at the same time as the app's code: the first of the two large model
+  // photos (src/content/homeImages.js) is the page's "Largest Contentful
+  // Paint" on phones and computers, so it gets top priority. The widths and
+  // sizes are the ones Hero.jsx uses (HERO_WIDTHS, HERO_SIZES), so the copy
+  // loaded early is exactly the one the page then shows. Skipped (with a
+  // warning) if that product is no longer in the shop, because the page then
+  // shows a different photo (src/hooks/useHomePhoto.js).
   const homePreloadLinks = [];
 
-  // Exactly the same text as MODELS_SIZES in src/components/sections/Hero.jsx
-  // (on computers it means 582px wide up to 1279px, 617px from 1280px), so
-  // the file loaded early here is the one the page then uses.
-  const MODELS_SIZES =
-    "(max-width: 1023px) min(92vw, 440px), (max-width: 1279px) 582px, 617px";
-
   try {
-    const assetFiles = await readdir(path.join(DIST, "assets"));
-    const findSet = (prefix, widths) =>
-      widths
-        .map((width) => {
-          const file = assetFiles.find((name) =>
-            new RegExp(`^${prefix}${width}-[\\w-]+\\.webp$`).test(name)
-          );
-          return file ? `/assets/${file} ${width}w` : null;
-        })
-        .filter(Boolean);
+    const { HERO_LOOKS, HERO_SIZES, HERO_WIDTHS } = await load(
+      "src/content/homeImages.js"
+    );
+    const lead = HERO_LOOKS[0];
+    const stillSold =
+      !haveProducts || products.some((product) => product.slug === lead?.slug);
+    const srcset = lead ? optimizedSrcSet(lead.src, HERO_WIDTHS) : undefined;
 
-    const bgPhone = findSet("hero-bg-m-", [480, 720, 941]);
-    const bgWide = findSet("hero-bg-", [960, 1672]);
-
-    if (bgPhone.length === 3) {
+    if (lead && stillSold && srcset) {
       homePreloadLinks.push(
-        `<link rel="preload" as="image" type="image/webp" fetchpriority="high" media="(max-width: 1023px)" imagesrcset="${esc(
-          bgPhone.join(", ")
-        )}" imagesizes="100vw" />`
+        `<link rel="preload" as="image" fetchpriority="high" imagesrcset="${esc(
+          srcset
+        )}" imagesizes="${esc(HERO_SIZES)}" />`
       );
+    } else if (lead && !stillSold) {
+      log(`home page photo "${lead.slug}" is no longer in the shop: update src/content/homeImages.js`);
     }
-
-    if (bgWide.length === 2) {
-      homePreloadLinks.push(
-        `<link rel="preload" as="image" type="image/webp" fetchpriority="high" media="(min-width: 1024px)" imagesrcset="${esc(
-          bgWide.join(", ")
-        )}" imagesizes="100vw" />`
-      );
-    }
-
-    const avif = [560, 640, 820, 1129]
-      .map((width) => {
-        const file = assetFiles.find((name) =>
-          new RegExp(`^models-${width}-[\\w-]+\\.avif$`).test(name)
-        );
-        return file ? `/assets/${file} ${width}w` : null;
-      })
-      .filter(Boolean);
-
-    if (avif.length === 4) {
-      homePreloadLinks.push(
-        `<link rel="preload" as="image" type="image/avif" media="(min-width: 1024px)" imagesrcset="${esc(
-          avif.join(", ")
-        )}" imagesizes="${esc(MODELS_SIZES)}" />`
-      );
-    }
-  } catch {
-    // No built files (for example when testing the page generator alone).
+  } catch (error) {
+    log(`home page photo preload skipped: ${briefError(error)}`);
   }
 
   const collectionsCrumb = { name: "Collections", path: "/collections" };
@@ -483,7 +443,7 @@ async function prerender() {
     },
     body: () =>
       `<h1>Aesthetic Hoodies &amp; Gifts Made From Original Art</h1>` +
-      `<h2>Cozy sweatshirts, graphic tees, mugs, tote bags and phone cases, printed to order just for you.</h2>` +
+      `<p>Cozy sweatshirts, graphic tees, mugs, tote bags and phone cases, printed to order just for you.</p>` +
       `<p>${esc(DEFAULT_DESCRIPTION)}</p>` +
       `<nav aria-label="Shop by collection"><h2>Shop by collection</h2><ul>` +
       COLLECTIONS.map(

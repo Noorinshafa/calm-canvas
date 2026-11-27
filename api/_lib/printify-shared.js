@@ -135,6 +135,50 @@ function mainPhotoColor(product) {
   }
 }
 
+// Printify's generated product photos ("mockups") say which camera made them
+// in the address, e.g. ...jpg?camera_label=front or ?camera_label=person-1.
+// Photos the shop uploaded itself have no label (returns "").
+function cameraLabel(src) {
+  try {
+    return new URL(src).searchParams.get("camera_label") || "";
+  } catch {
+    return "";
+  }
+}
+
+// The two photos a product card uses:
+//   cardImage   Printify's plain "front" photo of the product on a white
+//               background. The card shows it on a light grey field (the
+//               white turns into that grey), so every product in a grid sits
+//               on the same studio background.
+//   modelImage  a photo of a real model wearing or carrying the product
+//               ("person" photos), shown when the card is hovered.
+// Both show the colour a shopper first sees on the product page (its first
+// available variant). null when the product has no such photo (for example
+// products that only have photos uploaded by the shop): the card then uses
+// the product's main photo, exactly as before.
+function cardPhotos(product) {
+  try {
+    const images = (product.images || []).filter(
+      (image) => typeof image?.src === "string" && image.src
+    );
+    const firstVariantId = availableVariants(product)[0]?.id;
+    const showsFirstVariant = (image) =>
+      Array.isArray(image.variant_ids) && image.variant_ids.includes(firstVariantId);
+
+    const find = (matches) =>
+      images.find((image) => matches(cameraLabel(image.src)) && showsFirstVariant(image)) ||
+      images.find((image) => matches(cameraLabel(image.src)));
+
+    const front = find((label) => label === "front");
+    const model = find((label) => label.startsWith("person"));
+
+    return { cardImage: front?.src || null, modelImage: model?.src || null };
+  } catch {
+    return { cardImage: null, modelImage: null };
+  }
+}
+
 // Used for product LISTINGS (collections, homepage, search) -- these only
 // ever show a title, price and thumbnail, never variant details, so we
 // deliberately leave `variants` out. For 144 products, variants alone were
@@ -144,12 +188,15 @@ function mainPhotoColor(product) {
 // were loading so slowly, especially on mobile.
 export function mapProductSummary(product, blueprintTitle = "") {
   const priceValue = computePrice(product);
+  const { cardImage, modelImage } = cardPhotos(product);
 
   return {
     id: product.id,
     title: product.title,
     description: product.description,
     image: product.images?.[0]?.src || null,
+    cardImage,
+    modelImage,
     images: (product.images || [])
       .filter((img) => img.src)
       .map((img) => ({ src: img.src })),
@@ -179,6 +226,8 @@ export function mapProductCard(summary) {
     slug: summary.slug,
     title: summary.title,
     image: summary.image,
+    cardImage: summary.cardImage,
+    modelImage: summary.modelImage,
     price: summary.price,
     priceValue: summary.priceValue,
     blueprint_id: summary.blueprint_id,
@@ -199,6 +248,9 @@ export function mapProductCard(summary) {
 export function mapProductFull(product, blueprintTitle = "") {
   const summary = mapProductSummary(product, blueprintTitle);
   delete summary.feedColor; // feed-only, not needed by the product page
+  // Card-only photos: the product page shows the full photo list instead.
+  delete summary.cardImage;
+  delete summary.modelImage;
 
   const variants = availableVariants(product).map((variant) => {
     const { cost, ...rest } = variant;
