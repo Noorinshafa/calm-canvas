@@ -1,560 +1,589 @@
 /* ========================================
-   CALM CANVAS NAVBAR
+   HEADER (redesign, phase 1)
+   Warm white bar, charcoal type, forest for
+   the active page. Heights are unchanged
+   (92px, 82px under 1280px, +40px top bar on
+   the home page) so no page moves.
 ======================================== */
 
 .navbar {
   position: fixed;
   top: 0;
   left: 0;
-
   width: 100%;
-
-  background: #ffffff;
-
+  background: var(--c-warm);
+  border-bottom: 1px solid var(--c-line);
   z-index: 2000;
-
   transition:
-    transform 0.45s ease,
-    opacity 0.45s ease;
-
+    transform 0.45s var(--ease),
+    opacity 0.45s var(--ease);
   will-change: transform, opacity;
 }
 
-/* Hide navbar when scrolling down */
+/* Hide the header when scrolling down. */
 .navbar-hidden {
   transform: translateY(-110%);
   opacity: 0;
   pointer-events: none;
 }
 
-
-/* ========================================
-   NAVBAR INNER
-======================================== */
+/* Home page at the very top: one layer below the hero models (z-index 1600
+   in hero.css) so their heads can rise over the header's lower edge. */
+.navbar--top {
+  z-index: 1500;
+}
 
 .navbar-inner {
   width: min(1380px, 94%);
-
   min-height: 92px;
-
   margin: 0 auto;
-
   display: flex;
-
   align-items: center;
-
   justify-content: space-between;
-
-  gap: 35px;
-
+  gap: 32px;
   padding: 12px 0;
 }
 
-
-/* ========================================
-   LOGO
-======================================== */
+/* ---------- logo ---------- */
 
 .navbar-logo {
   display: flex;
-
   align-items: center;
-
-  gap: 14px;
-
-  text-decoration: none;
-
+  gap: 12px;
   flex-shrink: 0;
+  color: var(--c-charcoal);
 }
 
 .navbar-logo img {
-  width: 68px;
-  height: 68px;
-
+  width: 60px;
+  height: 60px;
   object-fit: contain;
-
-  display: block;
 }
 
 .navbar-brand {
   display: flex;
-
   flex-direction: column;
-
   justify-content: center;
 }
 
-.navbar-brand h2,
 .navbar-brand .brand-name {
   margin: 0;
-
-  color: #294c38;
-
-  font-family: "Cormorant Garamond", serif;
-
-  font-size: 2rem;
-
-  font-weight: 700;
-
-  line-height: 1;
-}
-
-.navbar-brand p {
-  margin: 6px 0 0;
-
-  color: #67746B;
-
-  font-family: "Manrope", sans-serif;
-
-  font-size: 0.68rem;
-
+  font-family: var(--f-serif);
+  font-size: 1.85rem;
   font-weight: 600;
-
-  letter-spacing: 1.8px;
-
-  white-space: nowrap;
+  line-height: 1;
+  letter-spacing: 0.005em;
+  color: var(--c-charcoal);
 }
 
-
-/* ========================================
-   NAVIGATION
-======================================== */
+/* ---------- links ---------- */
 
 .navbar-links {
   display: flex;
-
   align-items: center;
-
   justify-content: center;
-
-  gap: 30px;
-
+  gap: 26px;
   flex: 1;
 }
 
-.navbar-links a {
+.navbar-links > a,
+.nav-dd-toggle {
   position: relative;
-
-  color: #294c38;
-
-  text-decoration: none;
-
-  font-family: "Manrope", sans-serif;
-
-  font-size: 1rem;
-
-  font-weight: 700;
-
-  letter-spacing: 0.3px;
-
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 0;
+  background: none;
+  border: 0;
+  color: var(--c-charcoal);
+  font-family: var(--f-sans);
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
   white-space: nowrap;
-
-  padding: 10px 2px;
-
-  transition:
-    color 0.25s ease,
-    transform 0.25s ease;
+  cursor: pointer;
 }
 
-.navbar-links a::after {
+/* Underline that grows from the left on hover; stays under the current page. */
+.navbar-links > a::after,
+.nav-dd-toggle::after {
   content: "";
-
   position: absolute;
-
   left: 0;
-  bottom: 3px;
-
-  width: 0;
-
-  height: 2px;
-
-  background: #294c38;
-
-  border-radius: 10px;
-
-  transition: width 0.25s ease;
+  right: 0;
+  bottom: 4px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s var(--ease);
 }
 
-.navbar-links a:hover {
-  color: #163825;
-
-  transform: translateY(-2px);
+.navbar-links > a:hover::after,
+.nav-dd-toggle:hover::after,
+.nav-dd.is-open .nav-dd-toggle::after,
+.navbar-links > a.active::after {
+  transform: scaleX(1);
 }
 
-.navbar-links a:hover::after {
+.navbar-links > a.active {
+  color: var(--c-forest);
+  font-weight: 600;
+}
+
+.nav-dd-toggle svg {
+  font-size: 0.9rem;
+  transition: transform 0.2s var(--ease);
+}
+
+.nav-dd.is-open .nav-dd-toggle svg {
+  transform: rotate(180deg);
+}
+
+/* ---------- Shop panel (full width under the header) ---------- */
+
+/* Static, so the panel is placed against the whole header, not the button. */
+.nav-dd--mega {
+  position: static;
+}
+
+.nav-mega {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--c-warm);
+  border-top: 1px solid var(--c-line);
+  border-bottom: 1px solid var(--c-line);
+  box-shadow: 0 28px 40px -28px rgba(12, 10, 8, 0.22);
+  z-index: 10;
+}
+
+/* Invisible strip over the header's lower edge, so the pointer can travel
+   from "Shop" down into the panel without it closing. */
+.nav-mega::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -26px;
+  height: 26px;
+}
+
+.nav-mega[hidden] {
+  display: none;
+}
+
+.nav-mega-inner {
+  width: min(1380px, 94%);
+  margin: 0 auto;
+  padding: 36px 0 44px;
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) minmax(200px, 1fr) minmax(320px, 2fr);
+  gap: 48px;
+}
+
+.nav-mega-heading {
+  margin: 0 0 14px;
+  font-family: var(--f-sans);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--c-ink-soft);
+}
+
+.nav-mega-col ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.nav-mega-col a {
+  display: inline-block;
+  padding: 3px 0;
+  font-family: var(--f-serif);
+  font-size: 1.35rem;
+  font-weight: 500;
+  line-height: 1.25;
+  color: var(--c-charcoal);
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1px;
+  transition: text-decoration-color 0.2s var(--ease);
+}
+
+.nav-mega-col a:hover,
+.nav-mega-col a:focus-visible {
+  text-decoration-color: currentColor;
+}
+
+.nav-mega-col a.nav-mega-all {
+  margin-top: 8px;
+  font-family: var(--f-sans);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--c-forest);
+  text-decoration-color: currentColor;
+}
+
+.nav-mega-tiles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.nav-mega-tile {
+  display: grid;
+  gap: 10px;
+  color: var(--c-charcoal);
+}
+
+.nav-mega-tile img {
   width: 100%;
+  aspect-ratio: 4 / 5;
+  max-height: 260px;
+  object-fit: cover;
+  background: var(--c-grey);
+  transition: opacity 0.25s var(--ease);
 }
 
+.nav-mega-tile:hover img {
+  opacity: 0.88;
+}
 
-/* ========================================
-   NAVBAR ACTIONS
-======================================== */
+.nav-mega-tile span {
+  font-family: var(--f-sans);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* ---------- icons ---------- */
 
 .navbar-actions {
   display: flex;
-
   align-items: center;
-
-  gap: 8px;
-
+  gap: 4px;
   flex-shrink: 0;
 }
 
 .navbar-icon,
 .navbar-menu-button {
-  width: 46px;
-  height: 46px;
-
+  width: 44px;
+  height: 44px;
   display: flex;
-
   align-items: center;
   justify-content: center;
-
   border: none;
-
   background: transparent;
-
-  color: #294c38;
-
-  font-size: 1.35rem;
-
+  color: var(--c-charcoal);
+  font-size: 1.25rem;
   border-radius: 50%;
-
   cursor: pointer;
-
-  text-decoration: none;
-
-  transition:
-    background 0.25s ease,
-    transform 0.25s ease;
+  transition: background 0.2s var(--ease);
 }
 
 .navbar-icon:hover,
 .navbar-menu-button:hover {
-  background: rgba(41, 76, 56, 0.1);
-
-  transform: translateY(-2px);
+  background: var(--c-grey);
 }
 
 .navbar-menu-button {
   display: none;
 }
 
+.navbar-cart {
+  position: relative;
+}
 
-/* ========================================
-   SEARCH
-======================================== */
+.navbar-cart-count {
+  position: absolute;
+  top: 5px;
+  right: 3px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--c-forest);
+  color: var(--c-ivory);
+  font-family: var(--f-sans);
+  font-size: 0.68rem;
+  font-weight: 700;
+  line-height: 18px;
+  text-align: center;
+}
+
+/* ---------- search ---------- */
 
 .navbar-search {
   position: absolute;
-
   top: 92px;
-
   right: 3%;
-
-  width: 400px;
-
-  background: #ffffff;
-
-  border-radius: 18px;
-
+  width: 420px;
+  background: var(--c-white);
+  border: 1px solid var(--c-line);
+  border-radius: 2px;
   overflow: hidden;
-
-  box-shadow:
-    0 20px 60px rgba(30, 50, 38, 0.18);
-
-  animation: searchDrop 0.25s ease;
-
-  border: 1px solid #eeeeea;
+  box-shadow: 0 24px 48px -24px rgba(12, 10, 8, 0.28);
+  animation: searchDrop 0.2s var(--ease);
 }
 
 @keyframes searchDrop {
   from {
     opacity: 0;
-
-    transform: translateY(-10px);
+    transform: translateY(-6px);
   }
-
   to {
     opacity: 1;
-
     transform: translateY(0);
   }
 }
 
+.navbar--with-bar .navbar-search {
+  top: 132px;
+}
+
 .navbar-search-inner {
   display: flex;
-
   align-items: center;
-
   gap: 12px;
-
-  padding: 17px 19px;
-
-  border-bottom: 1px solid #eeeeea;
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--c-line);
 }
 
 .navbar-search-inner > svg {
-  color: #294c38;
-
-  font-size: 1.2rem;
-
+  color: var(--c-charcoal);
+  font-size: 1.15rem;
   flex-shrink: 0;
 }
 
 .navbar-search-inner input {
   width: 100%;
-
   border: none;
-
   outline: none;
-
-  font-family: "Manrope", sans-serif;
-
+  font-family: var(--f-sans);
   font-size: 0.95rem;
-
-  color: #294c38;
-
+  color: var(--c-charcoal);
   background: transparent;
 }
 
 .navbar-search-inner input:focus-visible {
-  outline: 2px solid #d89caf;
-
+  outline: 2px solid var(--c-forest);
   outline-offset: 2px;
 }
 
 .navbar-search-inner input::placeholder {
-  color: #9b9f9a;
+  color: var(--c-ink-soft);
 }
 
 .search-close {
   border: none;
-
   background: transparent;
-
-  color: #6b746d;
-
+  color: var(--c-ink-soft);
   font-size: 1.15rem;
-
   cursor: pointer;
-
   display: flex;
-
   align-items: center;
-
   justify-content: center;
 }
 
-
-/* ========================================
-   SEARCH RESULTS
-======================================== */
-
 .navbar-search-results {
   max-height: 400px;
-
   overflow-y: auto;
 }
 
 .navbar-search-product {
   display: flex;
-
   align-items: center;
-
   gap: 14px;
-
-  padding: 14px 18px;
-
-  text-decoration: none;
-
-  transition: background 0.2s ease;
+  padding: 12px 18px;
+  transition: background 0.2s var(--ease);
 }
 
 .navbar-search-product:hover {
-  background: #f5f7f3;
+  background: var(--c-warm);
 }
 
 .navbar-search-product img {
-  width: 58px;
-  height: 58px;
-
+  width: 56px;
+  height: 56px;
   object-fit: contain;
-
-  border-radius: 10px;
-
-  background: #f7f7f5;
+  background: var(--c-grey);
 }
 
 .navbar-search-product h4 {
-  margin: 0 0 5px;
-
-  color: #294c38;
-
-  font-family: "Manrope", sans-serif;
-
-  font-size: 0.9rem;
-
-  font-weight: 700;
+  margin: 0 0 4px;
+  color: var(--c-charcoal);
+  font-family: var(--f-sans);
+  font-size: 0.88rem;
+  font-weight: 600;
+  line-height: 1.35;
 }
 
 .navbar-search-product p {
   margin: 0;
-
-  color: #b27b42;
-
-  font-family: "Manrope", sans-serif;
-
+  color: var(--c-ink-soft);
+  font-family: var(--f-sans);
   font-size: 0.82rem;
 }
 
 .no-search-results {
-  padding: 25px;
-
+  padding: 24px;
   margin: 0;
-
   text-align: center;
-
-  color: #707070;
-
-  font-family: "Manrope", sans-serif;
+  color: var(--c-ink-soft);
+  font-family: var(--f-sans);
+  font-size: 0.9rem;
 }
 
-
-/* ========================================
-   MOBILE MENU
-======================================== */
+/* ---------- phone and tablet menu ---------- */
 
 .mobile-menu {
   position: fixed;
-
   top: 0;
   right: 0;
-
-  width: min(360px, 88vw);
-
+  width: min(380px, 88vw);
   height: 100vh;
-
-  background: #f7f4ed;
-
-  padding: 25px 28px;
-
+  height: 100dvh;
+  background: var(--c-warm);
+  padding: 22px 28px 32px;
   display: flex;
-
   flex-direction: column;
-
-  box-shadow:
-    -15px 0 50px rgba(0, 0, 0, 0.13);
-
+  overflow-y: auto;
   transform: translateX(100%);
-
-  transition: transform 0.35s ease;
-
+  visibility: hidden;
+  transition:
+    transform 0.35s var(--ease),
+    visibility 0s linear 0.35s;
   z-index: 3000;
 }
 
 .mobile-menu-open {
   transform: translateX(0);
+  visibility: visible;
+  transition: transform 0.35s var(--ease);
+  box-shadow: -24px 0 48px -24px rgba(12, 10, 8, 0.3);
+}
+
+/* Sized to the screen, not "inset: 0": the header's will-change makes it
+   the box that fixed children are placed in. */
+.mobile-menu-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  border: 0;
+  z-index: 2999;
+  background: rgba(12, 10, 8, 0.35);
+  cursor: default;
 }
 
 .mobile-menu-header {
   display: flex;
-
   align-items: center;
-
   justify-content: space-between;
-
-  margin-bottom: 40px;
+  margin-bottom: 18px;
 }
 
 .mobile-menu-title {
-  display: flex;
-
-  align-items: center;
-
-  gap: 10px;
-
-  color: #294c38;
-
-  font-family: "Cormorant Garamond", serif;
-
-  font-size: 1.7rem;
-
-  font-weight: 700;
-}
-
-.mobile-menu-title img {
-  width: 45px;
-  height: 45px;
-
-  object-fit: contain;
+  font-family: var(--f-serif);
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--c-charcoal);
 }
 
 .mobile-menu-header button {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border: none;
-
   background: transparent;
-
-  color: #294c38;
-
-  font-size: 1.5rem;
-
+  color: var(--c-charcoal);
+  font-size: 1.4rem;
   cursor: pointer;
 }
 
-.mobile-menu > a {
-  padding: 17px 0;
-
-  color: #294c38;
-
-  text-decoration: none;
-
-  font-family: "Manrope", sans-serif;
-
-  font-size: 1.05rem;
-
-  font-weight: 700;
-
-  border-bottom:
-    1px solid rgba(41, 76, 56, 0.12);
-
-  transition: padding-left 0.2s ease;
+.mobile-menu-group {
+  padding: 16px 0 12px;
+  border-top: 1px solid var(--c-line);
 }
 
-.mobile-menu > a:hover {
-  padding-left: 8px;
+.mobile-menu-heading {
+  margin: 0 0 6px;
+  font-family: var(--f-sans);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--c-ink-soft);
 }
 
+.mobile-menu-group a {
+  display: block;
+  padding: 8px 0;
+  font-family: var(--f-serif);
+  font-size: 1.3rem;
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--c-charcoal);
+}
+
+.mobile-menu-group--plain a {
+  font-family: var(--f-sans);
+  font-size: 0.95rem;
+  font-weight: 500;
+}
 
 /* ========================================
-   TABLET
+   BREAKPOINTS
 ======================================== */
 
-@media (max-width: 1100px) {
-
-  .navbar-links {
-    gap: 19px;
-  }
-
-  .navbar-links a {
-    font-size: 0.9rem;
-  }
-
+/* 1024-1279px: Shop, Hoodies, Sweatshirts, T-Shirts and Christmas Gifts fit;
+   the other three are one click away in the Shop panel. */
+@media (max-width: 1279px) {
   .navbar-inner {
+    min-height: 82px;
+    width: 92%;
     gap: 20px;
   }
 
+  .navbar-logo img {
+    width: 54px;
+    height: 54px;
+  }
+
+  .navbar-brand .brand-name {
+    font-size: 1.7rem;
+  }
+
+  .navbar-links {
+    gap: 22px;
+  }
+
+  .nav-wide-only {
+    display: none !important;
+  }
+
+  .navbar-search {
+    top: 82px;
+    width: min(420px, 94%);
+  }
+
+  .navbar--with-bar .navbar-search {
+    top: 122px;
+  }
+
+  .nav-mega-inner {
+    width: 92%;
+    gap: 32px;
+  }
 }
 
-
-/* ========================================
-   TABLET AND MOBILE
-   Below 1280px the row of links no longer fits beside the logo, so the menu
-   button is used instead.
-======================================== */
-
-@media (max-width: 1279px) {
-
+/* Under 1024px the row of links is replaced by the menu button. */
+@media (max-width: 1023px) {
   .navbar-links {
     display: none;
   }
@@ -562,60 +591,22 @@
   .navbar-menu-button {
     display: flex;
   }
-
-  .navbar-inner {
-    min-height: 82px;
-
-    width: 92%;
-  }
-
-  .navbar-logo img {
-    width: 58px;
-    height: 58px;
-  }
-
-  .navbar-brand h2,
-.navbar-brand .brand-name {
-    font-size: 1.75rem;
-  }
-
-  .navbar-brand p {
-    font-size: 0.62rem;
-  }
-
-  .navbar-search {
-    top: 82px;
-
-    right: 3%;
-
-    width: min(400px, 94%);
-  }
-
 }
 
-
-/* ========================================
-   SMALL PHONE
-======================================== */
-
+/* Phones */
 @media (max-width: 480px) {
-
-  .navbar-brand p {
-    display: none;
+  /* The brand name is one long word, so its size follows the screen width:
+     just big enough to fit beside the logo and the three buttons. */
+  .navbar-brand .brand-name {
+    display: block;
+    font-size: clamp(0.85rem, calc((92vw - 186px) / 7.4), 1.5rem);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
-  /* The brand name is one long word ("ShopCalmCanvas"), so on phones its
-     size follows the screen width: just big enough to fit beside the logo and
-     the three buttons, never pushing the menu button off the edge. */
-  .navbar-brand h2,
-.navbar-brand .brand-name {
-    font-size: clamp(0.85rem, calc((92vw - 186px) / 7.4), 1.55rem);
-  }
-
-  /* The logo block may shrink (the name is cut with "..." in the worst case)
-     so the search, cart and menu buttons ALWAYS stay on screen, even when
-     the phone shows text larger than normal (e.g. a bigger Samsung font size
-     or Instagram's built-in browser). */
+  /* The logo block may shrink so the search, bag and menu buttons always stay
+     on screen, even with larger phone text settings. */
   .navbar-logo {
     gap: 8px;
     flex-shrink: 1;
@@ -623,21 +614,13 @@
   }
 
   .navbar-logo img {
-    width: 44px;
-    height: 44px;
+    width: 42px;
+    height: 42px;
     flex-shrink: 0;
   }
 
   .navbar-brand {
     min-width: 0;
-  }
-
-  .navbar-brand h2,
-  .navbar-brand .brand-name {
-    display: block;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
 
   .navbar-inner {
@@ -646,192 +629,28 @@
   }
 
   .navbar-actions {
-    gap: 2px;
+    gap: 0;
   }
 
   .navbar-icon,
   .navbar-menu-button {
-    width: 38px;
-    height: 38px;
-
+    width: 40px;
+    height: 40px;
     font-size: 1.2rem;
   }
-
 }
 
-/* ========================================
-   NEW MENU (Home, Shop, Collections, About,
-   Contact), cart count and home top bar
-======================================== */
-
-/* Five items fit from 1024px, so the menu button is only used below that. */
-@media (min-width: 1024px) and (max-width: 1279px) {
-  .navbar-links {
-    display: flex;
-    gap: 22px;
+@media (prefers-reduced-motion: reduce) {
+  .navbar,
+  .mobile-menu,
+  .navbar-links > a::after,
+  .nav-dd-toggle::after,
+  .nav-dd-toggle svg,
+  .nav-mega-tile img {
+    transition: none;
   }
-  .navbar-menu-button {
-    display: none;
+
+  .navbar-search {
+    animation: none;
   }
-}
-
-.navbar-links a,
-.nav-dd-toggle {
-  color: #2f3a36;
-  font-family: "Manrope", sans-serif;
-  font-size: 0.98rem;
-  font-weight: 600;
-  letter-spacing: 0.2px;
-}
-
-.navbar-links a.active {
-  color: #c45e80;
-}
-
-.navbar-links > a.active::after {
-  width: 100%;
-  background: #d67a9b;
-}
-
-.nav-dd {
-  position: relative;
-}
-
-.nav-dd-toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 10px 2px;
-  background: none;
-  border: 0;
-  cursor: pointer;
-  white-space: nowrap;
-}
-
-.nav-dd-toggle svg {
-  font-size: 0.95rem;
-  transition: transform 0.2s ease;
-}
-
-.nav-dd.is-open .nav-dd-toggle {
-  color: #c45e80;
-}
-
-.nav-dd.is-open .nav-dd-toggle svg {
-  transform: rotate(180deg);
-}
-
-/* The panel starts right under the button (padding-top bridges the gap so
-   the mouse can move into it without the menu closing). */
-.nav-dd-panel {
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  padding-top: 10px;
-  z-index: 10;
-}
-
-.nav-dd-panel[hidden] {
-  display: none;
-}
-
-.nav-dd-panel ul {
-  list-style: none;
-  margin: 0;
-  padding: 10px;
-  min-width: 220px;
-  background: #ffffff;
-  border: 1px solid #f0e2de;
-  border-radius: 16px;
-  box-shadow: 0 22px 50px rgba(60, 30, 40, 0.14);
-}
-
-.nav-dd-panel a {
-  display: block;
-  padding: 10px 14px;
-  border-radius: 10px;
-  font-weight: 600;
-  font-size: 0.95rem;
-}
-
-.nav-dd-panel a::after {
-  display: none;
-}
-
-.nav-dd-panel a:hover,
-.nav-dd-panel a:focus-visible {
-  background: #fbefec;
-  color: #143c35;
-  transform: none;
-}
-
-/* Cart with item count. */
-.navbar-cart {
-  position: relative;
-}
-
-.navbar-cart-count {
-  position: absolute;
-  top: 4px;
-  right: 2px;
-  min-width: 18px;
-  height: 18px;
-  padding: 0 5px;
-  border-radius: 999px;
-  background: #d16e91;
-  color: #ffffff;
-  font-family: "Manrope", sans-serif;
-  font-size: 0.68rem;
-  font-weight: 700;
-  line-height: 18px;
-  text-align: center;
-}
-
-/* Home page: the thin top bar sits above the menu row, so the search panel
-   opens 40px lower. */
-.navbar--with-bar .navbar-search {
-  top: 132px;
-}
-
-@media (max-width: 1279px) {
-  .navbar--with-bar .navbar-search {
-    top: 122px;
-  }
-}
-
-/* Mobile menu groups (Shop, Collections). */
-.mobile-menu {
-  overflow-y: auto;
-}
-
-.mobile-menu-group {
-  padding: 12px 0 6px;
-  border-bottom: 1px solid rgba(41, 76, 56, 0.12);
-}
-
-.mobile-menu-heading {
-  margin: 4px 0 6px;
-  color: #ba446b;
-  font-family: "Manrope", sans-serif;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
-.mobile-menu-group a {
-  display: block;
-  padding: 10px 0;
-  color: #294c38;
-  text-decoration: none;
-  font-family: "Manrope", sans-serif;
-  font-size: 1rem;
-  font-weight: 600;
-}
-
-/* Home page at the very top: one layer below the hero models (z-index 1600
-   in hero.css) so their heads can rise over the header's lower edge. */
-.navbar--top {
-  z-index: 1500;
 }

@@ -1072,25 +1072,43 @@ async function prerender() {
   // The footer links (kept in step with src/components/sections/Footer.jsx)
   // ------------------------------------------------------------------
   const footerHtml = () => {
-    const shop = [
-      ...COLLECTIONS.map((c) => [c.path, c.nav]),
-      [CHRISTMAS_PAGE.path, "Christmas Gifts"],
-      ...THEME_PAGES.map((theme) => [theme.path, theme.nav]),
-    ];
-    const company = [
-      ["/about", "About Us"],
-      ["/blog", "Gift & Style Journal"],
-      ["/contact", "Contact Us"],
-      ["/shipping-returns", "Shipping & Returns"],
-      ["/terms", "Terms & Conditions"],
-      ["/privacy-policy", "Privacy Policy"],
+    const groups = [
+      [
+        "Shop",
+        [
+          ...COLLECTIONS.map((c) => [c.path, c.nav]),
+          [CHRISTMAS_PAGE.path, "Christmas Gifts"],
+        ],
+      ],
+      ["Gift collections", THEME_PAGES.map((theme) => [theme.path, theme.nav])],
+      [
+        "Customer care",
+        [
+          ["/contact", "Contact us"],
+          ["/shipping-returns", "Shipping & returns"],
+        ],
+      ],
+      [
+        "About",
+        [
+          ["/about", "Our story"],
+          ["/blog", "Gift & Style Journal"],
+        ],
+      ],
+      [
+        "Legal",
+        [
+          ["/privacy-policy", "Privacy policy"],
+          ["/terms", "Terms & conditions"],
+        ],
+      ],
     ];
     const list = (items) =>
       `<ul>${items.map(([href, text]) => `<li>${link(href, text)}</li>`).join("")}</ul>`;
 
     return (
       `<footer class="prerender-footer"><nav aria-label="Footer">` +
-      `<h2>Shop</h2>${list(shop)}<h2>Company</h2>${list(company)}` +
+      groups.map(([title, items]) => `<h2>${esc(title)}</h2>${list(items)}`).join("") +
       `</nav></footer>`
     );
   };

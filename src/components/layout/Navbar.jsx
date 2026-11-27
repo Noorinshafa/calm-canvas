@@ -18,34 +18,45 @@ import "../../styles/navbar.css";
 // 3-9 KB instead of the 69 KB logo.png, which stays for structured data.
 import logo68 from "../../assets/logo-68.webp";
 import logo136 from "../../assets/logo-136.webp";
+// Pictures in the Shop panel. They are only downloaded when the panel opens.
+import tileHoodies from "../../assets/home/cat-hoodies-400.webp";
+import tileMugs from "../../assets/home/cat-mugs-400.webp";
 
-// The two drop-down menus. Every page linked here already exists.
-const MENUS = [
-  {
-    id: "shop",
-    label: "Shop",
-    links: [
-      { to: "/hoodies", label: "Hoodies" },
-      { to: "/sweatshirts", label: "Sweatshirts" },
-      { to: "/tshirts", label: "T-Shirts" },
-      { to: "/mugs", label: "Mugs" },
-      { to: "/totebags", label: "Tote Bags" },
-      { to: "/phonecases", label: "Phone Cases" },
-      { to: "/collections", label: "Shop All" },
-    ],
-  },
-  {
-    id: "collections",
-    label: "Collections",
-    links: [
-      { to: "/christmas-gifts", label: "Christmas Gifts" },
-      { to: "/thanksgiving-gifts", label: "Thanksgiving Gifts" },
-      { to: "/cat-lover-gifts", label: "Cat Lover Gifts" },
-      { to: "/dog-lover-gifts", label: "Dog Lover Gifts" },
-      { to: "/floral-gifts", label: "Floral Gifts" },
-      { to: "/halloween", label: "Halloween & Spooky" },
-    ],
-  },
+// Every page linked here already exists.
+const CATEGORIES = [
+  { to: "/hoodies", label: "Hoodies" },
+  { to: "/sweatshirts", label: "Sweatshirts" },
+  { to: "/tshirts", label: "T-Shirts" },
+  { to: "/mugs", label: "Mugs" },
+  { to: "/totebags", label: "Tote Bags" },
+  { to: "/phonecases", label: "Phone Cases" },
+];
+
+const GIFT_COLLECTIONS = [
+  { to: "/christmas-gifts", label: "Christmas Gifts" },
+  { to: "/thanksgiving-gifts", label: "Thanksgiving Gifts" },
+  { to: "/cat-lover-gifts", label: "Cat Lover Gifts" },
+  { to: "/dog-lover-gifts", label: "Dog Lover Gifts" },
+  { to: "/floral-gifts", label: "Floral Gifts" },
+  { to: "/halloween", label: "Halloween & Spooky" },
+];
+
+const SHOP_TILES = [
+  { to: "/hoodies", label: "Hoodies", image: tileHoodies },
+  { to: "/mugs", label: "Mugs", image: tileMugs },
+];
+
+// The row of links beside "Shop" on computers. `wideOnly` links are hidden
+// between 1024 and 1279px, where they don't all fit; they stay one click away
+// in the Shop panel.
+const TOP_LINKS = [
+  { to: "/hoodies", label: "Hoodies" },
+  { to: "/sweatshirts", label: "Sweatshirts" },
+  { to: "/tshirts", label: "T-Shirts" },
+  { to: "/mugs", label: "Mugs", wideOnly: true },
+  { to: "/totebags", label: "Tote Bags", wideOnly: true },
+  { to: "/phonecases", label: "Phone Cases", wideOnly: true },
+  { to: "/christmas-gifts", label: "Christmas Gifts" },
 ];
 
 // Search shows at most this many matches, so a short word like "a" does not
@@ -58,7 +69,7 @@ function Navbar() {
   const [search, setSearch] = useState("");
   const [navbarHidden, setNavbarHidden] = useState(false);
   const [atTop, setAtTop] = useState(true);
-  const [openMenu, setOpenMenu] = useState(null);
+  const [shopOpen, setShopOpen] = useState(false);
   const navRef = useRef(null);
 
   const { pathname } = useLocation();
@@ -83,7 +94,7 @@ function Navbar() {
         setNavbarHidden(false);
       } else if (currentScroll > previousScroll) {
         setNavbarHidden(true);
-        setOpenMenu(null);
+        setShopOpen(false);
       } else if (currentScroll < previousScroll) {
         setNavbarHidden(false);
       }
@@ -95,19 +106,20 @@ function Navbar() {
   }, []);
 
   /* =========================
-     DROP-DOWN MENUS
-     Close on a click outside the menu or on the Escape key.
+     SHOP PANEL
+     Closes on a click outside the menu, on the Escape key, or when one of
+     its links is followed.
   ========================= */
   useEffect(() => {
-    if (!openMenu) return undefined;
+    if (!shopOpen) return undefined;
 
     function handlePointer(event) {
       if (navRef.current && !navRef.current.contains(event.target)) {
-        setOpenMenu(null);
+        setShopOpen(false);
       }
     }
     function handleKey(event) {
-      if (event.key === "Escape") setOpenMenu(null);
+      if (event.key === "Escape") setShopOpen(false);
     }
 
     document.addEventListener("pointerdown", handlePointer);
@@ -116,13 +128,13 @@ function Navbar() {
       document.removeEventListener("pointerdown", handlePointer);
       document.removeEventListener("keydown", handleKey);
     };
-  }, [openMenu]);
+  }, [shopOpen]);
 
-  // A mouse click keeps the menu open (it was opened on hover); a keyboard
+  // A mouse click keeps the panel open (it was opened on hover); a keyboard
   // press (event.detail === 0) opens and closes it.
-  function toggleMenu(event, id) {
+  function toggleShop(event) {
     const fromKeyboard = event.detail === 0;
-    setOpenMenu((current) => (fromKeyboard && current === id ? null : id));
+    setShopOpen((current) => (fromKeyboard ? !current : true));
   }
 
   /* =========================
@@ -146,9 +158,9 @@ function Navbar() {
 
   // On the home page, while it is scrolled to the very top and nothing is
   // open in the header, the header sits one layer below the hero models so
-  // their heads can rise over its lower edge. Any scroll, menu or search puts the
-  // header back on top.
-  const underHero = isHome && atTop && !menuOpen && !searchOpen && !openMenu;
+  // their heads can rise over its lower edge. Any scroll, menu or search puts
+  // the header back on top.
+  const underHero = isHome && atTop && !menuOpen && !searchOpen && !shopOpen;
 
   return (
     <header
@@ -176,50 +188,99 @@ function Navbar() {
 
         {/* NAVIGATION */}
         <nav className="navbar-links" aria-label="Main" ref={navRef}>
-          <NavLink to="/" end>
-            Home
-          </NavLink>
+          <div
+            className={`nav-dd nav-dd--mega ${shopOpen ? "is-open" : ""}`}
+            onMouseEnter={() => setShopOpen(true)}
+            onMouseLeave={() => setShopOpen(false)}
+          >
+            <button
+              type="button"
+              className="nav-dd-toggle"
+              aria-expanded={shopOpen}
+              aria-controls="nav-menu-shop"
+              onClick={toggleShop}
+            >
+              Shop
+              <FiChevronDown aria-hidden="true" />
+            </button>
 
-          {MENUS.map((menu) => {
-            const open = openMenu === menu.id;
-            return (
-              <div
-                key={menu.id}
-                className={`nav-dd ${open ? "is-open" : ""}`}
-                onMouseEnter={() => setOpenMenu(menu.id)}
-                onMouseLeave={() => setOpenMenu(null)}
-              >
-                <button
-                  type="button"
-                  className="nav-dd-toggle"
-                  aria-expanded={open}
-                  aria-controls={`nav-menu-${menu.id}`}
-                  onClick={(event) => toggleMenu(event, menu.id)}
-                >
-                  {menu.label}
-                  <FiChevronDown aria-hidden="true" />
-                </button>
-                <div
-                  id={`nav-menu-${menu.id}`}
-                  className="nav-dd-panel"
-                  hidden={!open}
-                >
-                  <ul>
-                    {menu.links.map((link) => (
+            <div id="nav-menu-shop" className="nav-mega" hidden={!shopOpen}>
+              <div className="nav-mega-inner">
+                <div className="nav-mega-col">
+                  <p className="nav-mega-heading" id="nav-mega-categories">
+                    Shop by category
+                  </p>
+                  <ul aria-labelledby="nav-mega-categories">
+                    {CATEGORIES.map((link) => (
                       <li key={link.to}>
-                        <Link to={link.to} onClick={() => setOpenMenu(null)}>
+                        <Link to={link.to} onClick={() => setShopOpen(false)}>
+                          {link.label}
+                        </Link>
+                      </li>
+                    ))}
+                    <li>
+                      <Link
+                        to="/collections"
+                        className="nav-mega-all"
+                        onClick={() => setShopOpen(false)}
+                      >
+                        Shop all
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="nav-mega-col">
+                  <p className="nav-mega-heading" id="nav-mega-gifts">
+                    Gift collections
+                  </p>
+                  <ul aria-labelledby="nav-mega-gifts">
+                    {GIFT_COLLECTIONS.map((link) => (
+                      <li key={link.to}>
+                        <Link to={link.to} onClick={() => setShopOpen(false)}>
                           {link.label}
                         </Link>
                       </li>
                     ))}
                   </ul>
                 </div>
-              </div>
-            );
-          })}
 
-          <NavLink to="/about">About</NavLink>
-          <NavLink to="/contact">Contact</NavLink>
+                {/* Pictures are only put on the page while the panel is open,
+                    so they are never downloaded for visitors who don't open it. */}
+                {shopOpen && (
+                  <div className="nav-mega-tiles">
+                    {SHOP_TILES.map((tile) => (
+                      <Link
+                        key={tile.to}
+                        to={tile.to}
+                        className="nav-mega-tile"
+                        onClick={() => setShopOpen(false)}
+                      >
+                        <img
+                          src={tile.image}
+                          alt=""
+                          width="400"
+                          height="500"
+                          decoding="async"
+                        />
+                        <span>{tile.label}</span>
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {TOP_LINKS.map((link) => (
+            <NavLink
+              key={link.to}
+              to={link.to}
+              className={link.wideOnly ? "nav-wide-only" : undefined}
+            >
+              {link.label}
+            </NavLink>
+          ))}
         </nav>
 
         {/* ACTIONS */}
@@ -238,8 +299,8 @@ function Navbar() {
             className="navbar-icon navbar-cart"
             aria-label={
               cartCount > 0
-                ? `Shopping cart, ${cartCount} ${cartCount === 1 ? "item" : "items"}`
-                : "Shopping cart"
+                ? `Shopping bag, ${cartCount} ${cartCount === 1 ? "item" : "items"}`
+                : "Shopping bag"
             }
           >
             <FiShoppingBag />
@@ -254,6 +315,8 @@ function Navbar() {
             className="navbar-menu-button"
             onClick={() => setMenuOpen(true)}
             aria-label="Open menu"
+            aria-expanded={menuOpen}
+            aria-controls="mobile-menu"
           >
             <FiMenu />
           </button>
@@ -271,7 +334,7 @@ function Navbar() {
                 id="navbar-search-input"
                 autoFocus
                 type="text"
-                placeholder="Search products..."
+                placeholder="Search products"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
@@ -308,7 +371,9 @@ function Navbar() {
                     </Link>
                   ))
                 ) : (
-                  <p className="no-search-results">No products found.</p>
+                  <p className="no-search-results">
+                    No products match “{search.trim()}”. Try a shorter word.
+                  </p>
                 )}
               </div>
             )}
@@ -317,46 +382,63 @@ function Navbar() {
       </div>
 
       {/* MOBILE MENU */}
-      <div className={`mobile-menu ${menuOpen ? "mobile-menu-open" : ""}`}>
+      <div
+        id="mobile-menu"
+        className={`mobile-menu ${menuOpen ? "mobile-menu-open" : ""}`}
+        aria-hidden={!menuOpen}
+        inert={!menuOpen}
+      >
         <div className="mobile-menu-header">
-          <div className="mobile-menu-title">
-            <img
-              src={logo68}
-              srcSet={`${logo68} 1x, ${logo136} 2x`}
-              alt="ShopCalmCanvas"
-              width="45"
-              height="45"
-              loading="lazy"
-            />
-            <span>Menu</span>
-          </div>
+          <span className="mobile-menu-title">Menu</span>
           <button onClick={closeMobileMenu} aria-label="Close menu">
             <FiX />
           </button>
         </div>
 
-        <Link to="/" onClick={closeMobileMenu}>
-          Home
-        </Link>
+        <div className="mobile-menu-group">
+          <p className="mobile-menu-heading">Shop by category</p>
+          {CATEGORIES.map((link) => (
+            <Link key={link.to} to={link.to} onClick={closeMobileMenu}>
+              {link.label}
+            </Link>
+          ))}
+          <Link to="/collections" onClick={closeMobileMenu}>
+            Shop all
+          </Link>
+        </div>
 
-        {MENUS.map((menu) => (
-          <div key={menu.id} className="mobile-menu-group">
-            <p className="mobile-menu-heading">{menu.label}</p>
-            {menu.links.map((link) => (
-              <Link key={link.to} to={link.to} onClick={closeMobileMenu}>
-                {link.label}
-              </Link>
-            ))}
-          </div>
-        ))}
+        <div className="mobile-menu-group">
+          <p className="mobile-menu-heading">Gift collections</p>
+          {GIFT_COLLECTIONS.map((link) => (
+            <Link key={link.to} to={link.to} onClick={closeMobileMenu}>
+              {link.label}
+            </Link>
+          ))}
+        </div>
 
-        <Link to="/about" onClick={closeMobileMenu}>
-          About
-        </Link>
-        <Link to="/contact" onClick={closeMobileMenu}>
-          Contact
-        </Link>
+        <div className="mobile-menu-group mobile-menu-group--plain">
+          <Link to="/about" onClick={closeMobileMenu}>
+            About us
+          </Link>
+          <Link to="/contact" onClick={closeMobileMenu}>
+            Contact
+          </Link>
+          <Link to="/shipping-returns" onClick={closeMobileMenu}>
+            Shipping &amp; returns
+          </Link>
+        </div>
       </div>
+
+      {/* Dims the page behind the open phone menu; a tap closes it. */}
+      {menuOpen && (
+        <button
+          type="button"
+          className="mobile-menu-backdrop"
+          aria-label="Close menu"
+          tabIndex={-1}
+          onClick={closeMobileMenu}
+        />
+      )}
     </header>
   );
 }

@@ -12,102 +12,70 @@ function socialLabel(url) {
   return name.charAt(0).toUpperCase() + name.slice(1);
 }
 
+// The same links (and URLs) are written into every pre-built page by
+// scripts/postbuild.mjs (footerHtml): keep the two in step.
+const COLUMNS = [
+  {
+    id: "shop",
+    title: "Shop",
+    links: [
+      { to: "/hoodies", label: "Hoodies" },
+      { to: "/sweatshirts", label: "Sweatshirts" },
+      { to: "/tshirts", label: "T-Shirts" },
+      { to: "/mugs", label: "Mugs" },
+      { to: "/totebags", label: "Tote Bags" },
+      { to: "/phonecases", label: "Phone Cases" },
+      { to: "/christmas-gifts", label: "Christmas Gifts" },
+    ],
+  },
+  {
+    id: "gifts",
+    title: "Gift collections",
+    links: [
+      { to: "/cat-lover-gifts", label: "Cat Lover Gifts" },
+      { to: "/dog-lover-gifts", label: "Dog Lover Gifts" },
+      { to: "/floral-gifts", label: "Floral Gifts" },
+      { to: "/thanksgiving-gifts", label: "Thanksgiving Gifts" },
+      { to: "/halloween", label: "Halloween & Spooky" },
+    ],
+  },
+  {
+    id: "care",
+    title: "Customer care",
+    links: [
+      { to: "/contact", label: "Contact us" },
+      { to: "/shipping-returns", label: "Shipping & returns" },
+    ],
+  },
+  {
+    id: "about",
+    title: "About",
+    links: [
+      { to: "/about", label: "Our story" },
+      { to: "/blog", label: "Gift & Style Journal" },
+    ],
+  },
+  {
+    id: "legal",
+    title: "Legal",
+    links: [
+      { to: "/privacy-policy", label: "Privacy policy" },
+      { to: "/terms", label: "Terms & conditions" },
+    ],
+  },
+];
+
 function Footer() {
+  const year = new Date().getFullYear();
+
   return (
     <footer className="footer">
-
-      <div className="footer-container">
-
-        {/* LEFT */}
-
+      <div className="footer-top">
         <div className="footer-brand">
-
-          <h2>ShopCalmCanvas</h2>
-
-          <p>
-            Art made for everyday living.
-            Premium print-on-demand products
-            designed to inspire creativity.
-          </p>
-
-        </div>
-
-
-        {/* SHOP */}
-
-        <div className="footer-links">
-
-          <h3>Shop</h3>
-
-          <Link to="/hoodies">Hoodies</Link>
-
-          <Link to="/tshirts">T-Shirts</Link>
-
-          <Link to="/sweatshirts">Sweatshirts</Link>
-
-          <Link to="/mugs">Mugs</Link>
-
-          <Link to="/phonecases">Phone Cases</Link>
-
-          <Link to="/totebags">Tote Bags</Link>
-
-          <Link to="/christmas-gifts">Christmas Gifts</Link>
-
-          <Link to="/cat-lover-gifts">Cat Lover Gifts</Link>
-
-          <Link to="/dog-lover-gifts">Dog Lover Gifts</Link>
-
-          <Link to="/floral-gifts">Floral Gifts</Link>
-
-          <Link to="/halloween">Halloween &amp; Spooky</Link>
-
-          <Link to="/thanksgiving-gifts">Thanksgiving Gifts</Link>
-
-        </div>
-
-
-        {/* COMPANY */}
-
-       <div className="footer-links">
-
-  <h3>Company</h3>
-
-  <Link to="/about">
-    About Us
-  </Link>
-
-  <Link to="/blog">
-    Gift &amp; Style Journal
-  </Link>
-
-  <Link to="/contact">
-    Contact Us
-  </Link>
-
-  <Link to="/shipping-returns">
-    Shipping &amp; Returns
-  </Link>
-
-  <Link to="/terms">
-    Terms &amp; Conditions
-  </Link>
-
-  <Link to="/privacy-policy">
-    Privacy Policy
-  </Link>
-
-</div>
-
-
-        {/* FOLLOW */}
-
-        <div className="footer-follow">
-
-          <h3>Follow Along</h3>
-
-          <p>
-            Find new designs and collections
-            on our social profiles.
+          <p className="footer-name">ShopCalmCanvas</p>
+          <p className="footer-about">
+            Original artwork on hoodies, sweatshirts, tees, mugs, tote bags and
+            phone cases, printed to order for you.
           </p>
 
           {SOCIAL_LINKS.length > 0 && (
@@ -126,37 +94,52 @@ function Footer() {
           )}
 
           <p className="footer-contact">
-            Questions about an order?{" "}
+            Help with an order:{" "}
             <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
           </p>
-
         </div>
 
+        <nav className="footer-nav" aria-label="Footer">
+          {COLUMNS.map((column) => (
+            <div className="footer-col" key={column.id}>
+              <h2 id={`footer-${column.id}`}>{column.title}</h2>
+              <ul aria-labelledby={`footer-${column.id}`}>
+                {column.links.map((link) => (
+                  <li key={link.to}>
+                    <Link to={link.to}>{link.label}</Link>
+                  </li>
+                ))}
+                {column.id === "care" && (
+                  <li>
+                    <a href={`mailto:${CONTACT_EMAIL}`}>Order support</a>
+                  </li>
+                )}
+                {column.id === "legal" && visitorNeedsConsentChoice() && (
+                  <li>
+                    <button
+                      type="button"
+                      className="footer-cookie-link"
+                      onClick={() =>
+                        window.dispatchEvent(new Event(OPEN_CONSENT_EVENT))
+                      }
+                    >
+                      Cookie settings
+                    </button>
+                  </li>
+                )}
+              </ul>
+            </div>
+          ))}
+        </nav>
       </div>
-
 
       <div className="footer-bottom">
-
-        <p>
-
-          © 2026 ShopCalmCanvas. All rights reserved.
-
-        </p>
-
-        {visitorNeedsConsentChoice() && (
-          <button
-            type="button"
-            className="footer-cookie-link"
-            onClick={() => window.dispatchEvent(new Event(OPEN_CONSENT_EVENT))}
-          >
-            Cookie settings
-          </button>
-        )}
-
+        <p>© {year} ShopCalmCanvas</p>
+        <p>Shipping to the US, UK, Canada and Europe</p>
+        <p>Secure card payments by Safepay</p>
       </div>
-
     </footer>
   );
 }
 
-export default Footer;
+export default Footer;

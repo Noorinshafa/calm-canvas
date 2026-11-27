@@ -1,3 +1,26 @@
+/* ==========================================
+        DESIGN TOKENS (redesign, 27 Nov 2026)
+        One palette for the whole site. New and
+        restyled components use these; older pages
+        move over to them phase by phase.
+========================================== */
+:root{
+    --c-charcoal:#0C0A08;      /* text, headings, icons */
+    --c-forest:#2A3723;        /* primary buttons, active nav, brand bands */
+    --c-sage:#B9BBA8;          /* dividers, quiet labels on forest */
+    --c-ivory:#E8E5DD;         /* section backgrounds, text on forest */
+    --c-champagne:#DCBC98;     /* small accents only */
+    --c-grey:#F1F1EF;          /* product image field */
+    --c-warm:#F7F6F3;          /* page and header background */
+    --c-white:#FFFFFF;
+    --c-ink-soft:#5A5856;      /* secondary text, 6.5:1 on warm white */
+    --c-line:rgba(12,10,8,.10);/* hairlines */
+    --c-error:#A8323F;         /* form errors, 6.6:1 on white */
+    --f-serif:"Cormorant Garamond", Georgia, serif;
+    --f-sans:"Manrope", system-ui, sans-serif;
+    --ease:cubic-bezier(.2,.6,.2,1);
+}
+
 *{
     margin:0;
     padding:0;
@@ -64,7 +87,7 @@ input:focus-visible,
 textarea:focus-visible,
 select:focus-visible,
 [tabindex]:focus-visible{
-    outline:2px solid #d89caf;
+    outline:2px solid var(--c-forest);
     outline-offset:2px;
 }
 
