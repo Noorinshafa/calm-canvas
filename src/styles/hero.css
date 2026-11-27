@@ -151,10 +151,7 @@
 
 .hb-model--grey{ left:-2%; height:74%; z-index:1; }
 .hb-model--couple{ left:12%; height:84%; z-index:2; }
-/* The model in black is cropped at the top of her head in the photo, so she
-   reaches up under the green header (a few pixels past the top of the group)
-   and the crop is never seen. */
-.hb-model--black{ left:47%; height:calc(100% + 6px); z-index:4; }
+.hb-model--black{ left:47%; height:98%; z-index:4; }
 .hb-model--white{ left:76%; height:88%; z-index:3; }
 
 .hb-floor{
@@ -169,6 +166,9 @@
 }
 
 /*---------- full-bleed wallpaper (Christmas) ----------*/
+
+/* The wallpaper starts just under the menu and fades in from the colour of
+   its own paper, so the gift boxes never sit behind the logo or the links. */
 
 .hb-bg{
     position:absolute;
@@ -185,22 +185,32 @@
     object-position:center;
 }
 
-.hb--christmas{ background:#EFE6D8; }
+.hb--christmas{ background:#F7F1E3; }
+
+.hb--christmas .hb-bg{
+    top:calc(var(--head) - 40px);
+    -webkit-mask-image:linear-gradient(to bottom, transparent 0, #000 70px);
+    mask-image:linear-gradient(to bottom, transparent 0, #000 70px);
+}
 
 /*---------- photo on the right (hoodies, tees) ----------*/
 
 .hb--hoodies{ background:#ACA9A6; }
 .hb--tees{ background:linear-gradient(110deg, #F1DDE2 0%, #DCCFE3 100%); }
 
+/* The photo fades in from the left (towards the text) and from the top
+   (under the menu). */
 .hb-photo{
     position:absolute;
-    top:0;
+    top:calc(var(--head) - 40px);
     right:0;
     bottom:0;
     width:62%;
     z-index:0;
-    -webkit-mask-image:linear-gradient(to right, transparent 0%, #000 22%);
-    mask-image:linear-gradient(to right, transparent 0%, #000 22%);
+    -webkit-mask-image:linear-gradient(to right, transparent 0%, #000 22%), linear-gradient(to bottom, transparent 0, #000 80px);
+    -webkit-mask-composite:source-in;
+    mask-image:linear-gradient(to right, transparent 0%, #000 22%), linear-gradient(to bottom, transparent 0, #000 80px);
+    mask-composite:intersect;
 }
 
 .hb-photo img{
@@ -295,7 +305,7 @@
 
 @media (max-width:1023px){
     .hero{
-        --hb-h:clamp(600px, 150vw, 760px);
+        --hb-h:clamp(640px, 170vw, 820px);
     }
 
     .hb{
@@ -321,10 +331,29 @@
         font-size:.95rem;
     }
 
+    /* The models sit straight under the menu and the text follows below
+       them, so the pictures never cover the buttons. */
+    .hb--models{
+        flex-direction:column;
+        align-items:stretch;
+    }
+
     .hb-models{
+        position:relative;
         top:auto;
+        right:auto;
+        bottom:auto;
+        flex:1 1 auto;
         width:100%;
-        height:52%;
+        height:auto;
+        min-height:0;
+        -webkit-mask-image:linear-gradient(to bottom, #000 82%, transparent);
+        mask-image:linear-gradient(to bottom, #000 82%, transparent);
+    }
+
+    .hb--models .hb-copy{
+        padding-top:22px;
+        padding-bottom:76px;
     }
 
     .hb-word{
@@ -334,7 +363,7 @@
 
     .hb-model--grey{ display:none; }
     .hb-model--couple{ left:-4%; height:82%; }
-    .hb-model--black{ left:36%; height:100%; }
+    .hb-model--black{ left:36%; height:97%; }
     .hb-model--white{ left:70%; height:86%; }
 
     .hb-photo{
@@ -342,7 +371,18 @@
         width:100%;
         height:50%;
         -webkit-mask-image:linear-gradient(to bottom, transparent 0%, #000 22%);
+        -webkit-mask-composite:source-over;
         mask-image:linear-gradient(to bottom, transparent 0%, #000 22%);
+        mask-composite:add;
+    }
+
+    /* On narrow screens the whole wallpaper sits at the bottom, so both
+       stacks of gifts show, and fades into the paper colour above it. */
+    .hb--christmas .hb-bg{
+        top:auto;
+        height:67vw;
+        -webkit-mask-image:linear-gradient(to bottom, transparent 0, #000 60px);
+        mask-image:linear-gradient(to bottom, transparent 0, #000 60px);
     }
 
     .hero-controls{ bottom:14px; }

@@ -157,8 +157,8 @@ function Navbar() {
   }
 
   // On the home page, while it is scrolled to the very top and nothing is
-  // open in the header, the menu row is forest green with white type
-  // (navbar.css). Any scroll, menu or search turns it white.
+  // open in the header, the menu row is see-through so the banner shows
+  // behind it (navbar.css). Any scroll, menu or search makes it solid.
   const underHero = isHome && atTop && !menuOpen && !searchOpen && !shopOpen;
 
   return (
