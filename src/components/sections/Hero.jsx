@@ -70,7 +70,7 @@ function ModelsBanner() {
               src={model.large}
               alt=""
               loading={model.key === "grey" ? "lazy" : "eager"}
-              fetchPriority={model.key === "couple" ? "high" : undefined}
+              fetchPriority={model.key === "couple" || model.key === "black" ? "high" : undefined}
               decoding="async"
             />
           </picture>

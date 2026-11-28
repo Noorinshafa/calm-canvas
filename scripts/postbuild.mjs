@@ -397,18 +397,26 @@ async function prerender() {
   }
 
   // The home page's first banner is only found by the browser once the app has
-  // started. Tell it about its largest picture (the cut-out couple, see
-  // src/components/sections/Hero.jsx) in the home page's HTML instead, so it
-  // downloads at the same time as the app's code, at top priority. Phones and
-  // tablets get the 480px-tall copy, computers the 900px one; the 1023px limit
-  // must match the <source media> in Hero.jsx so nobody downloads both.
+  // started. Tell it about its largest picture in the home page's HTML
+  // instead, so it downloads at the same time as the app's code, at top
+  // priority (cut-outs in src/components/sections/Hero.jsx). On computers the
+  // largest is the couple (900px-tall copy); on phones and tablets the models
+  // sit in a smaller band and the tallest is the model in black (480px copy).
+  // The 1023px limit must match the <source media> in Hero.jsx so nobody
+  // downloads a copy they will not use.
+  //
+  // The three fonts used in the first screen are fetched early too: Anton
+  // (banner headings, src/styles/hero.css), Cormorant Garamond 600 (the shop
+  // name in the menu) and Manrope 400 (body text). Without this they arrive
+  // after the page is first drawn, the text swaps font and moves things
+  // around (layout shift). Only these three: other weights stay on demand.
   const homePreloadLinks = [];
 
   try {
     const assetFiles = await readdir(path.join(DIST, "assets"));
-    const find = (prefix) =>
-      assetFiles.find((name) => new RegExp(`^${prefix}-[\\w-]+\\.webp$`).test(name));
-    const small = find("model-couple-480");
+    const find = (prefix, ext = "webp") =>
+      assetFiles.find((name) => new RegExp(`^${prefix}-[\\w-]+\\.${ext}$`).test(name));
+    const small = find("model-black-480");
     const large = find("model-couple-900");
 
     if (small && large) {
@@ -418,6 +426,21 @@ async function prerender() {
       );
     } else {
       log("home banner picture not found in dist/assets: early download skipped");
+    }
+
+    for (const font of [
+      "anton-latin-400-normal",
+      "cormorant-garamond-latin-600-normal",
+      "manrope-latin-400-normal",
+    ]) {
+      const file = find(font, "woff2");
+      if (file) {
+        homePreloadLinks.push(
+          `<link rel="preload" as="font" type="font/woff2" crossorigin href="/assets/${esc(file)}" />`
+        );
+      } else {
+        log(`${font} not found in dist/assets: early download skipped`);
+      }
     }
   } catch (error) {
     log(`home banner preload skipped: ${briefError(error)}`);
